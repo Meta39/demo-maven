@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fu.demo.dao.LogDao">
+
+    <resultMap type="com.fu.demo.entity.Log" id="BaseResultMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="applicationName" column="application_name" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="SMALLINT"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="requestURI" column="request_uri" jdbcType="VARCHAR"/>
+        <result property="requestData" column="request_data" jdbcType="VARCHAR"/>
+        <result property="respondData" column="respond_data" jdbcType="VARCHAR"/>
+        <result property="msg" column="msg" jdbcType="VARCHAR"/>
+        <result property="errorMsg" column="error_msg" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">id, user_id, username, application_name, code, `method`, request_uri, request_data, respond_data, msg, error_msg, create_time</sql>
+
+    <!-- 创建日志表 -->
+    <update id="crateTable" parameterType="String">
+        CREATE TABLE IF NOT EXISTS log_${tableName} (
+            `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+            `user_id` char(36) DEFAULT NULL COMMENT '用户ID',
+            `username` varchar(64) DEFAULT NULL COMMENT '用户名',
+            `application_name` varchar(255) DEFAULT NULL COMMENT '应用名称',
+            `code` smallint(6) DEFAULT NULL COMMENT '状态码',
+            `method` varchar(16) DEFAULT NULL COMMENT '请求方法',
+            `request_uri` varchar(2048) DEFAULT NULL COMMENT '请求URI',
+            `request_data` longtext DEFAULT NULL COMMENT '请求数据',
+            `respond_data` longtext DEFAULT NULL COMMENT '返回数据',
+            `msg` text DEFAULT NULL COMMENT '返回信息',
+            `error_msg` longtext DEFAULT NULL COMMENT '详细错误信息',
+            `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+            PRIMARY KEY (`id`),
+            KEY `create_time` (`create_time`) USING BTREE COMMENT '创建时间索引',
+            KEY `user_id` (`user_id`) COMMENT '用户ID索引',
+            KEY `application_name` (`application_name`) COMMENT '应用名称索引'
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    </update>
+
+    <!-- 根据ID查询 -->
+    <select id="queryById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from log_${tableName} where id = #{id}
+    </select>
+
+    <!-- 查询全部 -->
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from log_${tableName}
+        <where>
+            <if test="logDTO.userId != null and logDTO.userId != '' ">
+                AND    user_id = #{logDTO.userId}
+            </if>
+            <if test="logDTO.code != null">
+                AND    code = #{logDTO.code}
+            </if>
+            <if test="logDTO.method != null and logDTO.method != ''">
+                AND    `method` = #{logDTO.method}
+            </if>
+            <if test="logDTO.applicationName != null and logDTO.applicationName != ''">
+                AND    application_name = #{logDTO.applicationName}
+            </if>
+            <if test="logDTO.username != null and logDTO.username != ''">
+                AND    username LIKE CONCAT('%',#{logDTO.username,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="logDTO.requestURI != null and logDTO.requestURI != ''">
+                AND    request_uri LIKE CONCAT('%',#{logDTO.requestURI},'%')
+            </if>
+            <if test="logDTO.requestData != null and logDTO.requestData != ''">
+                AND    request_data LIKE CONCAT('%',#{logDTO.requestData,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="logDTO.respondData != null and logDTO.respondData != ''">
+                AND    respond_data LIKE CONCAT('%',#{logDTO.respondData,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="logDTO.errorMsg != null and logDTO.errorMsg != ''">
+                AND    error_msg LIKE CONCAT('%',#{logDTO.errorMsg,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="logDTO.startTime != null">
+                AND    create_time <![CDATA[>=]]> #{logDTO.startTime}
+            </if>
+            <if test="logDTO.endTime != null">
+                AND    create_time <![CDATA[<=]]> #{logDTO.endTime}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert">
+        insert into log_${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="log.id != null">
+                id,
+            </if>
+            <if test="log.userId != null">
+                user_id,
+            </if>
+            <if test="log.username != null">
+                username,
+            </if>
+            <if test="log.applicationName != null">
+                application_name,
+            </if>
+            <if test="log.code != null">
+                code,
+            </if>
+            <if test="log.method != null">
+                `method`,
+            </if>
+            <if test="log.requestURI != null">
+                request_uri,
+            </if>
+            <if test="log.requestData != null">
+                request_data,
+            </if>
+            <if test="log.respondData != null">
+                respond_data,
+            </if>
+            <if test="log.msg != null">
+                msg,
+            </if>
+            <if test="log.errorMsg != null">
+                error_msg,
+            </if>
+            <if test="log.createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="log.id != null">
+                #{log.id},
+            </if>
+            <if test="log.userId != null">
+                #{log.userId},
+            </if>
+            <if test="log.username != null">
+                #{log.username},
+            </if>
+            <if test="log.applicationName != null">
+                #{log.applicationName},
+            </if>
+            <if test="log.code != null">
+                #{log.code},
+            </if>
+            <if test="log.method != null">
+                #{log.method},
+            </if>
+            <if test="log.requestURI != null">
+                #{log.requestURI},
+            </if>
+            <if test="log.requestData != null">
+                #{log.requestData},
+            </if>
+            <if test="log.respondData != null">
+                #{log.respondData},
+            </if>
+            <if test="log.msg != null">
+                #{log.msg},
+            </if>
+            <if test="log.errorMsg != null">
+                #{log.errorMsg},
+            </if>
+            <if test="log.createTime != null">
+                #{log.createTime},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
+
