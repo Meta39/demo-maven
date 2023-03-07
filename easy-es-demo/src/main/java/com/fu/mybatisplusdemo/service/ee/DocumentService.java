@@ -1,7 +1,7 @@
-package com.fu.easyesdemo.service.ee;
+package com.fu.mybatisplusdemo.service.ee;
 
 import cn.easyes.core.biz.EsPageInfo;
-import com.fu.easyesdemo.entity.Document;
+import com.fu.mybatisplusdemo.entity.Document;
 
 import java.util.List;
 

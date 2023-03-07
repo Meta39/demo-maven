@@ -1,10 +1,10 @@
-package com.fu.easyesdemo.service.ee.impl;
+package com.fu.mybatisplusdemo.service.ee.impl;
 
 import cn.easyes.core.biz.EsPageInfo;
 import cn.easyes.core.conditions.LambdaEsQueryWrapper;
-import com.fu.easyesdemo.entity.Document;
-import com.fu.easyesdemo.mapper.ee.DocumentMapper;
-import com.fu.easyesdemo.service.ee.DocumentService;
+import com.fu.mybatisplusdemo.entity.Document;
+import com.fu.mybatisplusdemo.mapper.ee.DocumentMapper;
+import com.fu.mybatisplusdemo.service.ee.DocumentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

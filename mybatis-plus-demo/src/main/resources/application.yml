@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: mybatisplusdemo
+  #jackson配置统一返回给前端的格式以及时区
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatisplusdemo?characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+mybatis-plus:
+  #类型别名
+  type-aliases-package: com.fu.mybatisplusdemo.entity
+  # 扫描通用枚举包，需要配置@EnumValue注解使用
+  type-enums-package: com.fu.mybatisplusdemo.enums
+  #读取xml
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    #打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  #设置全局配置
+#  global-config:
+#    db-config:
+#      #设置表的统一前缀（可以不设置）
+#      table-prefix: t_
+#      #统一主键生成策略，一般就2种策略一个是自增auto，一个是雪花算法assign_id（可以不设置）
+#      id-type: auto

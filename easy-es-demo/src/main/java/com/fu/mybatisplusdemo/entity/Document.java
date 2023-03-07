@@ -1,4 +1,4 @@
-package com.fu.easyesdemo.entity;
+package com.fu.mybatisplusdemo.entity;
 
 import cn.easyes.annotation.HighLight;
 import cn.easyes.annotation.IndexField;

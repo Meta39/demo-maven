@@ -13,6 +13,7 @@
     <modules>
         <module>demo</module>
         <module>easy-es-demo</module>
+        <module>mybatis-plus-demo</module>
     </modules>
 
     <properties>
@@ -23,6 +24,7 @@
         <lombok.version>1.18.26</lombok.version>
         <spring.boot.version>2.7.9</spring.boot.version>
         <mysql.version>8.0.30</mysql.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <easy-es.version>1.1.1</easy-es.version>
         <elasticsearch.version>7.14.0</elasticsearch.version>
     </properties>
@@ -57,6 +59,11 @@
                 <version>${mysql.version}</version>
                 <type>pom</type><!-- 有毒吧，为什么要加pom -->
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
             </dependency>
             <!-- easy-es 开始 -->
             <dependency>
