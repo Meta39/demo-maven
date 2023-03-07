@@ -12,6 +12,7 @@
     <!-- 子模块 -->
     <modules>
         <module>demo</module>
+        <module>easy-es-demo</module>
     </modules>
 
     <properties>
@@ -19,8 +20,11 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <lombok.version>1.18.26</lombok.version>
         <spring.boot.version>2.7.9</spring.boot.version>
         <mysql.version>8.0.30</mysql.version>
+        <easy-es.version>1.1.1</easy-es.version>
+        <elasticsearch.version>7.14.0</elasticsearch.version>
     </properties>
 
     <!-- 必要依赖 -->
@@ -31,6 +35,13 @@
     <!-- 非必要依赖，子项目可选 -->
     <dependencyManagement>
         <dependencies>
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -47,6 +58,23 @@
                 <type>pom</type><!-- 有毒吧，为什么要加pom -->
                 <scope>import</scope>
             </dependency>
+            <!-- easy-es 开始 -->
+            <dependency>
+                <groupId>cn.easy-es</groupId>
+                <artifactId>easy-es-boot-starter</artifactId>
+                <version>${easy-es.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <!-- easy-es 结束 -->
         </dependencies>
     </dependencyManagement>
 
