@@ -11,9 +11,6 @@ pass-uri:
     - /checkUserId
     - /front
     - /login
-    - /minio/**
-    - /fileUpload
-    - /fileDelete
     - /roundRobin
     - /user/**
     - /exchangeFile/**
@@ -39,10 +36,6 @@ spring:
         queue-capacity: 1000
         #线程存活时间
         keep-alive: 60
-  elasticsearch:
-    uris: localhost:9200
-    username: elastic
-    password: password
   data:
     #mongo:4.0.6
     mongodb:
@@ -156,13 +149,6 @@ logging:
     com.fu.demo.dao: debug
     org.springframework.data.mongodb.core: debug
 
-minio:
-  endpoint: http://192.168.1.111
-  port: 9000
-  secure: false
-  accessKey: minioadmin
-  secretKey: minioadmin
-
 fdfs:
   so-timeout: 1501
   connect-timeout: 601
@@ -172,12 +158,3 @@ fdfs:
   tracker-list:            #TrackerList参数,支持多个
     - 192.168.1.111:22122
     - 192.168.1.112:22122
-
-xxl:
-  job:
-    admin:
-      addresses: http://192.168.1.111:9998/xxl_job
-    executor:
-      appname: demo
-      logretentiondays: 30
-      port: 9999
