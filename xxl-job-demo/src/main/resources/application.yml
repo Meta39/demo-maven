@@ -1,0 +1,8 @@
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:9998/xxl_job
+    executor:
+      appname: demo
+      logretentiondays: 30
+      port: 9999

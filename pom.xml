@@ -15,6 +15,7 @@
         <module>easy-es-demo</module>
         <module>mybatis-plus-demo</module>
         <module>minio-demo</module>
+        <module>xxl-job-demo</module>
     </modules>
 
     <properties>
@@ -26,6 +27,7 @@
         <spring.boot.version>2.7.9</spring.boot.version>
         <mysql.version>8.0.30</mysql.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <xxl-job.version>2.3.0</xxl-job.version>
         <easy-es.version>1.1.1</easy-es.version>
         <elasticsearch.version>7.14.0</elasticsearch.version>
     </properties>
@@ -61,10 +63,17 @@
                 <type>pom</type><!-- 有毒吧，为什么要加pom -->
                 <scope>import</scope>
             </dependency>
+            <!-- MyBatis-Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- xxl-job -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job.version}</version>
             </dependency>
             <!-- easy-es 开始 -->
             <dependency>
