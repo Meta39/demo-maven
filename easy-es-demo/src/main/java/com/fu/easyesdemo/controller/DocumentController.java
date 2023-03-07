@@ -1,8 +1,8 @@
-package com.fu.mybatisplusdemo.controller;
+package com.fu.easyesdemo.controller;
 
 import cn.easyes.core.biz.EsPageInfo;
-import com.fu.mybatisplusdemo.entity.Document;
-import com.fu.mybatisplusdemo.service.ee.DocumentService;
+import com.fu.easyesdemo.entity.Document;
+import com.fu.easyesdemo.service.ee.DocumentService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

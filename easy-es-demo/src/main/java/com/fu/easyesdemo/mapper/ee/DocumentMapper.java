@@ -1,7 +1,7 @@
-package com.fu.mybatisplusdemo.mapper.ee;
+package com.fu.easyesdemo.mapper.ee;
 
 import cn.easyes.core.conditions.interfaces.BaseEsMapper;
-import com.fu.mybatisplusdemo.entity.Document;
+import com.fu.easyesdemo.entity.Document;
 import org.springframework.stereotype.Repository;
 
 @Repository

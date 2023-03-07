@@ -1,4 +1,4 @@
-package com.fu.mybatisplusdemo;
+package com.fu.easyesdemo;
 
 import cn.easyes.starter.register.EsMapperScan;
 import org.springframework.boot.SpringApplication;
