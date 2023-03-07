@@ -17,6 +17,7 @@
         <module>minio-demo</module>
         <module>xxl-job-demo</module>
         <module>redis-demo</module>
+        <module>base-demo</module>
     </modules>
 
     <properties>
