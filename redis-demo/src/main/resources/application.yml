@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    # 有密码才需要
+    password: 12345678
