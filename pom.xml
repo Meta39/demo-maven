@@ -18,6 +18,7 @@
         <module>xxl-job-demo</module>
         <module>redis-demo</module>
         <module>base-demo</module>
+        <module>spring-boot-demo</module>
     </modules>
 
     <properties>
