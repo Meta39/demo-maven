@@ -3,6 +3,9 @@ package com.fu.springbootdemo.global;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * 自定义异常返回类
+ */
 public class Err extends RuntimeException implements Serializable {
 
     private static final long serialVersionUID = 6558796578827818467L;
@@ -16,7 +19,7 @@ public class Err extends RuntimeException implements Serializable {
     private static final Err err = new Err();
 
     //全局异常捕获填写状态码和异常信息返回给前端
-    public static Err getErr(Integer errCode,String errMessage){
+    public static Err setErr(Integer errCode,String errMessage){
         err.setErrCode(errCode);
         err.setErrMessage(errMessage);
         return err;

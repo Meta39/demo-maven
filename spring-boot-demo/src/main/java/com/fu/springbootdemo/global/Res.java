@@ -21,7 +21,7 @@ public class Res<T> implements Serializable {
     private static final Res res = new Res();//私有化静态实例化类
 
     //成功
-    public static <T> Res<T> success(T data){
+    public static <T> Res<T> ok(T data){
         res.setCode(1);
         res.setMsg("成功");
         res.setData(data);
