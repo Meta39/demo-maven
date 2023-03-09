@@ -18,8 +18,15 @@ public class Err extends RuntimeException implements Serializable {
 
     private static final Err err = new Err();
 
-    //全局异常捕获填写状态码和异常信息返回给前端
-    public static Err setErr(Integer errCode,String errMessage){
+    //只返回异常信息给前端(推荐)
+    public static Err setMessage(String errMessage){
+        err.setErrCode(1);
+        err.setErrMessage(errMessage);
+        return err;
+    }
+
+    //全局异常捕获填写状态码和异常信息返回给前端（不推荐，只有当前端需要通过code判断时才使用）
+    public static Err setCodeAndMessage(Integer errCode,String errMessage){
         err.setErrCode(errCode);
         err.setErrMessage(errMessage);
         return err;
