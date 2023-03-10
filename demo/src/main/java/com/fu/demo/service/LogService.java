@@ -47,7 +47,7 @@ public class LogService {
     /**
      * 异步日志入库
      */
-    @Async("demoAsync")
+    @Async
     public void insert(Log logObj) {
 //        log.info("打印当前B线程名称：{}",Thread.currentThread().getName());
         //获取当前年月

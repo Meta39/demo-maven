@@ -1,0 +1,87 @@
+package com.fu.springbootdemo.controller;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fu.springbootdemo.entity.Authorize;
+import com.fu.springbootdemo.service.AuthorizeService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.Valid;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 权限
+ */
+@RestController
+@RequestMapping("authorize")
+public class AuthorizeController {
+
+    @Autowired
+    private AuthorizeService authorizeService;
+
+    /**
+     * 根据ID查询权限
+     *
+     * @param id ID
+     */
+    @GetMapping("{id}")
+    public Authorize selectAuthorizeById(@PathVariable("id") Integer id) {
+        return this.authorizeService.selectAuthorizeById(id);
+    }
+
+    /**
+     * 新增权限
+     *
+     * @param authorize 权限实体类
+     */
+    @PostMapping
+    public int insertAuthorize(@RequestBody @Valid Authorize authorize) {
+        return this.authorizeService.insertAuthorize(authorize);
+    }
+
+    /**
+     * 更新权限
+     *
+     * @param authorize 权限实体类
+     */
+    @PutMapping
+    public int updateAuthorize(@RequestBody @Valid Authorize authorize) {
+        return this.authorizeService.updateAuthorize(authorize);
+    }
+
+    /**
+     * 根据ID删除权限
+     *
+     * @param id ID
+     */
+    @DeleteMapping("{id}")
+    public int deleteAuthorize(@PathVariable Integer id) {
+        return this.authorizeService.deleteAuthorizeById(id);
+    }
+
+    /**
+     * 查询权限 分页数据
+     */
+    @GetMapping("paging")
+    public Page<Authorize> selectAuthorizePage(@RequestParam(required = false, defaultValue = "1") Long page, @RequestParam(required = false, defaultValue = "10") Long size) {
+        return this.authorizeService.selectAuthorizePage(page, size);
+    }
+
+    /**
+     * 查询权限 列表
+     */
+    @GetMapping
+    public List<Authorize> selectAuthorizeList(Authorize authorize) {
+        return this.authorizeService.selectAuthorizeList(authorize);
+    }
+
+    /**
+     * 根据ID集合批量删除权限
+     */
+    @DeleteMapping
+    public int deleteAuthorizes(@RequestBody List<Integer> ids) {
+        return this.authorizeService.deleteAuthorizeByIds(ids);
+    }
+}

@@ -1,6 +1,5 @@
 package com.fu.demo.controller;
 
-import com.fu.demo.aop.IgnoreResAnnotate;
 import com.fu.demo.dao.LoginDao;
 import com.fu.demo.entity.*;
 import com.fu.demo.util.RSAUtil;
@@ -28,7 +27,6 @@ public class LoginController {
     @Resource
     LoginDao loginDao;
 
-    @IgnoreResAnnotate //不反回Res
     @GetMapping("hello")
     public String hello() {
         return "hello";
@@ -68,7 +66,6 @@ public class LoginController {
      * @param salt      返回给前端的UUID盐
      * @param publicKey 返回给前端的RSA公钥
      */
-    @IgnoreResAnnotate
     @GetMapping("front")
     public String front(@RequestParam String password, @RequestParam String salt, @RequestParam String publicKey) throws Exception {
         String passwordAndSaltForMD5 = Base64.getEncoder().encodeToString(MessageDigest.getInstance("MD5").digest((password + salt).getBytes(StandardCharsets.UTF_8)));//原始密码+UUID盐生成MD5

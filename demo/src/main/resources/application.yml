@@ -23,19 +23,6 @@ server:
 spring:
   application:
     name: demo
-  task:
-    execution:
-      #异步线程名称
-      thread-name-prefix: demo-async
-      pool:
-        #初始线程数
-        core-size: 8
-        #最大线程数
-        max-size: 16
-        #线程队列大小
-        queue-capacity: 1000
-        #线程存活时间
-        keep-alive: 60
   data:
     #mongo:4.0.6
     mongodb:

@@ -1,5 +1,7 @@
 package com.fu.springbootdemo.controller;
 
+import com.fu.springbootdemo.annotation.PreAuthorize;
+import com.fu.springbootdemo.annotation.ReturnMeta;
 import com.fu.springbootdemo.async.MainThread;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ public class TestController {
     @Autowired
     private MainThread mainThread;
 
+    @ReturnMeta //返回原始数据，不用全局返回类封装。
     @GetMapping
     public Integer hello(){
         return 1;
@@ -25,4 +28,12 @@ public class TestController {
         return this.mainThread.mainThread();
     }
 
+    /**
+     * 测试权限注解，超级管理员角色跳过该鉴权注解
+     */
+    @PreAuthorize(authorize = "authorize")
+    @GetMapping("authorize")
+    public void authorize(){
+
+    }
 }

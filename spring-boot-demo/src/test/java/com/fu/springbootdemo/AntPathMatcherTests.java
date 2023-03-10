@@ -31,4 +31,11 @@ public class AntPathMatcherTests {
 //        log.info("/a/b/c是否匹配/a/*/def：{}",antPathMatcher.match("/a/*/def","/a/b/c"));//false
 //        log.info("/a/b/def是否匹配/a/*/def：{}",antPathMatcher.match("/a/*/def","/a/b/def"));//true
     }
+
+    @Test
+    public void test(){
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        boolean match = antPathMatcher.match("*:login","GET:login");
+        log.info("{}",match);
+    }
 }
