@@ -15,7 +15,7 @@ public class TestController {
     private MainThread mainThread;
 
     @ReturnMeta //返回原始数据，不用全局返回类封装。
-    @GetMapping
+    @GetMapping("hello")
     public Integer hello(){
         return 1;
     }
