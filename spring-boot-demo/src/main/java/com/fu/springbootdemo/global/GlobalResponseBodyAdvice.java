@@ -1,9 +1,11 @@
 package com.fu.springbootdemo.global;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fu.springbootdemo.annotation.ReturnMeta;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import java.lang.reflect.AnnotatedElement;
 import java.util.LinkedHashMap;
 
 /**
@@ -58,7 +61,10 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
      */
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return true;
+        //如果没有获取到@ReturnMeta自定义注解，则返回全局返回类
+        AnnotatedElement annotatedElement = returnType.getAnnotatedElement();
+        ReturnMeta returnMeta = AnnotationUtils.findAnnotation(annotatedElement, ReturnMeta.class);
+        return returnMeta == null;
     }
 
     /**
