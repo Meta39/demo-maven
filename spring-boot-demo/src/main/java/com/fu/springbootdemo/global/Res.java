@@ -6,6 +6,7 @@ import java.util.Objects;
 /**
  * 统一返回类
  */
+@SuppressWarnings("unchecked")
 public class Res<T> implements Serializable {
 
     private static final long serialVersionUID = 6558796578827818466L;
