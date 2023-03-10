@@ -33,7 +33,7 @@ public class TestController {
      */
     @PreAuthorize(authorize = "authorize")
     @GetMapping("authorize")
-    public void authorize(){
-
+    public String authorize(){
+        return "需要授权才能访问，超级管理员跳过鉴权。";
     }
 }

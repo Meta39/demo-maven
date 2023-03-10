@@ -46,7 +46,7 @@ public class GlobalAuthorizeAspect {
             throw Err.setMessage("登录时没有把TokenInfo放入Redis！");
         }
         if (tokenInfo.getRoleIds() == null || tokenInfo.getRoleIds().isEmpty()) {
-            throw Err.setMessage("当前登录用户没有分配角色！");
+            throw Err.setMessage("当前登录用户没有分配角色。所以没有相应的权限，如需访问，请联系管理员分配相应授权的角色。");
         }
         boolean admin = tokenInfo.getRoleIds().stream().anyMatch(role -> role == 1);
         //不是超级管理员则进行鉴权，超级管理员角色直接跳过鉴权
