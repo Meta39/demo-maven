@@ -1,44 +1,102 @@
-<configuration scanPeriod="60 seconds">
-    <!-- 动态日志级别 -->
-    <jmxConfigurator/>
-    <!-- 定义日志文件 输出位置 -->
-    <property name="log_dir" value="./logs/spring-boot-demo/"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <!-- 应用名称 -->
+    <springProperty scope="context" name="springApplicationName" source="spring.application.name" defaultValue="unknownApplicationName"/>
+    <!-- 环境 -->
+    <springProperty scope="context" name="springProfilesActive" source="spring.profiles.active" defaultValue="dev"/>
+    <!-- 重启后是否删除日志 -->
+    <springProperty scope="context" name="cleanHistoryOnStart" source="logging.logback.rollingpolicy.clean-history-on-start" defaultValue="false"/>
+    <!-- 单个日志文件的大小 -->
+    <springProperty scope="context" name="maxFileSize" source="logging.logback.rollingpolicy.max-file-size" defaultValue="10MB"/>
+    <!-- 日志总文件最大值 -->
+    <springProperty scope="context" name="totalSizeCap" source="logging.logback.rollingpolicy.total-size-cap" defaultValue="10GB"/>
+    <!-- 日志保留时长 (天) -->
+    <springProperty scope="context" name="maxHistory" source="logging.logback.rollingpolicy.max-history" defaultValue="7"/>
+    <!-- 日志文件路径 -->
+    <springProperty scope="context" name="path" source="logging.file.path" defaultValue="/var/log/${springApplicationName}/${springProfilesActive}"/>
 
-    <!-- 控制台输出日志 -->
+    <contextName>${springApplicationName}</contextName>
+
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <!-- 彩色日志格式 -->
+    <springProperty scope="context" name="patternConsole" source="logging.pattern.console" defaultValue="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(-%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx"/>
+
+    <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%magenta(%level)] %green([%logger]) >>> %cyan(%msg) %n
-            </pattern>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder" charset="UTF-8">
+            <pattern>${patternConsole}</pattern>
         </encoder>
     </appender>
 
-    <!-- 日志输出到文件 -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-        </filter>
+    <!-- 系统日志输出 -->
+    <appender name="file_info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 循环政策：基于时间创建日志文件 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log_dir}/log-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <!-- 日志保留最大天数 -->
-            <maxHistory>15</maxHistory>
-            <!-- 日志总保存量为totalSizeCap -->
-            <totalSizeCap>25GB</totalSizeCap>
+            <fileNamePattern>${path}/info/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>20MB</maxFileSize>
+                <maxFileSize>${maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
             <!-- 重启项目后删除日志 -->
-            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <cleanHistoryOnStart>${cleanHistoryOnStart}</cleanHistoryOnStart>
         </rollingPolicy>
         <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%level] [%logger] >>> %msg %n</pattern>
+            <pattern>${patternConsole}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!-- 过滤的级别 -->
+            <level>INFO</level>
+            <!-- 匹配时的操作：接收（记录） -->
+            <onMatch>ACCEPT</onMatch>
+            <!-- 不匹配时的操作：拒绝（不记录） -->
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 日志文件名格式 -->
+            <fileNamePattern>${path}/error/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!-- 日志总保存量为totalSizeCap -->
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
+            <maxHistory>${maxHistory}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- maxFileSize:这是活动文件的大小，默认值是10MB，这里设置为20MB -->
+                <maxFileSize>${maxFileSize}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 重启项目后删除日志 -->
+            <cleanHistoryOnStart>${cleanHistoryOnStart}</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${patternConsole}</pattern>
         </encoder>
     </appender>
-    <logger name="demo" level="INFO"/>
-    <!-- root级别 DEBUG -->
-    <root level="INFO">
-        <!-- 控制台输出 -->
-        <appender-ref ref="console"/>
-        <!-- 文件输出 -->
-        <appender-ref ref="FILE"/>
-    </root>
+
+    <!--  开发环境，日志输出到控制台  -->
+    <springProfile name="dev">
+        <!--控制台和日志文件输出级别-->
+        <root level="INFO">
+            <appender-ref ref="console"/>
+        </root>
+    </springProfile>
+
+    <!--  生产环境，日志输出到文件  -->
+    <springProfile name="prod">
+        <root level="WARN">
+            <appender-ref ref="file_error"/>
+        </root>
+    </springProfile>
+
+    <!--  测试环境，日志输出到控制台和文件  -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="console"/>
+            <appender-ref ref="file_info"/>
+            <appender-ref ref="file_error"/>
+        </root>
+    </springProfile>
+
 </configuration>

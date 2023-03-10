@@ -1,3 +1,15 @@
+fu:
+  authentication:
+    token-timeout: 300
+    # 不需要认证的请求方法和接口URI
+    not-authentication:
+      - 'POST:/login'
+      - 'POST:/logout'
+      - 'GET:/test/hello'
+
+server:
+  port: 81
+
 spring:
   task:
     execution:
