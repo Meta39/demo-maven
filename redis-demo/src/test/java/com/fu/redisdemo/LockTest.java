@@ -1,6 +1,5 @@
 package com.fu.redisdemo;
 
-import com.sun.istack.internal.NotNull;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,7 @@ public class LockTest {
 
     //加锁。建议key用id，否则全局公用一个key阻塞，锁粒度太大。
     @SneakyThrows
-    public Boolean lock(@NotNull String key, Long timeout) {
+    public Boolean lock( String key, Long timeout) {
         if (key == null || key.trim().isEmpty()){
             throw new Exception("加锁时key不能为空！");
         }
@@ -33,7 +32,7 @@ public class LockTest {
 
     //解锁
     @SneakyThrows
-    public Boolean unLock(@NotNull String key) {
+    public Boolean unLock( String key) {
         if (key == null || key.trim().isEmpty()){
             throw new Exception("解锁时key不能为空！");
         }
@@ -42,7 +41,7 @@ public class LockTest {
 
     //阻塞
     @SneakyThrows
-    public Boolean waitAndGetLock(@NotNull String key, Long timeout) {
+    public Boolean waitAndGetLock( String key, Long timeout) {
         if (key == null || key.trim().isEmpty()){
             throw new Exception("阻塞时key不能为空！");
         }
