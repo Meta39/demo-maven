@@ -1,8 +1,7 @@
 package com.fu.springbootdemo.global;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fu.springbootdemo.annotation.ReturnMeta;
+import com.fu.springbootdemo.util.ObjectMapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
@@ -25,7 +24,6 @@ import java.util.LinkedHashMap;
 @RestControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     private static final Logger log = LoggerFactory.getLogger(GlobalResponseBodyAdvice.class);
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 自定义异常
@@ -79,17 +77,13 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if(body instanceof String){//String类型要特殊处理
-            try {
-                return objectMapper.writeValueAsString(Res.ok(body));
-            } catch (JsonProcessingException e) {
-                log.error("GlobalResponseBodyAdvice类JSON转换异常：",e);
-                throw Err.setMessage("GlobalResponseBodyAdvice类beforeBodyWrite()方法内，返回类型为String时JSON转换异常。");
-            }
+            return ObjectMapperUtil.writeValueAsString(Res.ok(body));
         } else if (body instanceof Res) {//本身是Res直接返回即可。例如：全局异常处理，返回的就是Res
             return body;
         }else if (body instanceof LinkedHashMap){//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
             LinkedHashMap map = (LinkedHashMap) body;//强转
             if (map.get("status") != null) {
+                log.error("全局返回异常捕获到LinkedHashMap：{}",map);
                 int status = (int) map.get("status");
                 String error = (String) map.get("error");
                 String message = (String) map.get("message");
