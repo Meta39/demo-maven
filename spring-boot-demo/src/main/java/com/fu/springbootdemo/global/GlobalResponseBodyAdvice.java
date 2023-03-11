@@ -1,9 +1,10 @@
 package com.fu.springbootdemo.global;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fu.springbootdemo.annotation.ReturnMeta;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.MediaType;
@@ -21,9 +22,9 @@ import java.util.LinkedHashMap;
 /**
  * 全局返回和异常处理类
  */
-@Slf4j
 @RestControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+    private static final Logger log = LoggerFactory.getLogger(GlobalResponseBodyAdvice.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
@@ -75,11 +76,15 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
      * @param request               请求
      * @param response              响应
      */
-    @SneakyThrows
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if(body instanceof String){//String类型要特殊处理
-            return objectMapper.writeValueAsString(Res.ok(body));
+            try {
+                return objectMapper.writeValueAsString(Res.ok(body));
+            } catch (JsonProcessingException e) {
+                log.error("GlobalResponseBodyAdvice类JSON转换异常：",e);
+                throw Err.setMessage("GlobalResponseBodyAdvice类beforeBodyWrite()方法内，返回类型为String时JSON转换异常。");
+            }
         } else if (body instanceof Res) {//本身是Res直接返回即可。例如：全局异常处理，返回的就是Res
             return body;
         }else if (body instanceof LinkedHashMap){//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
