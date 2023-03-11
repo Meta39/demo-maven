@@ -31,7 +31,7 @@ public class TestController {
     /**
      * 测试权限注解，超级管理员角色跳过该鉴权注解
      */
-    @PreAuthorize(authorize = "authorize")
+    @PreAuthorize("authorize")
     @GetMapping("authorize")
     public String authorize(){
         return "需要授权才能访问，超级管理员跳过鉴权。";

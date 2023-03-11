@@ -10,6 +10,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface PreAuthorize {
 
-    String authorize();//权限值。如：user:select表示需要用户查询权限
+    String value();//权限值。如：user:select表示需要用户查询权限
 
 }

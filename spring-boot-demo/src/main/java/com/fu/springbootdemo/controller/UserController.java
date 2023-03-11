@@ -1,6 +1,7 @@
 package com.fu.springbootdemo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class UserController {
      *
      * @param id ID
      */
+    @PreAuthorize("user:select")
     @GetMapping("{id}")
     public User selectUserById(@PathVariable("id") Integer id) {
         return this.userService.selectUserById(id);
@@ -34,6 +36,7 @@ public class UserController {
      *
      * @param user 用户实体类
      */
+    @PreAuthorize("user:insert")
     @PostMapping
     public int insertUser(@RequestBody @Valid User user) {
         return this.userService.insertUser(user);
@@ -44,6 +47,7 @@ public class UserController {
      *
      * @param user 用户实体类
      */
+    @PreAuthorize("user:update")
     @PutMapping
     public int updateUser(@RequestBody @Valid User user) {
         return this.userService.updateUser(user);
@@ -54,6 +58,7 @@ public class UserController {
      *
      * @param id ID
      */
+    @PreAuthorize("user:delete")
     @DeleteMapping("{id}")
     public int deleteUser(@PathVariable Integer id) {
         return this.userService.deleteUserById(id);
@@ -62,6 +67,7 @@ public class UserController {
     /**
      * 查询用户 分页数据
      */
+    @PreAuthorize("user:select")
     @GetMapping("paging")
     public Page<User> selectUserPage(@RequestParam(required = false, defaultValue = "1") Long page, @RequestParam(required = false, defaultValue = "10") Long size) {
         return this.userService.selectUserPage(page, size);
@@ -70,6 +76,7 @@ public class UserController {
     /**
      * 查询用户 列表
      */
+    @PreAuthorize("user:select")
     @GetMapping
     public List<User> selectUserList(User user) {
         return this.userService.selectUserList(user);
@@ -78,6 +85,7 @@ public class UserController {
     /**
      * 根据ID集合批量删除用户
      */
+    @PreAuthorize("user:delete")
     @DeleteMapping
     public int deleteUsers(@RequestBody List<Integer> ids) {
         return this.userService.deleteUserByIds(ids);

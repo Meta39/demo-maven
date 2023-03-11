@@ -43,7 +43,7 @@ public class GlobalAuthorizeAspect {
             assert attributes != null;
             HttpServletRequest request = attributes.getRequest();
             String redisTokenKey = TOKEN + ":" + request.getHeader(TOKEN);//redis存放token的key
-            String authorize = preAuthorize.authorize();
+            String authorize = preAuthorize.value();
             TokenInfo tokenInfo = (TokenInfo) this.redisTemplate.opsForValue().get(redisTokenKey);
             if (tokenInfo == null) {
                 throw Err.setMessage("登录时没有把TokenInfo放入Redis！");

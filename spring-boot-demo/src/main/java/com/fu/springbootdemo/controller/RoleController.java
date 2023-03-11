@@ -1,6 +1,7 @@
 package com.fu.springbootdemo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.entity.Role;
 import com.fu.springbootdemo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class RoleController {
      *
      * @param id ID
      */
+    @PreAuthorize("role:select")
     @GetMapping("{id}")
     public Role selectRoleById(@PathVariable("id") Integer id) {
         return this.roleService.selectRoleById(id);
@@ -34,6 +36,7 @@ public class RoleController {
      *
      * @param role 角色实体类
      */
+    @PreAuthorize("role:insert")
     @PostMapping
     public int insertRole(@RequestBody @Valid Role role) {
         return this.roleService.insertRole(role);
@@ -44,6 +47,7 @@ public class RoleController {
      *
      * @param role 角色实体类
      */
+    @PreAuthorize("role:update")
     @PutMapping
     public int updateRole(@RequestBody @Valid Role role) {
         return this.roleService.updateRole(role);
@@ -54,6 +58,7 @@ public class RoleController {
      *
      * @param id ID
      */
+    @PreAuthorize("role:delete")
     @DeleteMapping("{id}")
     public int deleteRole(@PathVariable Integer id) {
         return this.roleService.deleteRoleById(id);
@@ -62,6 +67,7 @@ public class RoleController {
     /**
      * 查询角色 分页数据
      */
+    @PreAuthorize("role:select")
     @GetMapping("paging")
     public Page<Role> selectRolePage(@RequestParam(required = false, defaultValue = "1") Long page, @RequestParam(required = false, defaultValue = "10") Long size) {
         return this.roleService.selectRolePage(page, size);
@@ -70,6 +76,7 @@ public class RoleController {
     /**
      * 查询角色 列表
      */
+    @PreAuthorize("role:select")
     @GetMapping
     public List<Role> selectRoleList(Role role) {
         return this.roleService.selectRoleList(role);
@@ -78,6 +85,7 @@ public class RoleController {
     /**
      * 根据ID集合批量删除角色
      */
+    @PreAuthorize("role:delete")
     @DeleteMapping
     public int deleteRoles(@RequestBody List<Integer> ids) {
         return this.roleService.deleteRoleByIds(ids);
