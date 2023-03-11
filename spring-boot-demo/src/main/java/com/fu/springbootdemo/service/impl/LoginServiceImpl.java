@@ -36,6 +36,11 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 登录
+     * @param username 用户名
+     * @param password 密码
+     */
     @Override
     public Map<String, Object> login(String username, String password) {
         User user = this.userMapper.selectOne(new LambdaQueryWrapper<User>()
@@ -60,6 +65,8 @@ public class LoginServiceImpl implements LoginService {
         //把登录用户信息存入Redis
         this.redisTemplate.opsForValue().set(TOKEN + ":" + uuid, tokenInfo, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         map.put("token", uuid);
+        //返回token过期时间给前端，让前端判断token快过期时，调用续期接口，实现无感刷新。
+        map.put("tokenTimeout",globalAuthenticationFilter.getTokenTimeout());
         map.put("username", username);
         System.out.println(roleIds.isEmpty());
         Set<String> roleNames = roleIds.isEmpty() ? null : this.roleMapper.selectBatchIds(roleIds).stream().map(Role::getRoleName).collect(Collectors.toSet());
@@ -67,11 +74,26 @@ public class LoginServiceImpl implements LoginService {
         return map;
     }
 
+    /**
+     * 登出
+     */
     @Override
     public Boolean logout(HttpServletRequest request) {
         String token = TOKEN + ":" + request.getHeader(TOKEN);
         if (Boolean.TRUE.equals(this.redisTemplate.hasKey(token))) {
             return this.redisTemplate.delete(token);
+        }
+        throw Err.setCodeAndMessage(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage());
+    }
+
+    /**
+     * 续期token
+     */
+    @Override
+    public Boolean token(HttpServletRequest request) {
+        String token = TOKEN + ":" + request.getHeader(TOKEN);
+        if (Boolean.TRUE.equals(this.redisTemplate.hasKey(token))) {
+            return this.redisTemplate.expire(token,Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         }
         throw Err.setCodeAndMessage(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage());
     }

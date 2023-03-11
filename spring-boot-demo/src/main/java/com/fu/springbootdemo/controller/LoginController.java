@@ -33,4 +33,12 @@ public class LoginController {
         return this.loginService.logout(request);
     }
 
+    /**
+     * 续期token
+     */
+    @PostMapping("refreshToken")
+    public Boolean token(HttpServletRequest request){
+        return this.loginService.token(request);
+    }
+
 }

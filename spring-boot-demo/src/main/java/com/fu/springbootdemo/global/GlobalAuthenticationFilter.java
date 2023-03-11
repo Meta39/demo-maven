@@ -14,8 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
@@ -28,9 +27,17 @@ import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
 @ConfigurationProperties("fu.authentication")
 public class GlobalAuthenticationFilter implements Filter {
 
-    private int tokenTimeout = 3600;//token默认过期时间
+    /**
+     * token默认过期时间
+     */
+    private int tokenTimeout = 3600;
 
-    private List<String> notAuthentication = Arrays.asList("POST:/login", "POST:/logout"); //不要求认证的uri
+    /**
+     * 默认不需要认证的URI：'POST:/login'。
+     * 建议：开发环境推荐全部接口不认证也不鉴权，设置为'**'。
+     * 警告：生产环境不要设置为'**'
+     */
+    private List<String> notAuthentication = Collections.singletonList("POST:/login"); //不要求认证的uri
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -51,12 +58,7 @@ public class GlobalAuthenticationFilter implements Filter {
         boolean matchURI = this.notAuthentication.stream().anyMatch(ymlMethodAndURI -> antPathMatcher.match(ymlMethodAndURI, methodAndURI));//判断请求Method和URI是否在不需要认证的集合里面
         boolean checkToken = StringUtils.hasLength(token) && Boolean.TRUE.equals(this.redisTemplate.hasKey(redisTokenKey));
         if (matchURI || checkToken) {//认证白名单或这认证通过
-            if (checkToken){//认证通过，续期token过期时间
-                // TODO 优化：过期时间不应当在这续期，而应该单独调一个接口对当前登录用户的token进行续期。
-                this.redisTemplate.expire(redisTokenKey, Duration.ofSeconds(tokenTimeout));
-            }
-            //放行
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);//放行
         }else {
             //未认证
             this.resolver.resolveException(request, response, null, Err.setCodeAndMessage(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage()));

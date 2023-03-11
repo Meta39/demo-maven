@@ -23,7 +23,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public User selectUserById(Integer id) {
-        return this.userMapper.selectById(id);
+        User user = this.userMapper.selectById(id);
+        user.setSalt(null);
+        user.setPwd(null);
+        return user;
     }
 
     /**
@@ -31,7 +34,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int insertUser(User user) {
-        if (!StringUtils.hasLength(user.getPwd())){
+        if (!StringUtils.hasLength(user.getPwd())) {
             throw Err.setMessage("密码不能为空");
         }
         return this.userMapper.insert(user);
@@ -42,10 +45,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int updateUser(User user) {
-        if (StringUtils.hasLength(user.getSalt())){
+        if (StringUtils.hasLength(user.getSalt())) {
             throw Err.setMessage("更新用户时不允许传盐");
         }
-        if (StringUtils.hasLength(user.getPwd())){
+        if (StringUtils.hasLength(user.getPwd())) {
             throw Err.setMessage("更新用户时不允许传密码");
         }
         return this.userMapper.updateById(user);
@@ -56,7 +59,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int deleteUserById(Integer id) {
-        if (id == 1){
+        if (id == 1) {
             throw Err.setMessage("不允许删除超级用户");
         }
         return this.userMapper.deleteById(id);
@@ -68,7 +71,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<User> selectUserPage(Long page, Long size) {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        return this.userMapper.selectPage(Page.of(page, size), lqw);
+        Page<User> userPage = this.userMapper.selectPage(Page.of(page, size), lqw);
+        userPage.getRecords().forEach(u -> {
+            //不返回密码
+            u.setSalt(null);
+            u.setPwd(null);
+        });
+        return userPage;
     }
 
     /**
@@ -78,7 +87,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> selectUserList(User user) {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        return this.userMapper.selectList(lqw);
+        List<User> userList = this.userMapper.selectList(lqw);
+        userList.forEach(u -> {
+            //不返回密码
+            u.setPwd(null);
+            u.setSalt(null);
+        });
+        return userList;
     }
 
     /**
@@ -86,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int deleteUserByIds(List<Integer> ids) {
-        if (ids != null && !ids.isEmpty() && ids.stream().anyMatch(id -> id == 1)){
+        if (ids != null && !ids.isEmpty() && ids.stream().anyMatch(id -> id == 1)) {
             throw Err.setMessage("不允许删除超级用户");
         }
         return this.userMapper.deleteBatchIds(ids);

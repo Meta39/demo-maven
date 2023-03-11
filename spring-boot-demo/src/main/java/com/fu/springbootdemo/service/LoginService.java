@@ -16,4 +16,9 @@ public interface LoginService {
      */
     Boolean logout(HttpServletRequest request);
 
+    /**
+     * 续期token
+     */
+    Boolean token(HttpServletRequest request);
+
 }
