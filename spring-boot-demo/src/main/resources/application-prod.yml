@@ -1,10 +1,6 @@
 fu:
   authentication:
-    token-timeout: 300
-    # 不需要认证的请求方法和接口URI
-    not-authentication:
-      - 'POST:/login'
-      - 'POST:/logout'
+    token-timeout: 7200
 
 server:
   port: 81

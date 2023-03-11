@@ -23,6 +23,8 @@ import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
 @Aspect
 @Component
 public class GlobalAuthorizeAspect {
+    @Autowired
+    private GlobalAuthenticationFilter globalAuthenticationFilter;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -36,22 +38,25 @@ public class GlobalAuthorizeAspect {
     //执行方法前进行鉴权
     @Before("globalAuthorizeAspect()&&@annotation(preAuthorize)")
     public void doBefore(JoinPoint point, PreAuthorize preAuthorize) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        assert attributes != null;
-        HttpServletRequest request = attributes.getRequest();
-        String redisTokenKey = TOKEN + ":" + request.getHeader(TOKEN);//redis存放token的key
-        String authorize = preAuthorize.authorize();
-        TokenInfo tokenInfo = (TokenInfo) this.redisTemplate.opsForValue().get(redisTokenKey);
-        if (tokenInfo == null) {
-            throw Err.setMessage("登录时没有把TokenInfo放入Redis！");
-        }
-        if (tokenInfo.getRoleIds() == null || tokenInfo.getRoleIds().isEmpty()) {
-            throw Err.setMessage("当前登录用户没有分配角色。所以没有相应的权限，如需访问，请联系管理员分配相应授权的角色。");
-        }
-        boolean admin = tokenInfo.getRoleIds().stream().anyMatch(role -> role == 1);
-        //不是超级管理员则进行鉴权，超级管理员角色直接跳过鉴权
-        if (!admin && (tokenInfo.getAuthorizes() == null || tokenInfo.getAuthorizes().isEmpty() || tokenInfo.getAuthorizes().stream().noneMatch(a -> Objects.equals(a, authorize)))) {
-            throw Err.setCodeAndMessage(Code.NOT_PURVIEW.getErrCode(), Code.NOT_PURVIEW.getErrMessage());
+        //如果不需要认证的请求方法和接口URI配置成'**'，不进行认证和鉴权。
+        if (globalAuthenticationFilter.getNotAuthentication().stream().noneMatch(notAuthentication -> Objects.equals(notAuthentication,"**"))){
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            assert attributes != null;
+            HttpServletRequest request = attributes.getRequest();
+            String redisTokenKey = TOKEN + ":" + request.getHeader(TOKEN);//redis存放token的key
+            String authorize = preAuthorize.authorize();
+            TokenInfo tokenInfo = (TokenInfo) this.redisTemplate.opsForValue().get(redisTokenKey);
+            if (tokenInfo == null) {
+                throw Err.setMessage("登录时没有把TokenInfo放入Redis！");
+            }
+            if (tokenInfo.getRoleIds() == null || tokenInfo.getRoleIds().isEmpty()) {
+                throw Err.setMessage("当前登录用户没有分配角色。所以没有相应的权限，如需访问，请联系管理员分配相应授权的角色。");
+            }
+            boolean admin = tokenInfo.getRoleIds().stream().anyMatch(role -> role == 1);
+            //不是超级管理员则进行鉴权，超级管理员角色直接跳过鉴权
+            if (!admin && (tokenInfo.getAuthorizes() == null || tokenInfo.getAuthorizes().isEmpty() || tokenInfo.getAuthorizes().stream().noneMatch(a -> Objects.equals(a, authorize)))) {
+                throw Err.setCodeAndMessage(Code.NOT_PURVIEW.getErrCode(), Code.NOT_PURVIEW.getErrMessage());
+            }
         }
     }
 

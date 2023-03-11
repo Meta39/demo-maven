@@ -28,7 +28,7 @@ import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
 @ConfigurationProperties("fu.authentication")
 public class GlobalAuthenticationFilter implements Filter {
 
-    private int tokenTimeout = 30;//token默认过期时间
+    private int tokenTimeout = 3600;//token默认过期时间
 
     private List<String> notAuthentication = Arrays.asList("POST:/login", "POST:/logout"); //不要求认证的uri
 
@@ -52,6 +52,7 @@ public class GlobalAuthenticationFilter implements Filter {
         boolean checkToken = StringUtils.hasLength(token) && Boolean.TRUE.equals(this.redisTemplate.hasKey(redisTokenKey));
         if (matchURI || checkToken) {//认证白名单或这认证通过
             if (checkToken){//认证通过，续期token过期时间
+                // TODO 优化：过期时间不应当在这续期，而应该单独调一个接口对当前登录用户的token进行续期。
                 this.redisTemplate.expire(redisTokenKey, Duration.ofSeconds(tokenTimeout));
             }
             //放行

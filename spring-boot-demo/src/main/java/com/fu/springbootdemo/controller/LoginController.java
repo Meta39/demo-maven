@@ -3,11 +3,11 @@ package com.fu.springbootdemo.controller;
 import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.global.Code;
 import com.fu.springbootdemo.global.Err;
+import com.fu.springbootdemo.global.GlobalAuthenticationFilter;
 import com.fu.springbootdemo.global.TokenInfo;
 import com.fu.springbootdemo.service.RoleService;
 import com.fu.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,9 +21,8 @@ import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
 
 @RestController
 public class LoginController {
-    @Value("${fu.authentication.token-timeout}")
-    private int tokenTimeout;
-
+    @Autowired
+    private GlobalAuthenticationFilter globalAuthenticationFilter;
     @Autowired
     private UserService userService;
     @Autowired
@@ -57,7 +56,7 @@ public class LoginController {
         Map<String, Object> map = new HashMap<>();
         String uuid = UUID.randomUUID().toString();
         //把登录用户信息存入Redis
-        this.redisTemplate.opsForValue().set(TOKEN + ":" + uuid, tokenInfo, Duration.ofSeconds(tokenTimeout));
+        this.redisTemplate.opsForValue().set(TOKEN + ":" + uuid, tokenInfo, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         map.put("token", uuid);
         map.put("username", username);
         Set<String> roleNames = roleIds.isEmpty() ? null : this.roleService.selectRoleNamesByIds(roleIds);
