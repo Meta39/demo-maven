@@ -10,7 +10,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.Objects;
 
 import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;

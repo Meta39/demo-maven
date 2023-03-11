@@ -1,11 +1,11 @@
 package com.fu.springbootdemo.entity;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * 用户
@@ -24,7 +24,6 @@ public class User {
     @TableField("salt")
     private String salt; //盐    
 
-    @NotEmpty
     @TableField("pwd")
     private String pwd; //密码    
 
@@ -32,6 +31,7 @@ public class User {
     @TableField("nickname")
     private String nickname; //昵称    
 
+    @NotNull
     @TableField("sex")
     private Integer sex; //性别（0：女 1：男）    
 
@@ -41,6 +41,7 @@ public class User {
     @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private Date updateTime; //更新时间    
 
+    @NotNull
     @TableField("is_ban")
     private Integer isBan; //禁用（0：否 1：是）    
 

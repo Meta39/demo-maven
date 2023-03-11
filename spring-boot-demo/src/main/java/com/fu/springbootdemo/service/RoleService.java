@@ -1,11 +1,10 @@
 package com.fu.springbootdemo.service;
 
-import com.fu.springbootdemo.entity.Role;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fu.springbootdemo.entity.Role;
 
 import java.util.List;
-import java.util.Set;
 
 public interface RoleService extends IService<Role> {
     /**
@@ -43,10 +42,4 @@ public interface RoleService extends IService<Role> {
      * 根据ID集合批量删除角色
      */
     int deleteRoleByIds(List<Integer> ids);
-
-    /**
-     * 根据角色ID集合查询角色名称
-     * @param roleIds 角色ID集合
-     */
-    Set<String> selectRoleNamesByIds(Set<Integer> roleIds);
 }

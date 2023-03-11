@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
@@ -77,13 +75,4 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         return this.roleMapper.deleteBatchIds(ids);
     }
 
-    /**
-     * 根据角色ID集合查询角色名称
-     * @param roleIds 角色ID集合
-     */
-    @Override
-    public Set<String> selectRoleNamesByIds(Set<Integer> roleIds) {
-        List<Role> roles = this.roleMapper.selectBatchIds(roleIds);
-        return roles.stream().map(Role::getRoleName).collect(Collectors.toSet());
-    }
 }

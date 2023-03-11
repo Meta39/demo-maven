@@ -4,13 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.entity.User;
+import com.fu.springbootdemo.global.Err;
 import com.fu.springbootdemo.mapper.UserMapper;
 import com.fu.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
@@ -30,6 +31,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int insertUser(User user) {
+        if (!StringUtils.hasLength(user.getPwd())){
+            throw Err.setMessage("密码不能为空");
+        }
         return this.userMapper.insert(user);
     }
 
@@ -38,6 +42,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int updateUser(User user) {
+        if (StringUtils.hasLength(user.getSalt())){
+            throw Err.setMessage("更新用户时不允许传盐");
+        }
+        if (StringUtils.hasLength(user.getPwd())){
+            throw Err.setMessage("更新用户时不允许传密码");
+        }
         return this.userMapper.updateById(user);
     }
 
@@ -46,6 +56,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int deleteUserById(Integer id) {
+        if (id == 1){
+            throw Err.setMessage("不允许删除超级用户");
+        }
         return this.userMapper.deleteById(id);
     }
 
@@ -73,34 +86,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int deleteUserByIds(List<Integer> ids) {
+        if (ids != null && !ids.isEmpty() && ids.stream().anyMatch(id -> id == 1)){
+            throw Err.setMessage("不允许删除超级用户");
+        }
         return this.userMapper.deleteBatchIds(ids);
-    }
-
-    /**
-     * 通过用户名查询用户信息
-     * @param username 用户名
-     */
-    @Override
-    public User selectUserByUsername(String username){
-        return this.userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername,username));
-    }
-
-    /**
-     * 查询登录用户角色信息
-     * @param userId 用户ID
-     */
-    @Override
-    public Set<Integer> selectUserRoleIds(Integer userId) {
-        return this.userMapper.selectUserRoleInfo(userId);
-    }
-
-    /**
-     * 查询登录用户权限信息
-     * @param roleIds 角色ID集合
-     */
-    @Override
-    public Set<String> selectUserAuthorizes(Set<Integer> roleIds) {
-        return this.userMapper.selectUserAuthorizes(roleIds);
     }
 
 }

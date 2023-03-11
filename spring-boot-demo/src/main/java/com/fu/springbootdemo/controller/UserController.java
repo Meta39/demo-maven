@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.Valid;
-
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**

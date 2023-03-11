@@ -1,8 +1,8 @@
 package com.fu.springbootdemo.service;
 
-import com.fu.springbootdemo.entity.Authorize;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fu.springbootdemo.entity.Authorize;
 
 import java.util.List;
 

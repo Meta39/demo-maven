@@ -1,11 +1,10 @@
 package com.fu.springbootdemo.service;
 
-import com.fu.springbootdemo.entity.User;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fu.springbootdemo.entity.User;
 
 import java.util.List;
-import java.util.Set;
 
 public interface UserService extends IService<User> {
     /**
@@ -43,23 +42,5 @@ public interface UserService extends IService<User> {
      * 根据ID集合批量删除用户
      */
     int deleteUserByIds(List<Integer> ids);
-
-    /**
-     * 通过用户名查询用户信息
-     * @param username 用户名
-     */
-    User selectUserByUsername(String username);
-
-    /**
-     * 查询登录用户角色信息
-     * @param userId 用户ID
-     */
-    Set<Integer> selectUserRoleIds(Integer userId);
-
-    /**
-     * 查询登录用户权限信息
-     * @param roleIds 角色ID集合
-     */
-    Set<String> selectUserAuthorizes(Set<Integer> roleIds);
 
 }

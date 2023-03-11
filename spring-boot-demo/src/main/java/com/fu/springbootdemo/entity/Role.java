@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -19,6 +20,10 @@ public class Role {
     @NotEmpty
     @TableField("role_name")
     private String roleName; //角色名称
+
+    @NotNull
+    @TableField("is_ban")
+    private Boolean isBan; //禁用角色
 
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime; //创建时间
