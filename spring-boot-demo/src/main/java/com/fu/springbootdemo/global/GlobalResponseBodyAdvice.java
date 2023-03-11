@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 @Slf4j
 @RestControllerAdvice
 public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     /**
      * 自定义异常
@@ -39,7 +40,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @ExceptionHandler(value =Exception.class)
     public Res<Object> exception(Exception e){
         log.error("Exception异常：",e);
-        return Res.err(e.getMessage());
+        return Res.err("异常信息：" + e.getMessage());
     }
 
     /**
@@ -47,7 +48,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Res<Object> missingServletRequestParameterException(MissingServletRequestParameterException e) {
-        return Res.err(e.getMessage());
+        return Res.err("异常信息：" + e.getMessage());
     }
 
     //-----------------------------------------------有新的异常在上面加--------------------------------------------------------
@@ -77,9 +78,8 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @SneakyThrows
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        ObjectMapper om = new ObjectMapper();
         if(body instanceof String){//String类型要特殊处理
-            return om.writeValueAsString(Res.ok(body));
+            return objectMapper.writeValueAsString(Res.ok(body));
         } else if (body instanceof Res) {//本身是Res直接返回即可。例如：全局异常处理，返回的就是Res
             return body;
         }else if (body instanceof LinkedHashMap){//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
