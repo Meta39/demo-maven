@@ -68,7 +68,6 @@
     </dependencies>
 
     <build>
-        <finalName>${artifactId}-${spring.profiles.active}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
