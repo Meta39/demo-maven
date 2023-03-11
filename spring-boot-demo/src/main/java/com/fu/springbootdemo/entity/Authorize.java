@@ -16,7 +16,10 @@ import javax.validation.constraints.NotEmpty;
 public class Authorize {
     private static final long serialVersionUID = -47338307442719018L;
     @TableId(type = IdType.AUTO,value = "id")
-    private Integer id; //id    
+    private Integer id; //id
+
+    @TableField("p_id")
+    private Integer pId; //pId
 
     @NotEmpty
     @TableField("authorize_name")
