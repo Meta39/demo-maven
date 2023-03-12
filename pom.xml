@@ -30,6 +30,7 @@
         <spring.boot.version>2.7.9</spring.boot.version>
         <mysql.version>8.0.30</mysql.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <japidocs.version>1.4.4</japidocs.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <easy-es.version>1.1.1</easy-es.version>
         <elasticsearch.version>7.14.0</elasticsearch.version>
@@ -71,6 +72,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- JApiDocs离线接口文档 -->
+            <dependency>
+                <groupId>io.github.yedaxia</groupId>
+                <artifactId>japidocs</artifactId>
+                <version>${japidocs.version}</version>
             </dependency>
             <!-- xxl-job -->
             <dependency>

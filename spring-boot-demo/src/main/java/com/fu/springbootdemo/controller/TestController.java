@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 测试类相关接口
+ */
 @RestController
 @RequestMapping("test")
 public class TestController {
@@ -21,7 +24,7 @@ public class TestController {
     }
 
     /**
-     * 测试async异步线程
+     * async异步线程
      */
     @GetMapping("async")
     public String async(){
@@ -29,11 +32,11 @@ public class TestController {
     }
 
     /**
-     * 测试权限注解，超级管理员角色跳过该鉴权注解
+     * 权限注解（超级管理员角色或配置'**'过滤地址跳过该鉴权注解）
      */
     @PreAuthorize("authorize")
     @GetMapping("authorize")
     public String authorize(){
-        return "需要授权才能访问，超级管理员跳过鉴权。";
+        return "超级管理员角色或配置'**'过滤地址跳过该鉴权注解";
     }
 }

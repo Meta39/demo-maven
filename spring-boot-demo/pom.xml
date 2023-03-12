@@ -65,6 +65,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <!-- JApiDocs离线接口文档 -->
+        <dependency>
+            <groupId>io.github.yedaxia</groupId>
+            <artifactId>japidocs</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -87,6 +92,11 @@
                         <exclude>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-starter-test</artifactId>
+                        </exclude>
+                        <!-- JApiDocs离线接口文档不需要打包 -->
+                        <exclude>
+                            <groupId>io.github.yedaxia</groupId>
+                            <artifactId>japidocs</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>

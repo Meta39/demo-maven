@@ -38,7 +38,7 @@ public class UserController {
      */
     @PreAuthorize("user:insert")
     @PostMapping
-    public int insertUser(@RequestBody @Valid User user) {
+    public Integer insertUser(@RequestBody @Valid User user) {
         return this.userService.insertUser(user);
     }
 
@@ -49,7 +49,7 @@ public class UserController {
      */
     @PreAuthorize("user:update")
     @PutMapping
-    public int updateUser(@RequestBody @Valid User user) {
+    public Integer updateUser(@RequestBody @Valid User user) {
         return this.userService.updateUser(user);
     }
 
@@ -60,7 +60,7 @@ public class UserController {
      */
     @PreAuthorize("user:delete")
     @DeleteMapping("{id}")
-    public int deleteUser(@PathVariable Integer id) {
+    public Integer deleteUser(@PathVariable Integer id) {
         return this.userService.deleteUserById(id);
     }
 
@@ -87,7 +87,7 @@ public class UserController {
      */
     @PreAuthorize("user:delete")
     @DeleteMapping
-    public int deleteUsers(@RequestBody List<Integer> ids) {
+    public Integer deleteUsers(@RequestBody List<Integer> ids) {
         return this.userService.deleteUserByIds(ids);
     }
 }

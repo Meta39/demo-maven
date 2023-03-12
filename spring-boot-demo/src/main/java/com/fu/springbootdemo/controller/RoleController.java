@@ -38,7 +38,7 @@ public class RoleController {
      */
     @PreAuthorize("role:insert")
     @PostMapping
-    public int insertRole(@RequestBody @Valid Role role) {
+    public Integer insertRole(@RequestBody @Valid Role role) {
         return this.roleService.insertRole(role);
     }
 
@@ -49,7 +49,7 @@ public class RoleController {
      */
     @PreAuthorize("role:update")
     @PutMapping
-    public int updateRole(@RequestBody @Valid Role role) {
+    public Integer updateRole(@RequestBody @Valid Role role) {
         return this.roleService.updateRole(role);
     }
 
@@ -60,7 +60,7 @@ public class RoleController {
      */
     @PreAuthorize("role:delete")
     @DeleteMapping("{id}")
-    public int deleteRole(@PathVariable Integer id) {
+    public Integer deleteRole(@PathVariable Integer id) {
         return this.roleService.deleteRoleById(id);
     }
 
@@ -87,7 +87,7 @@ public class RoleController {
      */
     @PreAuthorize("role:delete")
     @DeleteMapping
-    public int deleteRoles(@RequestBody List<Integer> ids) {
+    public Integer deleteRoles(@RequestBody List<Integer> ids) {
         return this.roleService.deleteRoleByIds(ids);
     }
 }

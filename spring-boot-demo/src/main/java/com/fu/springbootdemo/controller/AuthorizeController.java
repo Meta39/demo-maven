@@ -38,7 +38,7 @@ public class AuthorizeController {
      */
     @PreAuthorize("authorize:insert")
     @PostMapping
-    public int insertAuthorize(@RequestBody @Valid Authorize authorize) {
+    public Integer insertAuthorize(@RequestBody @Valid Authorize authorize) {
         return this.authorizeService.insertAuthorize(authorize);
     }
 
@@ -49,7 +49,7 @@ public class AuthorizeController {
      */
     @PreAuthorize("authorize:update")
     @PutMapping
-    public int updateAuthorize(@RequestBody @Valid Authorize authorize) {
+    public Integer updateAuthorize(@RequestBody @Valid Authorize authorize) {
         return this.authorizeService.updateAuthorize(authorize);
     }
 
@@ -60,7 +60,7 @@ public class AuthorizeController {
      */
     @PreAuthorize("authorize:delete")
     @DeleteMapping("{id}")
-    public int deleteAuthorize(@PathVariable Integer id) {
+    public Integer deleteAuthorize(@PathVariable Integer id) {
         return this.authorizeService.deleteAuthorizeById(id);
     }
 
@@ -87,7 +87,7 @@ public class AuthorizeController {
      */
     @PreAuthorize("authorize:delete")
     @DeleteMapping
-    public int deleteAuthorizes(@RequestBody List<Integer> ids) {
+    public Integer deleteAuthorizes(@RequestBody List<Integer> ids) {
         return this.authorizeService.deleteAuthorizeByIds(ids);
     }
 }

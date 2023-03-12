@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * 登录相关接口
+ */
 @RestController
 public class LoginController {
     @Autowired
