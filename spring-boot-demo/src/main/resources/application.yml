@@ -1,4 +1,6 @@
 spring:
+  freemarker:
+    check-template-location: false
   profiles:
     #环境设置
     active: '@spring.profiles.active@'
