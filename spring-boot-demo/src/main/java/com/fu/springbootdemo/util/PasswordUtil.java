@@ -137,7 +137,8 @@ public class PasswordUtil {
         String redisRsaKey = ENCRYPT_TYPE + ":" + UUID;
         Boolean hasKey = this.redisTemplate.hasKey(redisRsaKey);
         if (hasKey == null || !hasKey){
-            throw Err.setMessage("UUID："+UUID+"不存在");
+            //密钥对在redis已过期
+            throw Err.setCodeAndMessage(Code.KEY_PAIR_TIMEOUT_ERROR.getErrCode(), Code.KEY_PAIR_TIMEOUT_ERROR.getErrMessage());
         }
         Map<String,String> map = (Map<String, String>) this.redisTemplate.opsForValue().get(redisRsaKey);
         if (map == null || map.isEmpty()){

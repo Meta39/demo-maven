@@ -7,6 +7,8 @@ import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.global.Err;
 import com.fu.springbootdemo.mapper.UserMapper;
 import com.fu.springbootdemo.service.UserService;
+import com.fu.springbootdemo.util.DataBasePasswordUtil;
+import com.fu.springbootdemo.util.GeneratorRandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -34,10 +36,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public int insertUser(User user) {
+        if (StringUtils.hasLength(user.getSalt())) {
+            throw Err.setMessage("新增用户时不允许传盐");
+        }
         if (!StringUtils.hasLength(user.getPwd())) {
             throw Err.setMessage("密码不能为空");
         }
-        return this.userMapper.insert(user);
+        return this.userMapper.insert(setSaltAndPassword(user));
     }
 
     /**
@@ -48,10 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.hasLength(user.getSalt())) {
             throw Err.setMessage("更新用户时不允许传盐");
         }
-        if (StringUtils.hasLength(user.getPwd())) {
-            throw Err.setMessage("更新用户时不允许传密码");
-        }
-        return this.userMapper.updateById(user);
+        return this.userMapper.updateById(setSaltAndPassword(user));
     }
 
     /**
@@ -105,6 +107,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw Err.setMessage("不允许删除超级用户");
         }
         return this.userMapper.deleteBatchIds(ids);
+    }
+
+    //---------------------------------------内部方法--------------------------------------------------
+
+    /**
+     * 设置盐和加密密码
+     * @param user 用户
+     */
+    private User setSaltAndPassword(User user){
+        //设置新增用户的盐
+        String salt = GeneratorRandomUtil.getRandomLengthStringAndNumbers();
+        user.setSalt(salt);
+        //新增用户密码加盐加密
+        String password = DataBasePasswordUtil.encrypt(user.getPwd(),salt);
+        user.setPwd(password);
+        return user;
     }
 
 }

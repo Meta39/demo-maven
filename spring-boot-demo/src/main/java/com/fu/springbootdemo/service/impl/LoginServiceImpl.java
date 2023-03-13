@@ -11,6 +11,7 @@ import com.fu.springbootdemo.mapper.LoginMapper;
 import com.fu.springbootdemo.mapper.RoleMapper;
 import com.fu.springbootdemo.mapper.UserMapper;
 import com.fu.springbootdemo.service.LoginService;
+import com.fu.springbootdemo.util.DataBasePasswordUtil;
 import com.fu.springbootdemo.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -66,8 +67,8 @@ public class LoginServiceImpl implements LoginService {
         if (user == null) {
             throw Err.setMessage("登录用户名不存在");
         }
-        // TODO 数据库密码加密
-        if (!Objects.equals(this.passwordUtil.decrypt(passwordPublicKeyUUID,password), user.getPwd())) {
+        //前端加盐加密密码密文解密后拿到原始密码，拿到数据库的密码和盐对数据库的密码进行解密后匹配两个密码是否相等。
+        if (!Objects.equals(this.passwordUtil.decrypt(passwordPublicKeyUUID,password), DataBasePasswordUtil.decrypt(user.getPwd(),user.getSalt()))) {
             throw Err.setMessage("密码错误");
         }
         //校验密码成功后要把redis里前端传递过来的UUID删除。
