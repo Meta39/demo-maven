@@ -8,7 +8,6 @@ import java.util.Random;
  * 生成随机工具类
  */
 public class GeneratorRandomUtil {
-    private static final int RANDOM_LENGTH = new Random().nextInt(10) + 1;//随机长度1-10
     private static final String ALPHABETS_IN_UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String ALPHABETS_IN_LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBERS = "0123456789";
@@ -36,7 +35,7 @@ public class GeneratorRandomUtil {
      * 获取随机长度字符串和数字，可以用于密码盐salt，提供给前端进行加密。
      */
     public static String getRandomLengthStringAndNumbers(){
-        return getInstance().generatorRandomStringAndNumbers(RANDOM_LENGTH);
+        return getInstance().generatorRandomStringAndNumbers(new Random().nextInt(10) + 1);//字符串长度1-10
     }
 
     /**
@@ -51,7 +50,7 @@ public class GeneratorRandomUtil {
      * 获取随机长度的随机数字字符串
      */
     public static String getRandomLengthNumbers(){
-        return getInstance().generatorRandomNumbers(RANDOM_LENGTH);
+        return getInstance().generatorRandomNumbers(new Random().nextInt(10) + 1);//字符串长度1-10
     }
 
     //------------------------------------私有方法---------------------------------------------

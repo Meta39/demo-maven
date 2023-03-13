@@ -47,7 +47,8 @@ public class LoginServiceImpl implements LoginService {
         Map<String, String> map = this.passwordUtil.checkUUID(UUID);//校验
         Map<String,Object> resultMap = new HashMap<>(8);
         resultMap.put(RSA_PUBLIC_KEY,map.get(RSA_PUBLIC_KEY)); //公钥
-        resultMap.put(PASSWORD_SALT,map.get(PASSWORD_SALT)); //盐
+        resultMap.put(HEAD_SALT,map.get(HEAD_SALT)); //头部盐
+        resultMap.put(TAIL_SALT,map.get(TAIL_SALT)); //尾部盐
         return resultMap;
     }
 

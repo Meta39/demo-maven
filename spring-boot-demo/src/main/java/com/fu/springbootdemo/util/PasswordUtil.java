@@ -69,8 +69,10 @@ public class PasswordUtil {
         Map<String, String> map = new HashMap<>(8);
         map.put(RSA_PUBLIC_KEY, publicKeyString);
         map.put(RSA_PRIVATE_KEY, privateKeyString);
-        map.put(PASSWORD_SALT,GeneratorRandomUtil.getRandomLengthStringAndNumbers());
-        redisTemplate.opsForValue().set(ENCRYPT_TYPE + ":" + UUID, map, Duration.ofSeconds(getRedisPasswordKeyTimeout()));
+        map.put(HEAD_SALT,GeneratorRandomUtil.getRandomLengthStringAndNumbers());//密码头部盐
+        map.put(TAIL_SALT,GeneratorRandomUtil.getRandomLengthStringAndNumbers());//密码尾部盐
+        //set值如果redis存在该uuid则不进行任何操作。（概率比较小，但是不排除前端会请求多次，如果用set()那么前端请求多次，redis里的值就会不一样。）
+        redisTemplate.opsForValue().setIfAbsent(ENCRYPT_TYPE + ":" + UUID, map, Duration.ofSeconds(getRedisPasswordKeyTimeout()));
     }
 
     /**
@@ -87,8 +89,8 @@ public class PasswordUtil {
             //RSA加密
             Cipher cipher = Cipher.getInstance(ENCRYPT_TYPE);
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-            String password = noSaltPassword + map.get(PASSWORD_SALT);//密码加盐
-//            log.info("noSaltPassword：{} 原始密码加盐：{} 》》》 password：{}",noSaltPassword,map.get(PASSWORD_SALT),password);
+            String password = map.get(HEAD_SALT) + noSaltPassword + map.get(TAIL_SALT);//密码头尾加盐
+            log.info("原始密码：noSaltPassword：{} 头尾加盐：{},{} 》》》 password：{}",noSaltPassword,map.get(HEAD_SALT),map.get(TAIL_SALT),password);
             return Base64.getEncoder().encodeToString(cipher.doFinal(password.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             log.error("加密失败：", e);
@@ -112,10 +114,12 @@ public class PasswordUtil {
             //RSA解密
             Cipher cipher = Cipher.getInstance(ENCRYPT_TYPE);
             cipher.init(Cipher.DECRYPT_MODE, priKey);
-            String saltPassword = new String(cipher.doFinal(inputByte), StandardCharsets.UTF_8);
-            int passwordLength = saltPassword.length() - map.get(PASSWORD_SALT).length();//加盐密码长度 - 盐长度 = 原始密码长度
-            String password = saltPassword.substring(0,passwordLength);
-//            log.info("加盐：{}密码saltPassword：{} 还原原始密码》》》 password：{}",map.get(PASSWORD_SALT),saltPassword,password);
+            String saltPassword = new String(cipher.doFinal(inputByte), StandardCharsets.UTF_8);//加盐密码
+            String headSalt = map.get(HEAD_SALT);//头部盐
+            String tailSalt = map.get(TAIL_SALT);//尾部盐
+            saltPassword = saltPassword.substring(headSalt.length());//去除头部盐
+            String password =saltPassword.substring(0,saltPassword.length() - tailSalt.length());//去除尾部盐
+            log.info("加盐密码：{}，头部盐：{}，原始密码：{}，尾部盐：{}",saltPassword,map.get(HEAD_SALT),password,map.get(TAIL_SALT));
             return password;//切割掉随机长度的盐就是原始密码
         } catch (Exception e) {
             log.error("解密失败：", e);
