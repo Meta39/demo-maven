@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class GlobalAuthenticationFilter implements Filter {
      * 建议：开发环境推荐全部接口不认证也不鉴权，设置为'**'。
      * 警告：生产环境不要设置为'**'
      */
-    private List<String> notAuthentication = Collections.singletonList("POST:/login"); //不要求认证的uri
+    private List<String> notAuthentication = Arrays.asList("POST:/login","GET:/getPasswordPublicKey"); //不要求认证的uri
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
