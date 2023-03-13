@@ -113,7 +113,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User selectUserRole(Integer userId) {
         User user = this.userMapper.selectById(userId);
         Set<Integer> userRoleIds = this.userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)).stream().map(UserRole::getRoleId).collect(Collectors.toSet());
-        Set<Integer> roleIds = this.roleMapper.selectBatchIds(userRoleIds).stream().filter(role -> role.getIsBan() == 0).map(role -> role.getId()).collect(Collectors.toSet());
+        Set<Integer> roleIds = this.roleMapper.selectBatchIds(userRoleIds).stream().filter(role -> role.getIsBan() == 0).map(Role::getId).collect(Collectors.toSet());
         user.setRoleIds(roleIds);
         return user;
     }
