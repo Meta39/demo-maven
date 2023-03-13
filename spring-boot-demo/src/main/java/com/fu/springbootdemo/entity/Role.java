@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @TableName("role")
-public class Role {
+public class Role implements Serializable {
     private static final long serialVersionUID = -38372391020893738L;
     @TableId(type = IdType.AUTO,value = "id")
     private Integer id; //id    
@@ -23,7 +24,7 @@ public class Role {
 
     @NotNull
     @TableField("is_ban")
-    private Boolean isBan; //禁用角色
+    private Integer isBan; //禁用角色
 
     @TableField(value = "create_time",fill = FieldFill.INSERT)
     private Date createTime; //创建时间

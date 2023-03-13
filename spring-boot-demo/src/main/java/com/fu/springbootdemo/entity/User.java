@@ -1,18 +1,22 @@
 package com.fu.springbootdemo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 用户
  */
 @Data
 @TableName("user")
-public class User {
+@JsonIgnoreProperties(allowSetters = true, value = {"salt","pwd"})//盐、密码不允许序列化成json字符串返回给前端
+public class User implements Serializable {
     private static final long serialVersionUID = -45656328374893341L;
     @TableId(type = IdType.AUTO,value = "id")
     private Integer id; //id    
@@ -52,4 +56,6 @@ public class User {
     @TableField("last_login_time")
     private Date lastLoginTime; //最后登录时间    
 
+    @TableField(exist = false)
+    private Set<Integer> roleIds; //用户角色ID集合
 }

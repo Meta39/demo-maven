@@ -7,13 +7,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 
 /**
  * 权限
  */
 @Data
 @TableName("authorize")
-public class Authorize {
+public class Authorize implements Serializable {
     private static final long serialVersionUID = -47338307442719018L;
     @TableId(type = IdType.AUTO,value = "id")
     private Integer id; //id

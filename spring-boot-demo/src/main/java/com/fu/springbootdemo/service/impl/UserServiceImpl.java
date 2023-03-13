@@ -3,9 +3,13 @@ package com.fu.springbootdemo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fu.springbootdemo.entity.Role;
 import com.fu.springbootdemo.entity.User;
+import com.fu.springbootdemo.entity.UserRole;
 import com.fu.springbootdemo.global.Err;
+import com.fu.springbootdemo.mapper.RoleMapper;
 import com.fu.springbootdemo.mapper.UserMapper;
+import com.fu.springbootdemo.mapper.UserRoleMapper;
 import com.fu.springbootdemo.service.UserService;
 import com.fu.springbootdemo.util.DataBasePasswordUtil;
 import com.fu.springbootdemo.util.GeneratorRandomUtil;
@@ -13,22 +17,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+    @Autowired
+    private RoleMapper roleMapper;
 
     /**
      * 根据ID查询用户
      */
     @Override
     public User selectUserById(Integer id) {
-        User user = this.userMapper.selectById(id);
-        user.setSalt(null);
-        user.setPwd(null);
-        return user;
+        return this.userMapper.selectById(id);
     }
 
     /**
@@ -73,13 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<User> selectUserPage(Long page, Long size) {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        Page<User> userPage = this.userMapper.selectPage(Page.of(page, size), lqw);
-        userPage.getRecords().forEach(u -> {
-            //不返回密码
-            u.setSalt(null);
-            u.setPwd(null);
-        });
-        return userPage;
+        return this.userMapper.selectPage(Page.of(page, size), lqw);
     }
 
     /**
@@ -89,13 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<User> selectUserList(User user) {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        List<User> userList = this.userMapper.selectList(lqw);
-        userList.forEach(u -> {
-            //不返回密码
-            u.setPwd(null);
-            u.setSalt(null);
-        });
-        return userList;
+        return this.userMapper.selectList(lqw);
     }
 
     /**
@@ -107,6 +103,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw Err.setMessage("不允许删除超级用户");
         }
         return this.userMapper.deleteBatchIds(ids);
+    }
+
+    /**
+     * 根据用户ID查询用户角色集合
+     * @param userId 用户ID
+     */
+    @Override
+    public User selectUserRole(Integer userId) {
+        User user = this.userMapper.selectById(userId);
+        Set<Integer> userRoleIds = this.userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)).stream().map(UserRole::getRoleId).collect(Collectors.toSet());
+        Set<Integer> roleIds = this.roleMapper.selectBatchIds(userRoleIds).stream().filter(role -> role.getIsBan() == 0).map(role -> role.getId()).collect(Collectors.toSet());
+        user.setRoleIds(roleIds);
+        return user;
     }
 
     //---------------------------------------内部方法--------------------------------------------------
