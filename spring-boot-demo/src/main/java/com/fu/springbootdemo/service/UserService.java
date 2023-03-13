@@ -43,6 +43,4 @@ public interface UserService extends IService<User> {
      */
     int deleteUserByIds(List<Integer> ids);
 
-    User selectUserRole(Integer userId);
-
 }

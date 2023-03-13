@@ -81,7 +81,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public Page<User> selectUserPage(Long page, Long size) {
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        return this.userMapper.selectPage(Page.of(page, size), lqw);
+        Page<User> userPage = this.userMapper.selectPage(Page.of(page, size), lqw);
+        userPage.getRecords().forEach(user -> {
+            //获取用户列表对应的角色列表集合
+            List<Integer> roleIds = this.userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, user.getId())).stream()
+                    .map(UserRole::getRoleId).collect(Collectors.toList());
+            if (!roleIds.isEmpty()){
+                user.setRoles(new HashSet<>(this.roleMapper.selectBatchIds(roleIds)));
+            }
+        });
+        return userPage;
     }
 
     /**
@@ -103,19 +112,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw Err.setMessage("不允许删除超级用户");
         }
         return this.userMapper.deleteBatchIds(ids);
-    }
-
-    /**
-     * 根据用户ID查询用户角色集合
-     * @param userId 用户ID
-     */
-    @Override
-    public User selectUserRole(Integer userId) {
-        User user = this.userMapper.selectById(userId);
-        Set<Integer> userRoleIds = this.userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId)).stream().map(UserRole::getRoleId).collect(Collectors.toSet());
-        Set<Role> roleIds = new HashSet<>(this.roleMapper.selectBatchIds(userRoleIds));
-        user.setRoles(roleIds);
-        return user;
     }
 
     //---------------------------------------内部方法--------------------------------------------------

@@ -91,13 +91,4 @@ public class UserController {
         return this.userService.deleteUserByIds(ids);
     }
 
-    /**
-     * 根据用户ID查询用户的角色集合
-     * @param userId 用户ID
-     */
-    @PreAuthorize("user:select")
-    @GetMapping("selectUserRole/{userId}")
-    public User selectUserRole(@PathVariable Integer userId){
-        return this.userService.selectUserRole(userId);
-    }
 }
