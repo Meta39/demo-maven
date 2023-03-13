@@ -57,5 +57,5 @@ public class User implements Serializable {
     private Date lastLoginTime; //最后登录时间    
 
     @TableField(exist = false)
-    private Set<Integer> roleIds; //用户角色ID集合
+    private Set<Role> roles; //用户角色ID集合
 }

@@ -61,11 +61,12 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public Map<String, Object> login(String passwordPublicKeyUUID,String username, String password) {
         User user = this.userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, username)
-                //没有禁用的
-                .eq(User::getIsBan, 0));
+                .eq(User::getUsername, username));
         if (user == null) {
             throw Err.setMessage("登录用户名不存在");
+        }
+        if (user.getIsBan() == 1){
+            throw Err.setMessage("登录用户被禁用");
         }
         //前端加盐加密密码密文解密后拿到原始密码，拿到数据库的密码和盐对数据库的密码进行解密后匹配两个密码是否相等。
         if (!Objects.equals(this.passwordUtil.decrypt(passwordPublicKeyUUID,password), DataBasePasswordUtil.decrypt(user.getPwd(),user.getSalt()))) {
