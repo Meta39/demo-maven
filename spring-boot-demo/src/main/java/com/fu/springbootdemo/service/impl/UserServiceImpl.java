@@ -116,12 +116,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @param user 用户
      */
     private User setSaltAndPassword(User user){
-        //设置新增用户的盐
-        String salt = GeneratorRandomUtil.getRandomLengthStringAndNumbers();
-        user.setSalt(salt);
-        //新增用户密码加盐加密
-        String password = DataBasePasswordUtil.encrypt(user.getPwd(),salt);
-        user.setPwd(password);
+        if (StringUtils.hasLength(user.getPwd())){
+            //设置新增用户的盐
+            String salt = GeneratorRandomUtil.getRandomLengthStringAndNumbers();
+            user.setSalt(salt);
+            //新增用户密码加盐加密
+            String password = DataBasePasswordUtil.encrypt(user.getPwd(),salt);
+            user.setPwd(password);
+        }
         return user;
     }
 
