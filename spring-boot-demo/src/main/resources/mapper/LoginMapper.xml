@@ -5,7 +5,6 @@
     <select id="selectUserRoleInfo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT id FROM `role`
         <where>
-            AND is_ban = 0
             <if test="userId != null and userId != 0">
                 AND id IN (SELECT role_id FROM user_role WHERE user_id = #{userId})
             </if>
