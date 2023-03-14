@@ -5,6 +5,7 @@
     <select id="selectUserRoleInfo" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         SELECT id FROM `role`
         <where>
+            AND is_delete = 0
             <if test="userId != null and userId != 0">
                 AND id IN (SELECT role_id FROM user_role WHERE user_id = #{userId})
             </if>
@@ -14,6 +15,7 @@
     <select id="selectUserAuthorizes" resultType="java.lang.String">
         SELECT authorize_name FROM authorize
         <where>
+            AND is_delete = 0
             <if test="roleIds != null and roleIds.size() > 0">
                 AND id IN(SELECT authorize_id FROM role_authorize WHERE role_id IN
                 <foreach item="roleId" index="index" collection="roleIds" open="(" separator="," close=" )">
