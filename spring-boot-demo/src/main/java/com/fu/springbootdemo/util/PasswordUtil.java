@@ -25,6 +25,7 @@ import static com.fu.springbootdemo.global.GlobalVariable.*;
 /**
  * 密码加密工具类
  */
+@SuppressWarnings("unchecked")
 @Component
 @ConfigurationProperties("fu.redis-password-key-timeout")
 public class PasswordUtil {
