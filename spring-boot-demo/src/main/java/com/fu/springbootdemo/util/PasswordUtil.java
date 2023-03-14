@@ -119,7 +119,7 @@ public class PasswordUtil {
             String tailSalt = map.get(TAIL_SALT);//尾部盐
             saltPassword = saltPassword.substring(headSalt.length());//去除头部盐
             String password =saltPassword.substring(0,saltPassword.length() - tailSalt.length());//去除尾部盐
-            log.info("加盐密码：{}，头部盐：{}，原始密码：{}，尾部盐：{}",saltPassword,map.get(HEAD_SALT),password,map.get(TAIL_SALT));
+            log.info("头部盐：{}，原始密码：{}，尾部盐：{}",map.get(HEAD_SALT),password,map.get(TAIL_SALT));
             return password;//切割掉随机长度的盐就是原始密码
         } catch (Exception e) {
             log.error("解密失败：", e);
