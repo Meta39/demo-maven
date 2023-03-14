@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * token内存放的信息
+ * token后端需要的信息
  */
 public class TokenInfo implements Serializable {
 

@@ -1,15 +1,12 @@
 package com.fu.springbootdemo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.entity.Role;
+import com.fu.springbootdemo.entity.RoleAuthorize;
 import com.fu.springbootdemo.entity.User;
-import com.fu.springbootdemo.global.Code;
-import com.fu.springbootdemo.global.Err;
-import com.fu.springbootdemo.global.GlobalAuthenticationFilter;
-import com.fu.springbootdemo.global.TokenInfo;
-import com.fu.springbootdemo.mapper.LoginMapper;
-import com.fu.springbootdemo.mapper.RoleMapper;
-import com.fu.springbootdemo.mapper.UserMapper;
+import com.fu.springbootdemo.global.*;
+import com.fu.springbootdemo.mapper.*;
 import com.fu.springbootdemo.service.LoginService;
 import com.fu.springbootdemo.util.DataBasePasswordUtil;
 import com.fu.springbootdemo.util.PasswordUtil;
@@ -35,6 +32,10 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RoleMapper roleMapper;
     @Autowired
+    private RoleAuthorizeMapper roleAuthorizeMapper;
+    @Autowired
+    private AuthorizeMapper authorizeMapper;
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private PasswordUtil passwordUtil;
@@ -59,7 +60,7 @@ public class LoginServiceImpl implements LoginService {
      * @param password 密码
      */
     @Override
-    public Map<String, Object> login(String passwordPublicKeyUUID,String username, String password) {
+    public TokenFrontInfo login(String passwordPublicKeyUUID,String username, String password) {
         User user = this.userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getUsername, username));
         if (user == null) {
@@ -83,18 +84,42 @@ public class LoginServiceImpl implements LoginService {
         tokenInfo.setUserId(user.getId());
         Set<Integer> roleIds = this.loginMapper.selectUserRoleInfo(user.getId());
         tokenInfo.setRoleIds(roleIds);
-        tokenInfo.setAuthorizes(this.loginMapper.selectUserAuthorizes(roleIds));
-        Map<String, Object> map = new HashMap<>();
-        String uuid = UUID.randomUUID().toString();
+        //判断是否包含超级管理员角色
+        if (roleIds.stream().anyMatch(roleId -> roleId == 1)){
+            tokenInfo.setAuthorizes(this.authorizeMapper.selectList(null).stream().map(Authorize::getAuthorizeName).collect(Collectors.toSet()));
+        }else {
+            tokenInfo.setAuthorizes(this.loginMapper.selectUserAuthorizes(roleIds));
+        }
+        String token = UUID.randomUUID().toString();
         //把登录用户信息存入Redis
-        this.redisTemplate.opsForValue().set(TOKEN + ":" + uuid, tokenInfo, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
-        map.put("token", uuid);
+        this.redisTemplate.opsForValue().set(TOKEN + ":" + token, tokenInfo, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
+        TokenFrontInfo tokenFrontInfo = TokenFrontInfo.getInstance();
+        tokenFrontInfo.setToken(token);
         //返回token过期时间给前端，让前端判断token快过期时，调用续期接口，实现无感刷新。
-        map.put("tokenTimeout",globalAuthenticationFilter.getTokenTimeout());
-        map.put("username", username);
-        Set<String> roleNames = roleIds.isEmpty() ? null : this.roleMapper.selectBatchIds(roleIds).stream().map(Role::getRoleName).collect(Collectors.toSet());
-        map.put("roleNames", roleNames);
-        return map;
+        tokenFrontInfo.setTokenTimeout(globalAuthenticationFilter.getTokenTimeout());
+        tokenFrontInfo.setUsername(username);
+        List<Role> roles = roleIds.isEmpty() ? null : this.roleMapper.selectBatchIds(roleIds);
+        tokenFrontInfo.setRoles(roles);
+        List<Authorize> authorizes = new ArrayList<>();
+        if (roles != null && !roles.isEmpty()){
+            //超级管理员直接获取全部权限集合
+            if (roles.stream().anyMatch(role -> role.getId() == 1)){
+                authorizes = this.authorizeMapper.selectList(null);
+            }else {
+                for (Role role : roles) {//根据角色ID获取角色权限ID集合
+                    List<RoleAuthorize> roleAuthorizes = this.roleAuthorizeMapper.selectList(new LambdaQueryWrapper<RoleAuthorize>().eq(RoleAuthorize::getRoleId, role.getId()));
+                    for (RoleAuthorize roleAuthorize : roleAuthorizes) {//获取其中一个角色的所有权限列表
+                        List<Authorize> oneRoleAuthorizes = this.authorizeMapper.selectList(new LambdaQueryWrapper<Authorize>().eq(Authorize::getId, roleAuthorize.getAuthorizeId()));
+                        authorizes.addAll(oneRoleAuthorizes);
+                    }
+                }
+            }
+            //递归权限树
+            List<Authorize> finalAuthorizes = authorizes;
+            authorizes = authorizes.stream().filter(authorize -> authorize.getPId() == 0).peek(authorize -> authorize.setChildAuthorize(authorizesTree(authorize, finalAuthorizes))).collect(Collectors.toList());
+        }
+        tokenFrontInfo.setAuthorizes(authorizes);
+        return tokenFrontInfo;
     }
 
     /**
@@ -119,6 +144,18 @@ public class LoginServiceImpl implements LoginService {
             return this.redisTemplate.expire(token,Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         }
         throw Err.setCodeAndMessage(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage());
+    }
+
+    //-----------------------------------------内部方法------------------------------------------------------
+
+    /**
+     * 递归权限树
+     */
+    private static List<Authorize> authorizesTree(Authorize authorize,List<Authorize> authorizes){
+        return authorizes.stream()
+                .filter(a -> a.getPId().equals(authorize.getId()))
+                .peek(a -> a.setChildAuthorize(authorizesTree(a,authorizes)))
+                .collect(Collectors.toList());
     }
 
 }

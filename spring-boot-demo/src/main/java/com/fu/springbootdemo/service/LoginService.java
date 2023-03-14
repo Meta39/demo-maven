@@ -1,6 +1,8 @@
 package com.fu.springbootdemo.service;
 
 
+import com.fu.springbootdemo.global.TokenFrontInfo;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -13,7 +15,7 @@ public interface LoginService {
     /**
      * 登录接口
      */
-    Map<String, Object> login(String passwordPublicKeyUUID,String username,String password);
+    TokenFrontInfo login(String passwordPublicKeyUUID, String username, String password);
 
     /**
      * 登出接口

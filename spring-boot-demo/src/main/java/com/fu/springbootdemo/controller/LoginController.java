@@ -1,5 +1,6 @@
 package com.fu.springbootdemo.controller;
 
+import com.fu.springbootdemo.global.TokenFrontInfo;
 import com.fu.springbootdemo.service.LoginService;
 import com.fu.springbootdemo.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class LoginController {
      * @param password 密码
      */
     @PostMapping("login")
-    public Map<String, Object> login(@RequestParam("passwordPublicKeyUUID") String passwordPublicKeyUUID,@RequestParam("username") String username, @RequestParam("password") String password) {
+    public TokenFrontInfo login(@RequestParam("passwordPublicKeyUUID") String passwordPublicKeyUUID, @RequestParam("username") String username, @RequestParam("password") String password) {
         //前端传过来的密码密文会把+号转成空格，因此这里要把空格转换成加号
         return this.loginService.login(passwordPublicKeyUUID,username,password.replaceAll(" ", "+"));
     }
