@@ -43,18 +43,19 @@ public class User implements Serializable {
     private Date createTime; //创建时间    
 
     @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime; //更新时间    
+    private Date updateTime; //更新时间
+
+    @TableField("last_login_time")
+    private Date lastLoginTime; //最后登录时间
 
     @NotNull
     @TableField("is_ban")
-    private Integer isBan; //禁用（0：否 1：是）    
+    private Integer isBan; //禁用（0：否 1：是）
 
-    @TableLogic //逻辑删除
+    //特殊逻辑删除，0未删除，NULL为已删除。数据库username和is_delete为组合唯一索引，解决逻辑删除后username同名唯一索引的问题
+    @TableLogic(value = "0",delval = "NULL")
     @TableField("is_delete")
-    private Integer isDelete; //删除（0：否 1：是）    
-
-    @TableField("last_login_time")
-    private Date lastLoginTime; //最后登录时间    
+    private Integer isDelete; //删除（0：否 1：是）
 
     @TableField(exist = false)
     private Set<Role> roles; //用户角色ID集合

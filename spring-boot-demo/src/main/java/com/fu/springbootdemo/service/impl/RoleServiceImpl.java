@@ -3,25 +3,47 @@ package com.fu.springbootdemo.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.entity.Role;
+import com.fu.springbootdemo.entity.RoleAuthorize;
+import com.fu.springbootdemo.global.Err;
+import com.fu.springbootdemo.mapper.AuthorizeMapper;
+import com.fu.springbootdemo.mapper.RoleAuthorizeMapper;
 import com.fu.springbootdemo.mapper.RoleMapper;
 import com.fu.springbootdemo.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
     @Autowired
     private RoleMapper roleMapper;
+    @Autowired
+    private RoleAuthorizeMapper roleAuthorizeMapper;
+    @Autowired
+    private AuthorizeMapper authorizeMapper;
 
     /**
-     * 根据ID查询角色
+     * 根据ID查询角色并获取其权限列表
      */
     @Override
     public Role selectRoleById(Integer id) {
-        return this.roleMapper.selectById(id);
+        if (id == 1){
+            throw Err.setMessage("超级管理员默认拥有全权限，无需查询");
+        }
+        Role role = this.roleMapper.selectById(id);
+        Set<Authorize> authorizes = new HashSet<>();
+        this.roleAuthorizeMapper.selectList(new LambdaQueryWrapper<RoleAuthorize>().eq(RoleAuthorize::getRoleId, role.getId()))
+                .forEach(roleAuthorize -> {
+                    Authorize authorize = this.authorizeMapper.selectById(new LambdaQueryWrapper<Authorize>().eq(Authorize::getId, roleAuthorize.getAuthorizeId()));
+                    authorizes.add(authorize);
+                });
+        role.setAuthorizes(authorizes);
+        return role;
     }
 
     /**

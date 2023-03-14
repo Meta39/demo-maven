@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 角色
@@ -26,5 +27,13 @@ public class Role implements Serializable {
 
     @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
     private Date updateTime; //更新时间
+
+    //特殊逻辑删除，0未删除，NULL为已删除。解决roleName被删除后重名的问题。
+    @TableLogic(value = "0",delval = "NULL")
+    @TableField("is_delete")
+    private Integer isDelete; //删除（0：否 NULL：是）
+
+    @TableField(exist = false)
+    Set<Authorize> authorizes; //角色所拥有的权限集合
 
 }
