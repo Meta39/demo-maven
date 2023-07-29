@@ -1,0 +1,13 @@
+server:
+  port: 8180
+
+pig:
+  id: '1'
+  name: '佩奇'
+
+pig2:
+  id: '2'
+  name: '佩奇2'
+logging:
+  level:
+    sql: debug

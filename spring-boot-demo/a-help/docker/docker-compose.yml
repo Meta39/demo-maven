@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+  #项目名称
+  fu:
+    #镜像名称:版本号
+    image: demo:1
+    #Docker容器重启时，当前容器也会自动重启
+    restart: always
+    #容器名称
+    container_name: demo
+    #容器映射到宿主机端口
+    ports:
+      - "81:81"
+    #数据映射
+    volumes:
+      - /docker_data/springboot/logs:/logs/
+      - /docker_data/springboot/ExchangeFile:/ExchangeFile/
+      - /docker_data/springboot/application.yml:/application.yml
+    #启动依赖项
+    depends_on:
+      - redis
+      - mysql
+
+  redis:
+    image: redis:6.2.6
+    container_name: redis-6.2.6
+    ports:
+      - "6379:6379"
+    #前提是你linux环境下面的/docker_data/redis文件夹内有redis.conf配置文件、data文件夹，没有的要先cp镜像文件
+    #docker cp redis6.2.6的镜像ID:/etc/redis/redis.conf /docker_data/redis/redis.conf
+    volumes:
+      - /docker_data/redis/redis.conf:/etc/redis/redis.conf
+      - /docker_data/redis/data:/data
+    #使用容器的配置文件，由于我们配置了-v，因此会拿宿主机的配置文件
+    command: redis-server /etc/redis/redis.conf
+
+  mysql:
+    image: mysql:8.0.23
+    container_name: mysql-8.0.23
+    #环境变量等效于ENV
+    environment:
+      MYSQL_ROOT_PASSWORD: '123456'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
+      MYSQL_DATABASE: 'demo'
+    ports:
+      - "3306:3306"
+    volumes:
+      - /docker_data/mysql/data:/var/lib/mysql
+      - /docker_data/mysql/log:/var/log/mysql
+      - /docker_data/mysql/conf:/etc/mysql/conf.d
+    #解决外部无法访问的问题
+    command: --default-authentication-plugin=mysql_native_password

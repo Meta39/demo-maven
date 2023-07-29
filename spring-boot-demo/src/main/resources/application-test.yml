@@ -1,0 +1,38 @@
+server:
+  port: 81
+
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 8
+        max-size: 16
+        queue-capacity: 1000
+        keep-alive: 60
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spring_boot_demo?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  redis:
+    host: localhost
+    port: 6379
+    password:
+
+logging:
+  file:
+    # 当开发者切换到test环境时推荐把path注释掉，这样日志文件就会输出到当前项目的logs文件夹。
+    path: /var/log/${spring.application.name}/${spring.profiles.active}
+  logback:
+    rollingpolicy:
+      # 重启后是否删除日志文件（当开发者切换到test环境时推荐开启为true）
+      clean-history-on-start: false
+      # 单个日志文件的大小
+      max-file-size: 10MB
+      # 日志保留时长 (天)
+      max-history: 30
+      # 日志总文件最大值
+      total-size-cap: 30GB
+  # SQL日志打印
+  level:
+    com.fu.springbootdemo.mapper: debug
