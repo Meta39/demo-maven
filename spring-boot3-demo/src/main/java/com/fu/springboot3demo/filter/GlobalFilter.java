@@ -24,7 +24,6 @@ public class GlobalFilter implements Filter {
         BodyCachingHttpServletRequestWrapper requestWrapper = new BodyCachingHttpServletRequestWrapper((HttpServletRequest) servletRequest);
         BodyCachingHttpServletResponseWrapper responseWrapper = new BodyCachingHttpServletResponseWrapper((HttpServletResponse) servletResponse);
         byte[] requestBodyByte = requestWrapper.getBody();
-        byte[] responseBodyByte = responseWrapper.getBody();
 
         //过滤请求内容，去除空格和换行符
         String requestBodyString = new String(requestBodyByte);
@@ -33,8 +32,12 @@ public class GlobalFilter implements Filter {
         String requestBodyFilterString = matcher.replaceAll("");//全部替换成空格
 
         log.info("请求内容:{}", requestBodyFilterString);
-        log.info("返回内容:{}", new String(responseBodyByte));
         filterChain.doFilter(requestWrapper, responseWrapper);
+
+        //要在doFilter后面获取body，否则会无法获取到数据。
+        byte[] responseBodyByte = responseWrapper.getBody();
+        String responseBodyString = new String(responseBodyByte);
+        log.info("返回内容:{}", responseBodyString);
     }
 
 }
