@@ -1,6 +1,14 @@
 server:
   port: 8180
 
+spring:
+  mvc:
+    contentnegotiation:
+      # 开启参数内容协商
+      favor-parameter: true
+      # 参数名称，默认名称为：format。请求接口在接口后面加上参数?format=xml即可返回xml参数形式的数据。
+      parameter-name: format
+
 pig:
   id: '1'
   name: '佩奇'
