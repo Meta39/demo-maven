@@ -2,6 +2,10 @@ server:
   port: 8180
 
 spring:
+  application:
+    name: '@artifactId@'
+  profiles:
+    active: '@spring.profiles.active@'
   mvc:
     contentnegotiation:
       # 开启参数内容协商
