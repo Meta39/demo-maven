@@ -20,19 +20,5 @@ spring:
     password:
 
 logging:
-  file:
-    # 当开发者切换到test环境时推荐把path注释掉，这样日志文件就会输出到当前项目的logs文件夹。
-    path: /var/log/${spring.application.name}/${spring.profiles.active}
-  logback:
-    rollingpolicy:
-      # 重启后是否删除日志文件（当开发者切换到test环境时推荐开启为true）
-      clean-history-on-start: false
-      # 单个日志文件的大小
-      max-file-size: 10MB
-      # 日志保留时长 (天)
-      max-history: 30
-      # 日志总文件最大值
-      total-size-cap: 30GB
-  # SQL日志打印
   level:
     com.fu.springbootdemo.mapper: debug

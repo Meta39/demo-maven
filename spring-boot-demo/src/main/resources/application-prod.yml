@@ -22,15 +22,3 @@ spring:
     host: localhost
     port: 16379
     password: 12345678
-
-logging:
-  file:
-    path: /var/log/${spring.application.name}/${spring.profiles.active}
-  logback:
-    rollingpolicy:
-      # 单个日志文件的大小
-      max-file-size: 10MB
-      # 日志保留时长 (天)
-      max-history: 30
-      # 日志总文件最大值
-      total-size-cap: 30GB
