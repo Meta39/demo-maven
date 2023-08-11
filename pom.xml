@@ -22,6 +22,7 @@
         <module>spring-boot-jpa-demo</module>
         <module>spring-boot-kafka-demo</module>
         <module>velocity-generate-code-demo</module>
+        <module>spring-springmvc-mybatis-demo</module>
     </modules>
 
     <properties>
