@@ -109,4 +109,35 @@
         <finalName>ssm</finalName>
     </build>
 
+    <!-- 多环境配置 -->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/environment/dev.properties</filter>
+                </filters>
+            </build>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/environment/test.properties</filter>
+                </filters>
+            </build>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <build>
+                <filters>
+                    <filter>src/main/resources/environment/prod.properties</filter>
+                </filters>
+            </build>
+        </profile>
+    </profiles>
+
 </project>

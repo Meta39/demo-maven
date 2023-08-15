@@ -5,10 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
-    <!-- 引入jdbc.properties配置文件 -->
-    <context:property-placeholder location="classpath:jdbc.properties"/>
     <!-- 配置数据源 -->
-    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+    <bean id="druidDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
