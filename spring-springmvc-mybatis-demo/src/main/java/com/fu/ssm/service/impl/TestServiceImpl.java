@@ -5,7 +5,6 @@ import com.fu.ssm.entity.Test;
 import com.fu.ssm.mapper.TestMapper;
 import com.fu.ssm.service.TestService;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageSerializable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ public class TestServiceImpl implements TestService {
         log.debug("debug");
         log.info("info");
         log.warn("warn");
-        log.error("warn");
+        log.error("error");
         return testMapper.selectByTestId(id);
     }
 

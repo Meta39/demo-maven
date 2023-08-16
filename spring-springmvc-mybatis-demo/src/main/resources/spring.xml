@@ -35,8 +35,6 @@
                 <!-- 驼峰式命名 -->
                 <prop key="mapUnderscoreToCamelCase">true</prop>
                 <prop key="jdbcTypeForNull">NULL</prop>
-                <prop key="logImpl">SFL4J</prop>
-                <prop key="loggingLevel">INFO</prop>
             </props>
         </property>
         <!-- 插件 -->
@@ -44,8 +42,6 @@
             <array>
                 <!-- 分页插件 -->
                 <bean class="com.github.pagehelper.PageInterceptor"/>
-                <!-- 输出SQL到控制台 -->
-                <bean class="com.fu.ssm.base.MyBatisSQLInterceptor"/>
             </array>
         </property>
     </bean>
