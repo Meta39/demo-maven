@@ -49,4 +49,32 @@ public class LocalDateTest {
         System.out.println(foodTime + "-" + ceilTime);
     }
 
+    /**
+     * LocalTime获取时间段内所有的半/整点时间
+     */
+    @Test
+    void localTimeGetTimeSlot(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); // 时间格式化
+
+        LocalTime swgzsjStart = LocalTime.parse("08:00", formatter); // 起始时间 08:00
+        LocalTime swgzsjEnd = LocalTime.parse("12:00", formatter); // 结束时间 12:00
+
+        LocalTime xwgzsjStart = LocalTime.parse("14:00", formatter); // 起始时间 14:00
+        LocalTime xwgzsjEnd = LocalTime.parse("18:00", formatter); // 结束时间 18:00
+
+        LocalTime currentTime = swgzsjStart;//上午工作时间开始时间
+
+        System.out.println("==上午工作时间==");
+        while (currentTime.isBefore(swgzsjEnd) || currentTime.equals(swgzsjEnd)) {
+            System.out.println(currentTime.format(formatter));
+            currentTime = currentTime.plusMinutes(30); // 递增30分钟
+        }
+        System.out.println("\n==下午工作时间==");
+        currentTime = xwgzsjStart;//下午工作时间开始时间
+        while (currentTime.isBefore(xwgzsjEnd) || currentTime.equals(xwgzsjEnd)){
+            System.out.println(currentTime.format(formatter));
+            currentTime = currentTime.plusMinutes(30); // 递增30分钟
+        }
+    }
+
 }
