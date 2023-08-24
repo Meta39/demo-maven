@@ -1,5 +1,6 @@
 package com.fu.basedemo.designpattern;
 
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -77,26 +78,24 @@ class LazySynchronizedSingleMode {
  * 懒汉式：通过加ReentrantLock锁让线程安全（推荐）
  */
 class LazyReentrantLockSingleMode{
+    private LazyReentrantLockSingleMode() {}
+    private static final Lock lock = new ReentrantLock();//使用ReentrantLock必须声明static final
 
-    private static final ReentrantLock reentrantLock = new ReentrantLock();//使用ReentrantLock必须声明static final
+    private static LazyReentrantLockSingleMode instance;
 
-    private LazyReentrantLockSingleMode(){
-
-    }
-
-    private static LazyReentrantLockSingleMode lazyReentrantLockSingleMode = null;
-
-    public static LazyReentrantLockSingleMode getLazyReentrantLockSingleMode(){
-        if (lazyReentrantLockSingleMode == null){
-            reentrantLock.lock();//加锁放到try外面
+    public static LazyReentrantLockSingleMode getInstance(){
+        if (instance == null){
+            lock.lock();//加锁放到try外面
             try {
-                lazyReentrantLockSingleMode = new LazyReentrantLockSingleMode();
+                if (instance == null) {
+                    instance = new LazyReentrantLockSingleMode();
+                }
             }finally {
                 //必须在finally解锁，防止死锁，可以没有catch
-                reentrantLock.unlock();
+                lock.unlock();
             }
         }
-        return lazyReentrantLockSingleMode;
+        return instance;
     }
 
 }
