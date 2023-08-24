@@ -57,7 +57,7 @@ class LazySynchronizedSingleMode {
 
     }
 
-    private static LazySynchronizedSingleMode lazySynchronizedSingleMode = null;
+    private static volatile LazySynchronizedSingleMode lazySynchronizedSingleMode = null;
 
     //加synchronized锁让线程安全
     public static LazySynchronizedSingleMode getLazySynchronizedSingleMode(){
