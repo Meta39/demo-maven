@@ -93,9 +93,12 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }else if (body instanceof LinkedHashMap){//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
             LinkedHashMap map = (LinkedHashMap) body;//强转
-            log.error("全局返回异常捕获到LinkedHashMap：{}",map);
-            String errorMessage = "error：" + map.get("error") + ",message：" + map.get("message") + ",path：" + map.get("path");
-            return Res.err((Integer) map.get("status"), errorMessage);
+            //如果LinkedHashMap包含status状态码的key，则抛出异常。
+            if (map.containsKey("status") && map.containsKey("error") && map.containsKey("message")) {
+                log.error("全局返回异常捕获到LinkedHashMap：{}",map);
+                String errorMessage = "error：" + map.get("error") + ",message：" + map.get("message") + ",path：" + map.get("path");
+                return Res.err((Integer) map.get("status"), errorMessage);
+            }
         }
         return Res.ok(body);
     }
