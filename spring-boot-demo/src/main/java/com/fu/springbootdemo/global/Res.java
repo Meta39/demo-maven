@@ -19,7 +19,7 @@ public class Res<T> implements Serializable {
 
     private Res (){}//私有化构造方法
 
-    private static final Res res = new Res();//私有化静态实例化类
+    private static final  Res res = new Res<>();//私有化静态实例化类
 
     /**
      * 成功（前端没有特别要求状态码，直接用这个。）
