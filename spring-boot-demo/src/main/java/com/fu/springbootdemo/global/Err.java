@@ -31,12 +31,11 @@ public class Err extends RuntimeException implements Serializable {
 
     /**
      * 全局异常捕获填写状态码和异常信息返回给前端（一般情况下不推荐，只有当前端要求通过code判断时才使用。就算要使用也要在Code枚举类里枚举出来，方便到时候统一修改！）
-     * @param code 错误状态码
-     * @param msg 错误信息
+     * @param code 错误枚举类
      */
-    public static Err codeAndMsg(Integer code, String msg){
-        err.setCode(code);
-        err.setMsg(msg);
+    public static Err codeAndMsg(Code code){
+        err.setCode(code.getErrCode());
+        err.setMsg(code.getErrMessage());
         return err;
     }
 

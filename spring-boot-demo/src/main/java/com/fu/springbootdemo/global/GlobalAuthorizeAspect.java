@@ -54,7 +54,7 @@ public class GlobalAuthorizeAspect {
             boolean admin = tokenInfo.getRoleIds().stream().anyMatch(roleId -> roleId == 1);
             //不是超级管理员则进行鉴权，超级管理员角色直接跳过鉴权
             if (!admin && (tokenInfo.getAuthorizes() == null || tokenInfo.getAuthorizes().isEmpty() || tokenInfo.getAuthorizes().stream().noneMatch(a -> Objects.equals(a, authorize)))) {
-                throw Err.codeAndMsg(Code.NOT_PURVIEW.getErrCode(), Code.NOT_PURVIEW.getErrMessage());
+                throw Err.codeAndMsg(Code.NOT_PURVIEW);
             }
         }
     }

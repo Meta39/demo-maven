@@ -69,7 +69,7 @@ public class GlobalAuthenticationFilter implements Filter {
             filterChain.doFilter(request, response);//放行
         } else {
             //未认证
-            this.resolver.resolveException(request, response, null, Err.codeAndMsg(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage()));
+            this.resolver.resolveException(request, response, null, Err.codeAndMsg(Code.NOT_LOGIN));
         }
     }
 

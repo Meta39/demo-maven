@@ -117,7 +117,7 @@ public class LoginServiceImpl implements LoginService {
         if (Boolean.TRUE.equals(this.redisTemplate.hasKey(tokenRedisKey))) {
             return this.redisTemplate.delete(tokenRedisKey);
         }
-        throw Err.codeAndMsg(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage());
+        throw Err.codeAndMsg(Code.NOT_LOGIN);
     }
 
     /**
@@ -147,7 +147,7 @@ public class LoginServiceImpl implements LoginService {
         if (Boolean.TRUE.equals(this.redisTemplate.hasKey(tokenRedisKey))) {
             return this.redisTemplate.expire(tokenRedisKey, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         }
-        throw Err.codeAndMsg(Code.NOT_LOGIN.getErrCode(), Code.NOT_LOGIN.getErrMessage());
+        throw Err.codeAndMsg(Code.NOT_LOGIN);
     }
 
     //-----------------------------------------内部方法------------------------------------------------------

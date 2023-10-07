@@ -29,7 +29,7 @@ public class CurrentLoginUserUtil {
         String redisTokenKey = request.getHeader(GlobalVariable.TOKEN);
         if (!StringUtils.hasText(redisTokenKey)){
             log.error("errCode:{},errMessage:{}",Code.NOT_LOGIN.getErrCode(),Code.NOT_LOGIN.getErrMessage());
-            throw Err.codeAndMsg(Code.NOT_LOGIN.getErrCode(),Code.NOT_LOGIN.getErrMessage());
+            throw Err.codeAndMsg(Code.NOT_LOGIN);
         }
         return Integer.parseInt(redisTokenKey.substring(32));
     }

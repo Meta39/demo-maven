@@ -35,7 +35,7 @@ public class RSAUtil {
             keyPairGen = KeyPairGenerator.getInstance(ENCRYPT_TYPE);
         } catch (NoSuchAlgorithmException e) {
             log.error("获取加密算法" + ENCRYPT_TYPE + "单例异常：", e);
-            throw Err.codeAndMsg(Code.ENCRYPT_ALGORITHM_ERROR.getErrCode(), Code.ENCRYPT_ALGORITHM_ERROR.getErrMessage());
+            throw Err.codeAndMsg(Code.ENCRYPT_ALGORITHM_ERROR);
         }
         // 初始化密钥对生成器
         keyPairGen.initialize(KEY_SIZE, new SecureRandom());
@@ -70,7 +70,7 @@ public class RSAUtil {
             return Base64.getEncoder().encodeToString(cipher.doFinal(originString.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             log.error("加密失败：", e);
-            throw Err.codeAndMsg(Code.ENCRYPT_ERROR.getErrCode(), Code.ENCRYPT_ERROR.getErrMessage());
+            throw Err.codeAndMsg(Code.ENCRYPT_ERROR);
         }
     }
 
@@ -93,7 +93,7 @@ public class RSAUtil {
             return new String(cipher.doFinal(inputByte), StandardCharsets.UTF_8);//原始数据
         } catch (Exception e) {
             log.error("解密失败：", e);
-            throw Err.codeAndMsg(Code.DECRYPT_ERROR.getErrCode(), Code.DECRYPT_ERROR.getErrMessage());
+            throw Err.codeAndMsg(Code.DECRYPT_ERROR);
         }
     }
 
