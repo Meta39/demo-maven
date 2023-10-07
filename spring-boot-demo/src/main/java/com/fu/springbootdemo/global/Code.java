@@ -11,15 +11,15 @@ public enum Code {
     DECRYPT_ERROR(6,"解密失败，详情请查看错误日志。"),
     KEY_PAIR_TIMEOUT_ERROR(7,"密钥对已过期，请重新请求生成接口生成新的密钥对。");
 
-    private final int errCode;
+    private final Integer errCode;
     private final String errMessage;
 
-    Code(int errCode, String errMessage) {
+    Code(Integer errCode, String errMessage) {
         this.errCode = errCode;
         this.errMessage = errMessage;
     }
 
-    public int getErrCode() {
+    public Integer getErrCode() {
         return errCode;
     }
 
