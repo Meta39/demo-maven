@@ -23,6 +23,7 @@
         <module>spring-boot-kafka-demo</module>
         <module>velocity-generate-code-demo</module>
         <module>spring-springmvc-mybatis-demo</module>
+        <module>transform</module>
     </modules>
 
     <properties>
