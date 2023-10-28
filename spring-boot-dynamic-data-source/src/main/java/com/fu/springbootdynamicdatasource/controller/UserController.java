@@ -36,8 +36,8 @@ public class UserController {
     @ChangeDataSource(DataSources.TWO)
     @GetMapping("two/{id}")
     public User selectByTwo(@PathVariable Integer id){
-        throw new RuntimeException();
-//        return userService.getById(id);
+//        throw new RuntimeException();
+        return userService.getById(id);
     }
 
 }
