@@ -10,5 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    private final UserMapper userMapper;
+
+    public int insert(User user){
+        return userMapper.insert(user);
+    }
 
 }

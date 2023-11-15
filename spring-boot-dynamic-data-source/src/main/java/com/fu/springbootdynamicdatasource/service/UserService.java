@@ -4,5 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fu.springbootdynamicdatasource.entity.User;
 
 public interface UserService extends IService<User> {
+    int insert(User user);
 
 }
