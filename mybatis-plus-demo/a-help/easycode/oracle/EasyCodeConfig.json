@@ -19,8 +19,16 @@
         "javaType" : "java.lang.Integer"
       }, {
         "matchType" : "REGEX",
-        "columnType" : "NUMBER\\(\\d,\\d+\\)?",
-        "javaType" : "java.lang.Integer"
+        "columnType" : "NUMBER\\(\\d,\\1\\)?",
+        "javaType" : "java.lang.Float"
+      }, {
+        "matchType" : "REGEX",
+        "columnType" : "NUMBER\\(\\d,\\2\\)?",
+        "javaType" : "java.lang.Double"
+      }, {
+        "matchType" : "REGEX",
+        "columnType" : "NUMBER\\(\\d,[3-9]\\)?",
+        "javaType" : "java.math.BigDecimal"
       }, {
         "matchType" : "REGEX",
         "columnType" : "NUMBER\\(\\d+\\)?",
@@ -33,6 +41,10 @@
         "matchType" : "REGEX",
         "columnType" : "NUMBER\\(\\d+,2\\)?",
         "javaType" : "java.lang.Double"
+      }, {
+        "matchType" : "REGEX",
+        "columnType" : "NUMBER\\(\\d+,[3-9]\\)?",
+        "javaType" : "java.math.BigDecimal"
       }, {
         "matchType" : "REGEX",
         "columnType" : "DATE",
