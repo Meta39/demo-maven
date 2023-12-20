@@ -27,8 +27,12 @@
         "javaType" : "java.lang.Long"
       }, {
         "matchType" : "REGEX",
-        "columnType" : "NUMBER\\(\\d+,\\d+\\)?",
-        "javaType" : "java.lang.Long"
+        "columnType" : "NUMBER\\(\\d+,1\\)?",
+        "javaType" : "java.lang.Float"
+      }, {
+        "matchType" : "REGEX",
+        "columnType" : "NUMBER\\(\\d+,2\\)?",
+        "javaType" : "java.lang.Double"
       }, {
         "matchType" : "REGEX",
         "columnType" : "DATE",
@@ -41,10 +45,6 @@
         "matchType" : "REGEX",
         "columnType" : "CHAR\\(\\d+\\)?",
         "javaType" : "java.lang.String"
-      }, {
-        "matchType" : "ORDINARY",
-        "columnType" : "NUMBER(*)",
-        "javaType" : "java.lang.Long"
       } ]
     }
   },
