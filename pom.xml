@@ -25,6 +25,7 @@
         <module>spring-springmvc-mybatis-demo</module>
         <module>transform</module>
         <module>spring-boot-dynamic-data-source</module>
+        <module>spring-boot-starter-mybatis-sql-log</module>
     </modules>
 
     <properties>

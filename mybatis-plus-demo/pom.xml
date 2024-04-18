@@ -60,6 +60,11 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fu.mybatissqllog</groupId>
+            <artifactId>spring-boot-starter-mybatis-sql-log</artifactId>
+            <version>1</version>
+        </dependency>
     </dependencies>
 
     <build>
