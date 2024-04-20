@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>spring-boot-dynamic-data-source</artifactId>
+    <description>通过注解动态切换数据源</description>
 
     <dependencies>
         <!-- lombok插件依赖 -->
