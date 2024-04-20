@@ -25,6 +25,7 @@
         <module>spring-springmvc-mybatis-demo</module>
         <module>transform</module>
         <module>spring-boot-dynamic-data-source</module>
+        <module>spring-boot-dynamic-data-source2</module>
     </modules>
 
     <properties>
@@ -36,6 +37,7 @@
         <lombok.version>1.18.26</lombok.version>
         <spring.boot.version>2.7.9</spring.boot.version>
         <mysql.version>8.0.30</mysql.version>
+        <mybatis.version>2.3.1</mybatis.version>
         <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <japidocs.version>1.4.4</japidocs.version>
         <xxl-job.version>2.3.0</xxl-job.version>
