@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties({MyBatisSqlLogConfig.class})
 //指定的参数值符合要求时，对应的配置才生效
-@ConditionalOnProperty(prefix = "mybatis-log", value = "enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "mybatis-log", value = "enabled", havingValue = "true")
 public class AutoConfig {
 
     @Bean
