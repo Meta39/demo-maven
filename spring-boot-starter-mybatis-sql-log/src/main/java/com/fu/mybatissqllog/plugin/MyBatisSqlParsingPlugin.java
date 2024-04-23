@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Intercepts({
         @Signature(type = StatementHandler.class, method = "update", args = {Statement.class,}),
@@ -44,10 +46,13 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
         ParameterHandler parameterHandler = statementHandler.getParameterHandler();
         BoundSql boundSql = statementHandler.getBoundSql();
         try {
-            log.info("Execute SQL:\n{}", formatSql(parameterHandler, boundSql));
+            String sql = formatSql(parameterHandler, boundSql);
+            if (!boundSql.getSql().equals(sql)) {
+                log.info("Execute SQL:\n{}", sql);
+            }
         } catch (Exception e) {
             String sql = boundSql.getSql();
-            log.error("SQL:{}\nformatSql Exception:", sql,e);
+            log.error("SQL:{}\nformatSql Exception:", sql, e);
         }
         return invocation.proceed();
     }
@@ -55,7 +60,7 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
     /**
      * 格式化SQL及其参数
      */
-    private String formatSql(ParameterHandler parameterHandler,BoundSql boundSql) throws NoSuchFieldException, IllegalAccessException {
+    private String formatSql(ParameterHandler parameterHandler, BoundSql boundSql) throws NoSuchFieldException, IllegalAccessException {
 
         Class<? extends ParameterHandler> parameterHandlerClass = parameterHandler.getClass();
         Field mappedStatementField = parameterHandlerClass.getDeclaredField("mappedStatement");
@@ -107,6 +112,21 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
 
         //转译百分号
         if (sql.contains("%")) {
+            //如果参数不一致直接返回SQL
+            Pattern pattern = Pattern.compile("\\?");
+            Matcher matcher = pattern.matcher(sql);
+            int count = 0;
+            while (matcher.find()) {
+                count++;
+            }
+            if (count == 0 || params.isEmpty()) {
+                return sql;
+            }
+            if (params.size() != count) {
+                log.error("SQL:{}", sql);
+                log.error("SQL parameters:{}", params);
+                return sql;
+            }
             sql = sql.replaceAll("%", "%%");
         }
 
