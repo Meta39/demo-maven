@@ -1,6 +1,5 @@
 package com.fu.mybatissqllog.plugin;
 
-
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
@@ -30,16 +29,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * <p>
- * 自定义SQL插件,功能如下
- * 1:打印SQL执行时间
- * 2:打印SQL,参数自动设置到SQL中
- * 3:区别慢SQL,SQL执行时间大于5秒的SQL为红色字体，否则为黄色字体,(执行时间可以自定义)
- * </p>
- *
- * @author liekkas 2020/12/08 10:42
- */
 @Intercepts({
         @Signature(type = StatementHandler.class, method = "update", args = {Statement.class,}),
         @Signature(type = StatementHandler.class, method = "query", args = {Statement.class, ResultHandler.class})
@@ -54,10 +43,10 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
         StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
         ParameterHandler parameterHandler = statementHandler.getParameterHandler();
         BoundSql boundSql = statementHandler.getBoundSql();
-        String sql = boundSql.getSql();
         try {
-            log.info("Execute SQL:\n{}", formatSql(parameterHandler, boundSql, sql));
+            log.info("Execute SQL:\n{}", formatSql(parameterHandler, boundSql));
         } catch (Exception e) {
+            String sql = boundSql.getSql();
             log.error("SQL:{}\nformatSql Exception:", sql,e);
         }
         return invocation.proceed();
@@ -66,14 +55,14 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
     /**
      * 格式化SQL及其参数
      */
-    private String formatSql(ParameterHandler parameterHandler,BoundSql boundSql,String sql) throws NoSuchFieldException, IllegalAccessException {
+    private String formatSql(ParameterHandler parameterHandler,BoundSql boundSql) throws NoSuchFieldException, IllegalAccessException {
 
         Class<? extends ParameterHandler> parameterHandlerClass = parameterHandler.getClass();
         Field mappedStatementField = parameterHandlerClass.getDeclaredField("mappedStatement");
         mappedStatementField.setAccessible(true);
         MappedStatement mappedStatement = (MappedStatement) mappedStatementField.get(parameterHandler);
 
-        sql = sql.replaceAll("\\s+", " ");
+        String sql = boundSql.getSql().replaceAll("\\s+", " ");
 
         // 输入sql字符串空判断
         if (!StringUtils.hasText(sql)) {
@@ -107,27 +96,13 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
             String propertyName = parameterMapping.getProperty();
             if (boundSql.hasAdditionalParameter(propertyName)) {
                 propertyValue = boundSql.getAdditionalParameter(propertyName);
-            } else if (parameterObject == null) {
-                params.add("null");
-                continue;
             } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
                 propertyValue = parameterObject;
             } else {
                 MetaObject metaObject = configuration.newMetaObject(parameterObject);
                 propertyValue = metaObject.getValue(propertyName);
             }
-            //把参数放入list
-            if (propertyValue instanceof String) {
-                params.add("'" + propertyValue + "'");
-            } else if (propertyValue instanceof Date) {
-                params.add("'" + DATE_TIME_FORMATTER.format(((Date) propertyValue).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) + "'");
-            } else if (propertyValue instanceof LocalDate) {
-                params.add("'" + DATE_FORMATTER.format((LocalDate) propertyValue) + "'");
-            } else if (propertyValue instanceof LocalDateTime) {
-                params.add("'" + DATE_TIME_FORMATTER.format((LocalDateTime) propertyValue) + "'");
-            } else {
-                params.add(propertyValue.toString());
-            }
+            params.add(this.formatParam(propertyValue));
         }
 
         //转译百分号
@@ -137,6 +112,46 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
 
         sql = sql.replaceAll("\\?", "%s");
         return String.format(sql, params.toArray());
+    }
+
+    private String formatParam(Object object) {
+        if (object == null) {
+            return "null";
+        }
+        // 尝试格式化String
+        if (object instanceof String) {
+            return formatString((String) object);
+        }
+        // 尝试格式化Date
+        if (object instanceof Date) {
+            return formatDate((Date) object);
+        }
+        // 尝试格式化LocalDate
+        if (object instanceof LocalDate) {
+            return formatLocalDate((LocalDate) object);
+        }
+        // 尝试格式化LocalDateTime
+        if (object instanceof LocalDateTime) {
+            return formatLocalDateTime((LocalDateTime) object);
+        }
+        // 默认行为：直接转换为字符串
+        return object.toString();
+    }
+
+    private static String formatString(String str) {
+        return "'" + str + "'";
+    }
+
+    private String formatDate(Date date) {
+        return "'" + DATE_TIME_FORMATTER.format(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()) + "'";
+    }
+
+    private String formatLocalDate(LocalDate date) {
+        return "'" + DATE_FORMATTER.format(date) + "'";
+    }
+
+    private String formatLocalDateTime(LocalDateTime dateTime) {
+        return "'" + DATE_TIME_FORMATTER.format(dateTime) + "'";
     }
 
 }
