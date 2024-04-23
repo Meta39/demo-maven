@@ -17,7 +17,7 @@ spring:
 
 #打印解析SQL日志
 mybatis-log:
-  enable-log: true
+  enabled: true
 
 mybatis-plus:
   #类型别名
@@ -28,7 +28,7 @@ mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
     #打印sql
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     #Oracle需要关闭驼峰命名法，即：设置为false
     map-underscore-to-camel-case: false
     #Oracle需要设置为null
