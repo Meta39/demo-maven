@@ -36,6 +36,8 @@
                 <!-- 驼峰式命名 -->
                 <prop key="mapUnderscoreToCamelCase">true</prop>
                 <prop key="jdbcTypeForNull">NULL</prop>
+                <!-- 配置SQL输出到控制台 -->
+<!--                <prop key="logImpl">STDOUT_LOGGING</prop>-->
             </props>
         </property>
         <!-- 插件 -->
