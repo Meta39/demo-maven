@@ -32,6 +32,11 @@
             <artifactId>lombok</artifactId>
             <scope>compile</scope>
         </dependency>
+        <!-- 内容协商支持返回xml格式 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
         <!-- web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

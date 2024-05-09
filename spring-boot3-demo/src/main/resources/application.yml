@@ -8,7 +8,7 @@ spring:
     active: '@spring.profiles.active@'
   mvc:
     contentnegotiation:
-      # 开启参数内容协商
+      # 开启参数内容协商，一般推荐通过请求头Accept : application/json 或 application/xml，来返回对应格式的内容
       favor-parameter: true
       # 参数名称，默认名称为：format。请求接口在接口后面加上参数?format=xml即可返回xml参数形式的数据。
       parameter-name: format

@@ -13,9 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
     private final InvokeMethodByBeanNameService invokeMethodByBeanNameService;
 
-    @PostMapping("hello")
-    public User hello(@RequestBody User user){
+    @PostMapping("user")
+    public User user(@RequestBody User user){
         return user;
+    }
+
+    @GetMapping("hello")
+    public User hello(){
+        return new User();
     }
 
     @GetMapping("invoke")
