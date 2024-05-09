@@ -20,7 +20,10 @@ public class HelloController {
 
     @GetMapping("hello")
     public User hello(){
-        return new User();
+        User user = new User();
+        user.setId(1L);
+        user.setName("轩辕镜城");
+        return user;
     }
 
     @GetMapping("invoke")
