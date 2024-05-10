@@ -12,21 +12,21 @@ public class DataSourceContextHolder {
      * 设置数据源
      * @param dataSourcesEnum 数据源枚举类
      */
-    public static void setBranchContext(DataSources dataSourcesEnum) {
+    public static void setDataSource(DataSources dataSourcesEnum) {
         contextHolder.set(dataSourcesEnum);
     }
 
     /**
      * 获取数据源
      */
-    public static DataSources getBranchContext() {
+    public static DataSources getDataSource() {
         return contextHolder.get();
     }
 
     /**
      * 销毁数据源
      */
-    public static void clearBranchContext() {
+    public static void clearDataSource() {
         contextHolder.remove();
     }
 
