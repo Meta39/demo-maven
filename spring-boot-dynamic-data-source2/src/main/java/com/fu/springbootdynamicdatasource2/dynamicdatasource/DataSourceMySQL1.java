@@ -25,20 +25,20 @@ public class DataSourceMySQL1 {
     private String mapperLocations;
 
     @Primary
-    @Bean(name = "mysql1DataSource")
+    @Bean
     @ConfigurationProperties("spring.datasource.mysql1")
     public DataSource mysql1DataSource() {
         return new HikariDataSource();
     }
 
     @Primary
-    @Bean(name = "mysql1TransactionManager")
+    @Bean
     public DataSourceTransactionManager mysql1TransactionManager() {
         return new DataSourceTransactionManager(mysql1DataSource());
     }
 
     @Primary
-    @Bean(name = "mysql1SqlSessionFactory")
+    @Bean
     public SqlSessionFactory mysql1SqlSessionFactory(@Qualifier("mysql1DataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);

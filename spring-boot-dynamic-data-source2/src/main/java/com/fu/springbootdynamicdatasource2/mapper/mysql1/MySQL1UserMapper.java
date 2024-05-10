@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface MySQL1UserMapper {
     User selectById(@Param("id") Integer id);
+
+    int insert(User user);
 }

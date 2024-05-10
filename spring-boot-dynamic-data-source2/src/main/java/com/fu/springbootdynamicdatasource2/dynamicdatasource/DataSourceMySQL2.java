@@ -25,19 +25,19 @@ public class DataSourceMySQL2 {
     private String mapperLocations;
 
     @Primary
-    @Bean(name = "mysql2DataSource")
+    @Bean
     @ConfigurationProperties("spring.datasource.mysql2")
     public DataSource mysql2DataSource() {
         return new HikariDataSource();
     }
 
-    @Bean(name = "mysql2TransactionManager")
+    @Bean
     @Primary
     public DataSourceTransactionManager mysql2TransactionManager() {
         return new DataSourceTransactionManager(mysql2DataSource());
     }
 
-    @Bean(name = "mysql2SqlSessionFactory")
+    @Bean
     @Primary
     public SqlSessionFactory mysql2SqlSessionFactory(@Qualifier("mysql2DataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();

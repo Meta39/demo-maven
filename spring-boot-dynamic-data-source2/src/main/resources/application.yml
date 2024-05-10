@@ -1,6 +1,10 @@
 server:
   port: 80
 
+logging:
+  level:
+    com.fu.springbootdynamicdatasource2.mapper: debug
+
 spring:
   freemarker:
     check-template-location: false
