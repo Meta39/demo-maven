@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <!-- 如果不包含spring-boot-starter等其它项目则必须加入此依赖才能实现自动配置。 -->

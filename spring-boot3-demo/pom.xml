@@ -30,7 +30,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>compile</scope>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
         <!-- 内容协商支持返回xml格式 -->
         <dependency>
