@@ -25,6 +25,7 @@
         <module>spring-springmvc-mybatis-demo</module>
         <module>transform</module>
         <module>spring-boot-dynamic-data-source2</module>
+        <module>spring-boot-rocketmq</module>
     </modules>
 
     <properties>
