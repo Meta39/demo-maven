@@ -37,6 +37,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <lombok.version>1.18.26</lombok.version>
         <spring.boot.version>2.7.9</spring.boot.version>
+        <spring.cloud.version>2021.0.9</spring.cloud.version>
         <mysql.version>8.0.32</mysql.version>
         <druid.version>1.1.22</druid.version>
         <mybatis.version>2.3.1</mybatis.version>
@@ -47,6 +48,7 @@
         <elasticsearch.version>7.14.0</elasticsearch.version>
         <redisson.version>3.20.0</redisson.version>
         <easyexcel.version>3.2.1</easyexcel.version>
+        <seata.version>2.0.0</seata.version>
         <velocity.version>2.3</velocity.version>
     </properties>
 
@@ -71,6 +73,14 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -144,6 +154,11 @@
                         <artifactId>slf4j-simple</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
             </dependency>
             <!-- apache apache模板引擎 -->
             <dependency>
