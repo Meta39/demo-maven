@@ -13,40 +13,13 @@ spring:
     time-zone: GMT+8
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.alibaba.druid.pool.xa.DruidXADataSource
     mysql1:
       mapper-locations: "classpath:mapper/mysql1/*.xml"
-      url: jdbc:mysql://localhost:3306/dynamic?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://localhost:3306/dynamic?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&pinGlobalTxToPhysicalConnection=true
       username: root
       password: 123456
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      type: com.alibaba.druid.pool.xa.DruidXADataSource
-      initial-size: 1
-      min-idle: 1
-      max-active: 20
-      test-on-borrow: true
-      minPoolSize: 3
-      maxPoolSize: 25
-      maxLifetime: 20000
-      borrowConnectionTimeout: 30
-      loginTimeout: 30
-      maintenanceInterval: 60
-      maxIdleTime: 60
     mysql2:
       mapper-locations: "classpath:mapper/mysql2/*.xml"
-      url: jdbc:mysql://localhost:3306/dynamic2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+      jdbc-url: jdbc:mysql://localhost:3306/dynamic2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai&pinGlobalTxToPhysicalConnection=true
       username: root
       password: 123456
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      type: com.alibaba.druid.pool.xa.DruidXADataSource
-      initial-size: 1
-      min-idle: 1
-      max-active: 20
-      test-on-borrow: true
-      minPoolSize: 3
-      maxPoolSize: 25
-      maxLifetime: 20000
-      borrowConnectionTimeout: 30
-      loginTimeout: 30
-      maintenanceInterval: 60
-      maxIdleTime: 60
