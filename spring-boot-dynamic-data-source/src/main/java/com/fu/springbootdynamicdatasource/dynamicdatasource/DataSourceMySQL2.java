@@ -33,7 +33,6 @@ public class DataSourceMySQL2 {
         mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
         mysqlXaDataSource.setPassword(testConfig.getPassword());
         mysqlXaDataSource.setUser(testConfig.getUsername());
-        mysqlXaDataSource.setPinGlobalTxToPhysicalConnection(true);
 
         // 将本地事务注册到创 Atomikos全局事务
         AtomikosDataSourceBean xaDataSource = new AtomikosDataSourceBean();
