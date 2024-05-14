@@ -47,10 +47,6 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
         BoundSql boundSql = statementHandler.getBoundSql();
         try {
             String sql = formatSql(parameterHandler, boundSql);
-            //如果是存储过程，直接跳过
-            if (!sql.isEmpty() && sql.charAt(0) == '{') {
-                return invocation.proceed();
-            }
             if (!boundSql.getSql().equals(sql)) {
                 log.info("Execute SQL:\n{}", sql);
             }
@@ -73,8 +69,8 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
 
         String sql = boundSql.getSql().replaceAll("\\s+", " ");
 
-        // 输入sql字符串空判断
-        if (!StringUtils.hasText(sql)) {
+        // sql字符串是空或存储过程，直接跳过
+        if (!StringUtils.hasText(sql) || sql.charAt(0) == '{') {
             return "";
         }
 
