@@ -13,7 +13,7 @@ public class AutoConfig {
 
     @Bean
     //不包含这个类，这个类才会注入到Spring容器中
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(MyBatisSqlParsingPlugin.class)
     public MyBatisSqlParsingPlugin myBatisSqlParsingPlugin() {
         return new MyBatisSqlParsingPlugin();
     }
