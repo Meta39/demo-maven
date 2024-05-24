@@ -48,11 +48,12 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
         try {
             String sql = formatSql(parameterHandler, boundSql);
             if (!boundSql.getSql().equals(sql)) {
-                log.info("Execute SQL:\n{}", sql);
+                log.info("Execute SQL: {}", sql);
             }
         } catch (Exception e) {
             String sql = boundSql.getSql();
-            log.error("SQL:{}\nformatSql Exception:", sql, e);
+            log.error("SQL: {}", sql);
+            log.error("formatSql Exception: ", e);
         }
         return invocation.proceed();
     }
@@ -81,12 +82,11 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
             return sql;
         }
 
-        return handleCommonParameter(boundSql, mappedStatement);
+        return handleCommonParameter(sql, boundSql, mappedStatement);
     }
 
     //替换预编译SQL
-    private String handleCommonParameter(BoundSql boundSql, MappedStatement mappedStatement) {
-        String sql = boundSql.getSql();
+    private String handleCommonParameter(String sql, BoundSql boundSql, MappedStatement mappedStatement) {
         Object parameterObject = boundSql.getParameterObject();
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         Configuration configuration = mappedStatement.getConfiguration();
@@ -123,8 +123,8 @@ public final class MyBatisSqlParsingPlugin implements Interceptor {
                 return sql;
             }
             if (params.size() != count) {
-                log.error("SQL:{}", sql);
-                log.error("SQL parameters:{}", params);
+                log.error("params.size() != count SQL: {}", sql);
+                log.error("params.size() != count SQL parameters: {}", params);
                 return sql;
             }
             sql = sql.replaceAll("%", "%%");
