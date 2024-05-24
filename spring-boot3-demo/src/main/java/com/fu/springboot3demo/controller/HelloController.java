@@ -18,6 +18,11 @@ public class HelloController {
         return user;
     }
 
+    @GetMapping(value = "get")
+    public String get(){
+        return "hello";
+    }
+
     @GetMapping("hello")
     public User hello(){
         User user = new User();

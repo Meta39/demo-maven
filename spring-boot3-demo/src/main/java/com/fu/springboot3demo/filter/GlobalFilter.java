@@ -6,10 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 全局过滤器，过滤请求。
@@ -21,23 +21,31 @@ public class GlobalFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        BodyCachingHttpServletRequestWrapper requestWrapper = new BodyCachingHttpServletRequestWrapper((HttpServletRequest) servletRequest);
-        BodyCachingHttpServletResponseWrapper responseWrapper = new BodyCachingHttpServletResponseWrapper((HttpServletResponse) servletResponse);
-        byte[] requestBodyByte = requestWrapper.getBody();
+        ContentCachingRequestWrapper request = new ContentCachingRequestWrapper((HttpServletRequest) servletRequest);
+        ContentCachingResponseWrapper response = new ContentCachingResponseWrapper((HttpServletResponse) servletResponse);
+        // 继续执行请求链
+        filterChain.doFilter(request, response);
+
+        // 请求方法
+        String method = request.getMethod();
+        // URI
+        String uri = request.getRequestURI();
+        // 请求体
+        byte[] requestContent = request.getContentAsByteArray();
 
         //过滤请求内容，去除空格和换行符
-        String requestBodyString = new String(requestBodyByte);
-        Pattern pattern = Pattern.compile("\\s*|\t|\r|\n");
-        Matcher matcher = pattern.matcher(requestBodyString);//请求
-        String requestBodyFilterString = matcher.replaceAll("");//全部替换成空格
+        String requestBodyString = new String(requestContent).replaceAll("\\s+", " ");
+        log.info("请求内容:\nmethod: {}\nuri: {}\nrequest: {}", method, uri, requestBodyString);
 
-        log.info("请求内容:{}", requestBodyFilterString);
-        filterChain.doFilter(requestWrapper, responseWrapper);
+        // 响应状态
+        int status = response.getStatus();
+        // 响应体
+        byte[] responseContent = response.getContentAsByteArray();
 
-        //要在doFilter后面获取body，否则会无法获取到数据。
-        byte[] responseBodyByte = responseWrapper.getBody();
-        String responseBodyString = new String(responseBodyByte);
-        log.info("返回内容:{}", responseBodyString);
+        log.info("响应内容:\nstatus: {}\nresponse: {}", status, new String(responseContent));
+
+        // 把缓存的响应数据，响应给客户端
+        response.copyBodyToResponse();
     }
 
 }
