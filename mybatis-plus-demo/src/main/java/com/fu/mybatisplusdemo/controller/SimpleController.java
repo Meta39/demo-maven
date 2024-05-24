@@ -52,10 +52,16 @@ public class SimpleController {
         //手动事务不能加@Transactional注解，否则优先使用@Transactional注解的事务
         TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);//1、手动获取事务
         SimpleObject simpleObject = new SimpleObject();
-        simpleObject.setId(2);
-        simpleObject.setName("name" + System.currentTimeMillis());
-        simpleObjectMapper.insert(simpleObject);
-        platformTransactionManager.commit(transaction);//2.手动提交事务
+        try {
+            simpleObject.setId(2);
+            simpleObject.setName("name" + System.currentTimeMillis());
+            simpleObjectMapper.insert(simpleObject);
+            platformTransactionManager.commit(transaction);//2.手动提交事务
+        } catch (Exception e) {
+            platformTransactionManager.rollback(transaction);//4.发生异常手动回滚事务
+            log.error("insert2异常：", e);
+            throw new RuntimeException( "insert2异常：" + e.getMessage());
+        }
         SimpleObject simpleObject1 = restTemplate.getForEntity("http://localhost:8080/simple/2", SimpleObject.class, simpleObject.getId()).getBody();
         log.info("simpleObject1 （这里会输出simpleObject1）：{}",simpleObject1);//3.这里会输出id = 2的 SimpleObject 对象，因为事务提交，数据库会新增数据
         if (Objects.isNull(simpleObject1)) {
