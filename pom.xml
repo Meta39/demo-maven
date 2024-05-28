@@ -31,9 +31,11 @@
     </modules>
 
     <properties>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <java.version>1.8</java.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <!-- maven.compiler.source 和 maven.compiler.target 这2个参数需要引入 apache maven-compiler-plugin 插件 -->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <lombok.version>1.18.26</lombok.version>
@@ -197,6 +199,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <!-- 指定项目Java编译版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <!-- 初始内存大小 -->
+                    <meminitial>512m</meminitial>
+                    <!-- 最大内存使用量 -->
+                    <maxmem>2048m</maxmem>
+                </configuration>
             </plugin>
         </plugins>
         <resources>

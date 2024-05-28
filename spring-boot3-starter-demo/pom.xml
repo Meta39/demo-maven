@@ -78,6 +78,19 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <!-- 指定项目Java编译版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <!-- 初始内存大小 -->
+                    <meminitial>512m</meminitial>
+                    <!-- 最大内存使用量 -->
+                    <maxmem>2048m</maxmem>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
