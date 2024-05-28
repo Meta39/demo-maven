@@ -28,6 +28,7 @@
         <module>spring-boot-dynamic-data-source2</module>
         <module>spring-boot-rocketmq</module>
         <module>spring-boot-feign-seata-demo</module>
+        <module>spring-boot-readwrite-splitting-demo</module>
     </modules>
 
     <properties>
@@ -45,7 +46,7 @@
         <mysql.version>8.0.32</mysql.version>
         <druid.version>1.1.22</druid.version>
         <mybatis.version>2.3.1</mybatis.version>
-        <mybatis-plus.version>3.5.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <japidocs.version>1.4.4</japidocs.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <easy-es.version>1.1.1</easy-es.version>
