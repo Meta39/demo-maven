@@ -19,7 +19,7 @@ import java.util.Map;
  * 创建日期：2024-05-28
  */
 @Configuration
-public class DSConfig {
+public class DataSourceConfig {
 
     @Bean
     @ConfigurationProperties("spring.datasource.master")
@@ -35,13 +35,13 @@ public class DSConfig {
 
     @Primary
     @Bean
-    public DSRouting dynamicDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
-                                       @Qualifier("slaveDataSource") DataSource slaveDataSource) {
+    public ReadOnlyRoutingDataSource dynamicDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
+                                                       @Qualifier("slaveDataSource") DataSource slaveDataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
-        targetDataSources.put(DB.MASTER, masterDataSource);
-        targetDataSources.put(DB.SLAVE, slaveDataSource);
+        targetDataSources.put(MasterDB.MASTER, masterDataSource);//主库（事务）
+        targetDataSources.put(SlaveDB.SLAVE, slaveDataSource);//从库（只读）
 
-        DSRouting dataSource = new DSRouting();
+        ReadOnlyRoutingDataSource dataSource = new ReadOnlyRoutingDataSource();
         dataSource.setTargetDataSources(targetDataSources);
         dataSource.setDefaultTargetDataSource(masterDataSource); // 设置默认数据源为主数据库
 

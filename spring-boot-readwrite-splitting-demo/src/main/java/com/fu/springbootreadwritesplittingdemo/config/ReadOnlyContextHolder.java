@@ -1,14 +1,14 @@
 package com.fu.springbootreadwritesplittingdemo.config;
 
-public class DSContextHolder {
+public class ReadOnlyContextHolder {
 
-    private static final ThreadLocal<DB> CONTEXT_HOLDER = new ThreadLocal<>();
+    private static final ThreadLocal<SlaveDB> CONTEXT_HOLDER = new ThreadLocal<>();
 
-    public static void set(DB db) {
+    public static void set(SlaveDB db) {
         CONTEXT_HOLDER.set(db);
     }
 
-    public static DB get() {
+    public static SlaveDB get() {
         return CONTEXT_HOLDER.get();
     }
 

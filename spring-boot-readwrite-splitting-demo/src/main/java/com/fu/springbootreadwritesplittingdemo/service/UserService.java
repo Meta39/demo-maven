@@ -1,6 +1,6 @@
 package com.fu.springbootreadwritesplittingdemo.service;
 
-import com.fu.springbootreadwritesplittingdemo.config.DS;
+import com.fu.springbootreadwritesplittingdemo.config.ReadOnly;
 import com.fu.springbootreadwritesplittingdemo.entity.User;
 import com.fu.springbootreadwritesplittingdemo.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class UserService {
         userMapper.deleteById(userId);
     }
 
-    @DS
+    @ReadOnly
     public User selectById(Long userId) {
         return userMapper.selectById(userId);
     }
@@ -43,12 +43,12 @@ public class UserService {
      * 验证事务
      * 1、什么注解都不加，使用主数据源
      * 2、只使用 @Transactional 注解，不会切换数据源，只能修改主库数据。
-     * 3、只使用 @DS 注解，会切换数据源，主/从库都会修改。
-     * 4、同时使用 @Transactional + @DS 注解，会切换数据源，单只能修改主库数据。
-     * 结论：@Transactional 和 @DS 只能2选1
+     * 3、只使用 @ReadOnly 注解，会切换数据源，主/从库都会修改。
+     * 4、同时使用 @Transactional + @ReadOnly 注解，会切换数据源，单只能修改主库数据。
+     * 结论：@Transactional 和 @ReadOnly 只能2选1
      */
 //    @Transactional
-//    @DS//加了 @Transactional 事务注解，即使加了 @DS 动态数据源注解也不会写到从库。如果不加事务注解，使用 @DS 动态数据源，则会写入从库。
+//    @ReadOnly//加了 @Transactional 事务注解，即使加了 @ReadOnly 动态数据源注解也不会写到从库。如果不加事务注解，使用 @ReadOnly 动态数据源，则会写入从库。
     public void updateById() {
         User user = selectById(1L);
         user.setName("哈哈" + Math.random());
