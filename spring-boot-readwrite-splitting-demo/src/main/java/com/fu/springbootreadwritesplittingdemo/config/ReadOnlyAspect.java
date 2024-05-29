@@ -37,6 +37,10 @@ public class ReadOnlyAspect {
         }
     }
 
+    /**
+     * 如果加了事务，数据源切换其实是失败的。
+     * 读取的是主库的数据，只是切面还是会输出切换了数据源，但本质上走的是主库。
+     */
     @Around("dsPointCut()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         SlaveDB nowDb = roundRobinDB();
