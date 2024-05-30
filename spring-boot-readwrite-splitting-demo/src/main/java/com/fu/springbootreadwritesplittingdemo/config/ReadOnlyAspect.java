@@ -1,13 +1,8 @@
 package com.fu.springbootreadwritesplittingdemo.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,46 +15,62 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ReadOnlyAspect {
     protected static final AtomicInteger DB_INDEX = new AtomicInteger(0);
 
+    //事务切点
+    @Pointcut("@annotation(org.springframework.transaction.annotation.Transactional)")
+    public void transactionalPointCut() {
+    }
+
+    //执行事务切点之前将信息存储到ThreadLocal
+    @Before("transactionalPointCut()")
+    public void beforeTransactionalMethod() {
+        TransactionalThreadLocal.set(true);
+    }
+
+    @After("transactionalPointCut()")
+    public void afterTransactionalMethod() {
+        TransactionalThreadLocal.remove();
+    }
+
+    @AfterThrowing("transactionalPointCut()")
+    public void afterThrowingTransactionalMethod() {
+        TransactionalThreadLocal.remove();
+    }
+
+    //===================================== 事务切点结束 =========================================
+
+    //只读切点
     @Pointcut("@annotation(com.fu.springbootreadwritesplittingdemo.config.ReadOnly)")
-    public void dsPointCut() {
-
+    public void readOnlyPointCut() {
     }
 
-    /**
-     * 不能同时使用 @Transactional 和 @ReadOnly 注解
-     * @param transactional 事务注解
-     * @param readOnly 只读注解
-     */
-    @Before(value = "@annotation(transactional) && @annotation(readOnly)", argNames = "transactional,readOnly")
-    public void before(Transactional transactional, ReadOnly readOnly) {
-        if (transactional != null && readOnly != null) {
-            throw new RuntimeException("Using " + Transactional.class.getSimpleName() + " and " + ReadOnly.class.getSimpleName() + " together is not allowed");
+    //执行只读切点前判断是否使用了事务，如果使用了事务，则不进行数据源切换
+    @Before("readOnlyPointCut()")
+    public void beforeReadOnlyMethod() {
+        if (TransactionalThreadLocal.get()) {
+            return;
         }
-    }
-
-    /**
-     * 如果加了事务，数据源切换其实是失败的。
-     * 读取的是主库的数据，只是切面还是会输出切换了数据源，但本质上走的是主库。
-     */
-    @Around("dsPointCut()")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         SlaveDB nowDb = roundRobinDB();
         ReadOnlyContextHolder.set(nowDb);
         log.info("当前只读数据源为：{}", nowDb);
-        try {
-            return joinPoint.proceed();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            ReadOnlyContextHolder.clear();
-        }
     }
+
+    @After("readOnlyPointCut()")
+    public void afterReadOnlyMethod() {
+        ReadOnlyContextHolder.remove();
+    }
+
+    @AfterThrowing("readOnlyPointCut()")
+    public void afterThrowingReadOnlyMethod() {
+        ReadOnlyContextHolder.remove();
+    }
+
+    //===================================== 只读切点结束 =========================================
 
     /**
      * 轮询
      */
     protected SlaveDB roundRobinDB() {
-        int index = DB_INDEX.getAndIncrement();
+        int index = DB_INDEX.get();
         if (index >= SlaveDB.VALUES_LENGTH - 1) {
             DB_INDEX.set(0);
             return SlaveDB.getByIndex(0);

@@ -9,10 +9,10 @@ public class ReadOnlyContextHolder {
     }
 
     public static SlaveDB get() {
-        return CONTEXT_HOLDER.get();
+        return CONTEXT_HOLDER.get() == null ? null : CONTEXT_HOLDER.get();
     }
 
-    public static void clear() {
+    public static void remove() {
         CONTEXT_HOLDER.remove();
     }
 
