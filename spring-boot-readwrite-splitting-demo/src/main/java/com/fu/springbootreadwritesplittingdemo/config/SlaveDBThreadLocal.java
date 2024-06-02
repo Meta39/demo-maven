@@ -9,7 +9,8 @@ public class SlaveDBThreadLocal {
     }
 
     public static SlaveDB get() {
-        return SLAVE_DB_THREAD_LOCAL.get() == null ? null : SLAVE_DB_THREAD_LOCAL.get();
+        //这里可以返回null，如果是null，则使用默认数据源
+        return SLAVE_DB_THREAD_LOCAL.get();
     }
 
     public static void remove() {

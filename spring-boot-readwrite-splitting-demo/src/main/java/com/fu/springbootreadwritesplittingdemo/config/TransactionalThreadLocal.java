@@ -6,11 +6,15 @@ package com.fu.springbootreadwritesplittingdemo.config;
 public class TransactionalThreadLocal {
     private static final ThreadLocal<Boolean> IS_TRANSACTION = new ThreadLocal<>();
 
-    public static void set(Boolean value) {
+    public static void set(boolean value) {
         IS_TRANSACTION.set(value);
     }
-    public static Boolean get() {
-        return IS_TRANSACTION.get() != null && IS_TRANSACTION.get();
+    public static boolean get() {
+        //因为这里返回的是 boolean，因此不能返回null，如果返回null，会报空指针异常
+        if (IS_TRANSACTION.get() == null) {
+            return false;
+        }
+        return IS_TRANSACTION.get();
     }
 
     public static void remove() {
