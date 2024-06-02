@@ -19,24 +19,19 @@ public class ApplicationContextUtil implements ApplicationContextAware {
         ApplicationContextUtil.applicationContext = applicationContext;
     }
 
-    //获取applicationContext（一般情况下用户数。因为我们暂时只需要获取bean就不需要获取其它内容了，而获取bean直接调用下面的方法即可。）
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
     //通过name获取 Bean.（推荐，因为bean的name是唯一的，出现重名的bean启动会报错。）
     public static Object getBean(String name) {
-        return getApplicationContext().getBean(name);
+        return applicationContext.getBean(name);
     }
 
     //通过class获取Bean.（确保bean的name不会重复。因为可能会出现在不同包的同名bean导致获取到2个实例）
     public static <T> T getBean(Class<T> clazz) {
-        return getApplicationContext().getBean(clazz);
+        return applicationContext.getBean(clazz);
     }
 
     //通过name,以及Clazz返回指定的Bean（这个是最稳妥的）
     public static <T> T getBean(String name, Class<T> clazz) {
-        return getApplicationContext().getBean(name, clazz);
+        return applicationContext.getBean(name, clazz);
     }
 
 }
