@@ -56,6 +56,12 @@ public class ReadOnlyAspect {
 
     //===================================== 只读切点结束 =========================================
 
+    @Before("transactionalPointCut() && readOnlyPointCut()")
+    public void beforeTransactionalReadMethod() {
+        throw new IllegalArgumentException("@Transactional 和 @ReadOnly 注解互斥，不能同时作用在同一个方法上");
+    }
+
+
     /**
      * 轮询
      */
