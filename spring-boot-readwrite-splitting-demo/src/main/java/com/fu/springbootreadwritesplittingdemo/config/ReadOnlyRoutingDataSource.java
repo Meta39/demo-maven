@@ -9,7 +9,7 @@ public class ReadOnlyRoutingDataSource extends AbstractRoutingDataSource {
 
     @Override
     protected Object determineCurrentLookupKey() {
-        return ReadOnlyContextHolder.get();
+        return SlaveDBThreadLocal.get();
     }
 }
 

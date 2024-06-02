@@ -14,8 +14,6 @@ public class TransactionalThreadLocal {
     }
 
     public static void remove() {
-        if (get()) {
-            IS_TRANSACTION.remove();
-        }
+        IS_TRANSACTION.remove();
     }
 }

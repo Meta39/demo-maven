@@ -31,11 +31,6 @@ public class ReadOnlyAspect {
         TransactionalThreadLocal.remove();
     }
 
-    @AfterThrowing("transactionalPointCut()")
-    public void afterThrowingTransactionalMethod() {
-        TransactionalThreadLocal.remove();
-    }
-
     //===================================== 事务切点结束 =========================================
 
     //只读切点
@@ -50,18 +45,13 @@ public class ReadOnlyAspect {
             return;
         }
         SlaveDB nowDb = roundRobinDB();
-        ReadOnlyContextHolder.set(nowDb);
+        SlaveDBThreadLocal.set(nowDb);
         log.info("当前只读数据源为：{}", nowDb);
     }
 
     @After("readOnlyPointCut()")
     public void afterReadOnlyMethod() {
-        ReadOnlyContextHolder.remove();
-    }
-
-    @AfterThrowing("readOnlyPointCut()")
-    public void afterThrowingReadOnlyMethod() {
-        ReadOnlyContextHolder.remove();
+        SlaveDBThreadLocal.remove();
     }
 
     //===================================== 只读切点结束 =========================================
