@@ -5,11 +5,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 只配置静态资源拦截，不要在这配置跨域访问，因为配置了拦截器，这里的跨域访问就会失效。
+ * 只配置静态资源拦截，不要在这配置跨域访问，因为配置了过滤器，这里的跨域访问就会失效。
  * 应该在implements Filter的过滤器里面配置跨域访问
  */
 @Configuration
-public class CORSConfiguration implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 静态资源拦截
