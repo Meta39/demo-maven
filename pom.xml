@@ -207,6 +207,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
+                    <!-- jdk8+ 编译前/后的方法参数名称一致 -->
+                    <parameters>true</parameters>
                     <fork>true</fork>
                     <!-- 初始内存大小 -->
                     <meminitial>512m</meminitial>
