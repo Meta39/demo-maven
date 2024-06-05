@@ -35,8 +35,8 @@
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <java.version>1.8</java.version>
         <!-- maven.compiler.source 和 maven.compiler.target 这2个参数需要引入 apache maven-compiler-plugin 插件 -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <lombok.version>1.18.26</lombok.version>
@@ -185,6 +185,21 @@
     <build>
         <finalName>${project.artifactId}-${spring.profiles.active}</finalName>
         <plugins>
+            <!-- 指定项目Java编译版本 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <!-- jdk8+ 编译前/后的方法参数名称一致 -->
+                    <parameters>true</parameters>
+                    <fork>true</fork>
+                    <!-- 初始内存大小 -->
+                    <meminitial>512m</meminitial>
+                    <!-- 最大内存使用量 -->
+                    <maxmem>2048m</maxmem>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -200,21 +215,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- 指定项目Java编译版本 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <!-- jdk8+ 编译前/后的方法参数名称一致 -->
-                    <parameters>true</parameters>
-                    <fork>true</fork>
-                    <!-- 初始内存大小 -->
-                    <meminitial>512m</meminitial>
-                    <!-- 最大内存使用量 -->
-                    <maxmem>2048m</maxmem>
-                </configuration>
             </plugin>
         </plugins>
         <resources>
