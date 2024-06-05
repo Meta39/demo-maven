@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * 线程安全的HashMap之ConcurrentHashMap
+ * 和 Caffeine 相比，Caffeine 性能更好，但 ConcurrentHashMap 性能也不差！
+ * 主要区别就是 Caffeine 可以设置缓存的多种淘汰策略，ConcurrentHashMap只能手动淘汰！
  */
 public class JavaConcurrentHashMapTest {
     /**
