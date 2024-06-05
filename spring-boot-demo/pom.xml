@@ -92,7 +92,7 @@
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
-        <!--添加热重启-->
+        <!--添加热重启【打包会自动排除】-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -108,43 +108,5 @@
             <systemPath>${pom.basedir}/lib/aspose-words-21.1.0-jdk17-d.jar</systemPath>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <includeSystemScope>true</includeSystemScope>
-                    <excludes>
-                        <!--不打包lombok，因为lombok只在编译时使用，编译后就没用了-->
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                        <!--spring官方排除的依赖项-->
-                        <exclude>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-configuration-processor</artifactId>
-                        </exclude>
-                        <exclude>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-starter-test</artifactId>
-                        </exclude>
-                        <!-- JApiDocs离线接口文档不需要打包 -->
-                        <exclude>
-                            <groupId>io.github.yedaxia</groupId>
-                            <artifactId>japidocs</artifactId>
-                        </exclude>
-                        <!-- 热更新只是开发阶段使用，不需要打包 -->
-                        <exclude>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-devtools</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

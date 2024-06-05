@@ -205,7 +205,27 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring.boot.version}</version>
                 <configuration>
+                    <!-- 打包导入设置了 systemPath 的jar包 -->
+                    <includeSystemScope>true</includeSystemScope>
                     <addResources>true</addResources>
+                    <!-- 打包时排除依赖【如果子项目也引用了maven-compiler-plugin，则以子项目的配置为准】 -->
+                    <excludes>
+                        <!--不打包lombok，因为lombok只在编译时使用，编译后就没用了-->
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <!--spring官方排除的依赖项-->
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </exclude>
+                        <!-- 排除 test -->
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-test</artifactId>
+                        </exclude>
+                    </excludes>
                 </configuration>
                 <!-- 解决打包没有把依赖Jar包打入springboot的jar包的问题 -->
                 <executions>

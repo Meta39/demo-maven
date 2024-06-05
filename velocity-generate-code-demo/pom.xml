@@ -57,9 +57,15 @@
                 <configuration>
                     <mainClass>none</mainClass>
                     <excludes>
+                        <!--不打包lombok，因为lombok只在编译时使用，编译后就没用了-->
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </exclude>
+                        <!-- 排除 test -->
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-test</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>

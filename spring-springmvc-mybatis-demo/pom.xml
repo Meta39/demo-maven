@@ -111,6 +111,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
+                        <exclude>
+                            <!-- test -->
+                            <groupId>org.springframework</groupId>
+                            <artifactId>spring-test</artifactId>
+                        </exclude>
                     </excludes>
                 </configuration>
             </plugin>
