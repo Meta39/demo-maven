@@ -44,6 +44,8 @@
         <spring-cloud-dependencies.version>2021.0.9</spring-cloud-dependencies.version>
         <spring-cloud-alibaba-dependencies.version>2021.1</spring-cloud-alibaba-dependencies.version>
         <seata-spring-boot-starter.version>2.0.0</seata-spring-boot-starter.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <easyexcel.version>3.3.4</easyexcel.version>
         <druid-spring-boot-starter.version>1.2.23</druid-spring-boot-starter.version>
         <p6spy.version>3.9.1</p6spy.version>
         <pagehelper.version>6.1.0</pagehelper.version>
@@ -56,9 +58,10 @@
         <easy-es-boot-starter.version>1.1.1</easy-es-boot-starter.version>
         <elasticsearch-rest-high-level-client.version>7.14.0</elasticsearch-rest-high-level-client.version>
         <redisson.version>3.31.0</redisson.version>
-        <easyexcel.version>3.3.4</easyexcel.version>
         <velocity-engine-core.version>2.3</velocity-engine-core.version>
         <minio.version>7.1.0</minio.version>
+        <rocketmq-spring-boot-starter.version>2.3.0</rocketmq-spring-boot-starter.version>
+        <caffeine.version>2.9.3</caffeine.version>
     </properties>
 
     <!-- 必要依赖 -->
@@ -70,6 +73,29 @@
     <dependencyManagement>
         <dependencies>
             <!-- 如果这里填写了 spring-boot-dependencies 里包含的依赖，则会以当前配置的为准 -->
+            <!-- fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <!-- easyExcel -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>${easyexcel.version}</version>
+                <!-- 排除slf4j依赖，防止和springboot自带的slf4j依赖冲突 -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
             <!-- druid 数据库连接池（Spring） -->
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -154,23 +180,6 @@
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
-            <!-- easyExcel -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>easyexcel</artifactId>
-                <version>${easyexcel.version}</version>
-                <!-- 排除slf4j依赖，防止和springboot自带的slf4j依赖冲突 -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-simple</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>io.seata</groupId>
                 <artifactId>seata-spring-boot-starter</artifactId>
@@ -187,6 +196,18 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+            <!-- RocketMQ -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- caffeine 本地缓存 -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
             </dependency>
             <!-- Spring Boot 【放到最后面，因为前面定义了版本的话，就会覆盖Spring Boot自带的版本号】-->
             <dependency>
