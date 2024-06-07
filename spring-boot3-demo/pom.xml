@@ -90,27 +90,14 @@
 
     <build>
         <plugins>
-            <!-- 指定项目Java编译版本 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <parameters>true</parameters>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <fork>true</fork>
-                    <!-- 初始内存大小 -->
-                    <meminitial>512m</meminitial>
-                    <!-- 最大内存使用量 -->
-                    <maxmem>2048m</maxmem>
-                </configuration>
-            </plugin>
             <!-- AOT Graalvm native maven 插件 -->
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
-                <extensions>true</extensions>
+                <configuration>
+                    <skipTests>true</skipTests>
+                    <skipNativeTests>true</skipNativeTests>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -121,6 +108,10 @@
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-test</artifactId>
                         </exclude>
                     </excludes>
                 </configuration>
