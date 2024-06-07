@@ -41,16 +41,16 @@
         <spring-boot-dependencies.version>2.7.18</spring-boot-dependencies.version>
         <spring-cloud-dependencies.version>2021.0.9</spring-cloud-dependencies.version>
         <spring-cloud-alibaba-dependencies.version>2021.1</spring-cloud-alibaba-dependencies.version>
-        <druid-spring-boot-starter.version>1.1.22</druid-spring-boot-starter.version>
-        <mybatis.version>2.3.1</mybatis.version>
+        <seata-spring-boot-starter.version>2.0.0</seata-spring-boot-starter.version>
+        <druid-spring-boot-starter.version>1.2.23</druid-spring-boot-starter.version>
+        <mybatis-spring-boot-starter.version>2.3.2</mybatis-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.5.6</mybatis-plus-boot-starter.version>
         <japidocs.version>1.4.4</japidocs.version>
-        <xxl-job-core.version>2.3.0</xxl-job-core.version>
+        <xxl-job-core.version>2.4.1</xxl-job-core.version>
         <easy-es-boot-starter.version>1.1.1</easy-es-boot-starter.version>
         <elasticsearch-rest-high-level-client.version>7.14.0</elasticsearch-rest-high-level-client.version>
-        <redisson.version>3.20.0</redisson.version>
-        <easyexcel.version>3.2.1</easyexcel.version>
-        <seata-spring-boot-starter.version>2.0.0</seata-spring-boot-starter.version>
+        <redisson.version>3.31.0</redisson.version>
+        <easyexcel.version>3.3.4</easyexcel.version>
         <velocity-engine-core.version>2.3</velocity-engine-core.version>
     </properties>
 
@@ -97,6 +97,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- MyBatis -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
             </dependency>
             <!-- MyBatis-Plus -->
             <dependency>
