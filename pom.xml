@@ -38,20 +38,20 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.7.18</spring-boot.version>
-        <spring-cloud.version>2021.0.9</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
-        <druid.version>1.1.22</druid.version>
+        <spring-boot-dependencies.version>2.7.18</spring-boot-dependencies.version>
+        <spring-cloud-dependencies.version>2021.0.9</spring-cloud-dependencies.version>
+        <spring-cloud-alibaba-dependencies.version>2021.1</spring-cloud-alibaba-dependencies.version>
+        <druid-spring-boot-starter.version>1.1.22</druid-spring-boot-starter.version>
         <mybatis.version>2.3.1</mybatis.version>
-        <mybatis-plus.version>3.5.6</mybatis-plus.version>
+        <mybatis-plus-boot-starter.version>3.5.6</mybatis-plus-boot-starter.version>
         <japidocs.version>1.4.4</japidocs.version>
-        <xxl-job.version>2.3.0</xxl-job.version>
-        <easy-es.version>1.1.1</easy-es.version>
-        <elasticsearch.version>7.14.0</elasticsearch.version>
+        <xxl-job-core.version>2.3.0</xxl-job-core.version>
+        <easy-es-boot-starter.version>1.1.1</easy-es-boot-starter.version>
+        <elasticsearch-rest-high-level-client.version>7.14.0</elasticsearch-rest-high-level-client.version>
         <redisson.version>3.20.0</redisson.version>
         <easyexcel.version>3.2.1</easyexcel.version>
-        <seata.version>2.0.0</seata.version>
-        <velocity.version>2.3</velocity.version>
+        <seata-spring-boot-starter.version>2.0.0</seata-spring-boot-starter.version>
+        <velocity-engine-core.version>2.3</velocity-engine-core.version>
     </properties>
 
     <!-- 必要依赖 -->
@@ -72,7 +72,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
+                <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -80,7 +80,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
+                <version>${spring-cloud-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -88,7 +88,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${spring-cloud-alibaba.version}</version>
+                <version>${spring-cloud-alibaba-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -96,13 +96,13 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
-                <version>${druid.version}</version>
+                <version>${druid-spring-boot-starter.version}</version>
             </dependency>
             <!-- MyBatis-Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <version>${mybatis-plus-boot-starter.version}</version>
             </dependency>
             <!-- JApiDocs离线接口文档 -->
             <dependency>
@@ -114,23 +114,23 @@
             <dependency>
                 <groupId>com.xuxueli</groupId>
                 <artifactId>xxl-job-core</artifactId>
-                <version>${xxl-job.version}</version>
+                <version>${xxl-job-core.version}</version>
             </dependency>
             <!-- easy-es 开始 -->
             <dependency>
                 <groupId>cn.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
-                <version>${easy-es.version}</version>
+                <version>${easy-es-boot-starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.elasticsearch.client</groupId>
                 <artifactId>elasticsearch-rest-high-level-client</artifactId>
-                <version>${elasticsearch.version}</version>
+                <version>${elasticsearch-rest-high-level-client.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.elasticsearch</groupId>
                 <artifactId>elasticsearch</artifactId>
-                <version>${elasticsearch.version}</version>
+                <version>${elasticsearch-rest-high-level-client.version}</version>
             </dependency>
             <!-- easy-es 结束 -->
             <!--使用redisson作为分布式锁替换掉自定义分布式锁-->
@@ -159,13 +159,13 @@
             <dependency>
                 <groupId>io.seata</groupId>
                 <artifactId>seata-spring-boot-starter</artifactId>
-                <version>${seata.version}</version>
+                <version>${seata-spring-boot-starter.version}</version>
             </dependency>
             <!-- apache apache模板引擎 -->
             <dependency>
                 <groupId>org.apache.velocity</groupId>
                 <artifactId>velocity-engine-core</artifactId>
-                <version>${velocity.version}</version>
+                <version>${velocity-engine-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -191,7 +191,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
+                <version>${spring-boot-dependencies.version}</version>
                 <configuration>
                     <!-- 打包导入设置了 systemPath 的jar包 -->
                     <includeSystemScope>true</includeSystemScope>
