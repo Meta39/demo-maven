@@ -196,6 +196,7 @@
                 <configuration>
                     <!-- 打包导入设置了 systemPath 的jar包 -->
                     <includeSystemScope>true</includeSystemScope>
+                    <!-- 删除target/classes重复的资源 -->
                     <addResources>true</addResources>
                     <!-- 打包时排除依赖【如果子项目也引用了maven-compiler-plugin，则以子项目的配置为准】 -->
                     <excludes>
