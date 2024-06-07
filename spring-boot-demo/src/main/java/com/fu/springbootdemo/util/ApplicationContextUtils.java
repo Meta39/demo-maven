@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
  * 获取Bean
  */
 @Component
-public class ApplicationContextUtil implements ApplicationContextAware {
+public class ApplicationContextUtils implements ApplicationContextAware {
     //构造函数私有化，防止其它人实例化该对象
-    private ApplicationContextUtil(){}
+    private ApplicationContextUtils(){}
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ApplicationContextUtil.applicationContext = applicationContext;
+        ApplicationContextUtils.applicationContext = applicationContext;
     }
 
     //通过name获取 Bean.（推荐，因为bean的name是唯一的，出现重名的bean启动会报错。）
