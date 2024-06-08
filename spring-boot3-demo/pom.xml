@@ -104,6 +104,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <includeSystemScope>true</includeSystemScope>
+                    <addResources>true</addResources>
                     <excludes>
                         <!--不打包lombok，因为lombok只在编译时使用，编译后就没用了-->
                         <exclude>
