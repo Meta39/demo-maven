@@ -23,6 +23,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
     </properties>
 
@@ -126,6 +127,30 @@
                             <artifactId>log4j-to-slf4j</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <!-- 用 Dockerfile 把 Spring Boot 项目打包成 docker image 的 maven 插件【需要先clean 和 package 把 Spring Boot 项目打包成jar包】 -->
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>${dockerfile-maven-plugin.version}</version>
+                <configuration>
+                    <dockerfile>./Dockerfile</dockerfile>
+                    <!-- 不缓存 -->
+                    <noCache>true</noCache>
+                    <!-- image 版本号 -->
+                    <tag>${project.version}</tag>
+                    <!-- 传入 Dockerfile 的构建参数 -->
+                    <buildArgs>
+                        <JAR_NAME>${project.build.finalName}</JAR_NAME>
+                        <JDK>openjdk:21-ea-jdk-oracle</JDK>
+                    </buildArgs>
+                    <!-- docker 远程仓库地址【使用dockerfile:push的时候会使用】 -->
+                    <repository>localhost:5000/${project.artifactId}</repository>
+                    <!-- docker 远程仓库用户名 -->
+                    <username>username</username>
+                    <!-- docker 远程仓库密码 -->
+                    <password>password</password>
                 </configuration>
             </plugin>
         </plugins>
