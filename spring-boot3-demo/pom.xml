@@ -18,13 +18,13 @@
 
     <properties>
         <java.version>21</java.version>
-        <!-- maven3.8.1不支持 -->
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.5.0</springdoc-openapi-starter-webmvc-ui.version>
+        <mybatis-plus-spring-boot3-starter.version>3.5.6</mybatis-plus-spring-boot3-starter.version>
     </properties>
 
     <dependencies>
@@ -67,6 +67,13 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- MyBatis-Plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <!-- Spring Boot2及以下用的是 mybatis-plus-boot-starter，Spring Boot3开始用 mybatis-plus-spring-boot3-starter -->
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <version>${mybatis-plus-spring-boot3-starter.version}</version>
+        </dependency>
         <!-- cache 本地缓存【不引入 caffeine 默认用java自带的 ConcurrentHashMap 】 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -88,6 +95,11 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
         </dependency>
+        <!-- RestClient 和 RestTemplate 使用 Apache httpclient5 连接池-->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -101,6 +113,29 @@
                     <skipNativeTests>true</skipNativeTests>
                 </configuration>
             </plugin>
+            <!-- maven 编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 指定编码 -->
+                    <encoding>UTF-8</encoding>
+                    <!-- 指定要针对哪个 Java SE 版本构建项目 -->
+                    <release>${java.version}</release>
+                    <fork>true</fork>
+                    <!-- 设置编译初始内存大小 -->
+                    <meminitial>1024m</meminitial>
+                    <!-- 设置编译最大内存大小 -->
+                    <maxmem>2048m</maxmem>
+                    <compilerArgs>
+                        <!-- 启用 jdk8+ 参数 parameters【编译前后方法的参数名称一致】 -->
+                        <arg>-parameters</arg>
+                        <!-- 启用 21 参数 enable-preview【使用预览功能】 -->
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <!-- Spring Boot Maven 插件【前面设置了版本就会替换掉 spring-boot-maven-plugin 里默认的版本号】 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -142,8 +177,8 @@
                     <tag>${project.version}</tag>
                     <!-- 传入 Dockerfile 的构建参数 -->
                     <buildArgs>
-                        <JAR_NAME>${project.build.finalName}</JAR_NAME>
-                        <JDK>openjdk:21-ea-jdk-oracle</JDK>
+                        <JAR_NAME>${project.artifactId}</JAR_NAME>
+                        <JDK>openjdk:${java.version}-ea-jdk-oracle</JDK>
                     </buildArgs>
                     <!-- docker 远程仓库地址【使用dockerfile:push的时候会使用】 -->
                     <repository>localhost:5000/${project.artifactId}</repository>

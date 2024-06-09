@@ -10,6 +10,7 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 全局过滤器，过滤请求。
@@ -34,7 +35,7 @@ public class GlobalFilter implements Filter {
         byte[] requestContent = request.getContentAsByteArray();
 
         //过滤请求内容，去除空格和换行符
-        String requestBodyString = new String(requestContent).replaceAll("\\s+", " ");
+        String requestBodyString = new String(requestContent, StandardCharsets.UTF_8).replaceAll("\\s+", " ");
         log.info("请求内容:\nmethod: {}\nuri: {}\nrequest: {}", method, uri, requestBodyString);
 
         // 响应状态
@@ -42,7 +43,7 @@ public class GlobalFilter implements Filter {
         // 响应体
         byte[] responseContent = response.getContentAsByteArray();
 
-        log.info("响应内容:\nstatus: {}\nresponse: {}", status, new String(responseContent));
+        log.info("响应内容:\nstatus: {}\nresponse: {}", status, new String(responseContent, StandardCharsets.UTF_8));
 
         // 把缓存的响应数据，响应给客户端
         response.copyBodyToResponse();
