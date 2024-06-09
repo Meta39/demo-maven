@@ -177,8 +177,9 @@
                     <tag>${project.version}</tag>
                     <!-- 传入 Dockerfile 的构建参数 -->
                     <buildArgs>
-                        <JAR_NAME>${project.artifactId}</JAR_NAME>
-                        <JDK>openjdk:${java.version}-ea-jdk-oracle</JDK>
+                        <JAR_NAME>${project.build.finalName}</JAR_NAME>
+                        <!-- 通用 JRE 镜像 jre-${java.version}-slim-glibc 【推荐bellsoft 的 jre docker image，因为打出来的images比较小】 -->
+                        <JDK>bellsoft/liberica-runtime-container:jre-21.0.3-slim-glibc</JDK>
                     </buildArgs>
                     <!-- docker 远程仓库地址【使用dockerfile:push的时候会使用】 -->
                     <repository>localhost:5000/${project.artifactId}</repository>
