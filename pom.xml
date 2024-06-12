@@ -11,19 +11,20 @@
 
     <!-- 子模块 -->
     <modules>
+        <!-- 下面这2个项目依赖一个第三方jar包，所以注释掉。需要的时候放开即可。 -->
+        <!--<module>transform</module>
+        <module>spring-boot-demo</module>-->
         <module>base-demo</module>
         <module>easy-es-demo</module>
         <module>mybatis-plus-demo</module>
         <module>minio-demo</module>
         <module>xxl-job-demo</module>
         <module>redis-demo</module>
-        <module>spring-boot-demo</module>
         <module>spring-boot-security-demo</module>
         <module>spring-boot-jpa-demo</module>
         <module>spring-boot-kafka-demo</module>
         <module>velocity-generate-code-demo</module>
         <module>spring-springmvc-mybatis-demo</module>
-        <module>transform</module>
         <module>spring-boot-dynamic-data-source</module>
         <module>spring-boot-dynamic-data-source2</module>
         <module>spring-boot-rocketmq</module>
