@@ -1,6 +1,5 @@
 package com.fu.springbootdynamicdatasource2.annotations;
 
-import javafx.util.Pair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.*;
@@ -11,6 +10,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -25,7 +26,7 @@ public class MultiDataSourceTransactionalAspect {
     /**
      * 线程本地变量：为什么使用栈？※为了达到后进先出的效果※
      */
-    private static final ThreadLocal<Stack<Pair<DataSourceTransactionManager, TransactionStatus>>> THREAD_LOCAL = new ThreadLocal<>();
+    private static final ThreadLocal<Stack<Map.Entry<DataSourceTransactionManager, TransactionStatus>>> THREAD_LOCAL = new ThreadLocal<>();
 
     /**
      * 用于获取事务管理器
@@ -57,11 +58,11 @@ public class MultiDataSourceTransactionalAspect {
     public void before(DynamicTransactional transactional) {
         // 根据设置的事务名称按顺序声明，并放到ThreadLocal里
         String[] transactionManagerNames = transactional.transactionManagers();
-        Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = new Stack<>();
+        Stack<Map.Entry<DataSourceTransactionManager, TransactionStatus>> pairStack = new Stack<>();
         for (String transactionManagerName : transactionManagerNames) {
             DataSourceTransactionManager transactionManager = applicationContext.getBean(transactionManagerName, DataSourceTransactionManager.class);
             TransactionStatus transactionStatus = transactionManager.getTransaction(def);
-            pairStack.push(new Pair<>(transactionManager, transactionStatus));
+            pairStack.push(new AbstractMap.SimpleImmutableEntry<>(transactionManager, transactionStatus));
         }
         THREAD_LOCAL.set(pairStack);
     }
@@ -72,9 +73,9 @@ public class MultiDataSourceTransactionalAspect {
     @AfterReturning("pointcut()")
     public void afterReturning() {
         // ※栈顶弹出（后进先出）
-        Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
+        Stack<Map.Entry<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
         while (!pairStack.empty()) {
-            Pair<DataSourceTransactionManager, TransactionStatus> pair = pairStack.pop();
+            Map.Entry<DataSourceTransactionManager, TransactionStatus> pair = pairStack.pop();
             pair.getKey().commit(pair.getValue());
         }
         THREAD_LOCAL.remove();
@@ -86,9 +87,9 @@ public class MultiDataSourceTransactionalAspect {
     @AfterThrowing(value = "pointcut()")
     public void afterThrowing() {
         // ※栈顶弹出（后进先出）
-        Stack<Pair<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
+        Stack<Map.Entry<DataSourceTransactionManager, TransactionStatus>> pairStack = THREAD_LOCAL.get();
         while (!pairStack.empty()) {
-            Pair<DataSourceTransactionManager, TransactionStatus> pair = pairStack.pop();
+            Map.Entry<DataSourceTransactionManager, TransactionStatus> pair = pairStack.pop();
             pair.getKey().rollback(pair.getValue());
         }
         THREAD_LOCAL.remove();
