@@ -120,13 +120,16 @@
                 <configuration>
                     <!-- 指定编码 -->
                     <encoding>UTF-8</encoding>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                     <!-- 指定要针对哪个 Java SE 版本构建项目 -->
                     <release>${java.version}</release>
                     <fork>true</fork>
                     <!-- 设置编译初始内存大小 -->
-                    <meminitial>1024m</meminitial>
+                    <meminitial>256m</meminitial>
                     <!-- 设置编译最大内存大小 -->
-                    <maxmem>2048m</maxmem>
+                    <maxmem>1024m</maxmem>
+                    <!-- 传给 javac 的参数 -->
                     <compilerArgs>
                         <!-- 启用 jdk8+ 参数 parameters【编译前后方法的参数名称一致】 -->
                         <arg>-parameters</arg>
