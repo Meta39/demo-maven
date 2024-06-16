@@ -127,7 +127,11 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
+                    <!-- 快速构建【CPU和内存疯涨，这时候电脑会卡顿】或者将 GRAALVM_QUICK_BUILD 环境变量设置为 true -->
+                    <quickBuild>true</quickBuild>
                     <skipNativeTests>true</skipNativeTests>
+                    <debug>false</debug>
+                    <verbose>false</verbose>
                 </configuration>
             </plugin>
             <!-- maven 编译插件 -->

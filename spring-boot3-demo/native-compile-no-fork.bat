@@ -21,7 +21,7 @@ set MAVEN_ARGS=-Dmaven.test.skip=true ^
 
 echo mvn clean compile ......
 @REM 打包 native 必须使用 -P native否则打完包，启动后输出控制台会报错。
-start /B /WAIT cmd /c "mvn clean compile -f pom.xml -P native,%PROFILES%"
+start /B /WAIT cmd /c "mvn clean compile -f pom.xml -Pnative,%PROFILES%"
 @REM 如果上面这条 cmd 命令执行失败，则后续命令不会执行
 if %ERRORLEVEL% neq 0 (
     echo Error: mvn clean compile failed.
@@ -29,14 +29,14 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo mvn spring-boot:process-aot ......
-start /B /WAIT cmd /c "mvn spring-boot:process-aot -f pom.xml -P native,%PROFILES%"
+start /B /WAIT cmd /c "mvn spring-boot:process-aot -f pom.xml"
 if %ERRORLEVEL% neq 0 (
     echo Error: mvn spring-boot:process-aot failed.
     exit /b %ERRORLEVEL%
 )
 
 echo mvn native:compile-no-fork ......
-start /B /WAIT cmd /c "mvn native:compile-no-fork -f pom.xml -P native,%PROFILES% -Dnative-image.compiler-option=--local-images"
+start /B /WAIT cmd /c "mvn native:compile-no-fork -f pom.xml -Pnative"
 if %ERRORLEVEL% neq 0 (
     echo Error: mvn native:compile-no-fork failed.
     exit /b %ERRORLEVEL%
