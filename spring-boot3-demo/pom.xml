@@ -110,7 +110,6 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <configuration>
-                    <skipTests>true</skipTests>
                     <skipNativeTests>true</skipNativeTests>
                 </configuration>
             </plugin>
@@ -126,10 +125,6 @@
                     <!-- 指定要针对哪个 Java SE 版本构建项目 -->
                     <release>${java.version}</release>
                     <fork>true</fork>
-                    <!-- 设置编译初始内存大小 -->
-                    <meminitial>256m</meminitial>
-                    <!-- 设置编译最大内存大小 -->
-                    <maxmem>1024m</maxmem>
                     <!-- 传给 javac 的参数 -->
                     <compilerArgs>
                         <!-- 启用 jdk8+ 参数 parameters【编译前后方法的参数名称一致】 -->
@@ -194,6 +189,30 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <!-- 排除打包文件 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>application*.yml</exclude>
+                    <exclude>application*.properties</exclude>
+                </excludes>
+            </resource>
+            <!-- 打包需要的文件 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 解决yml配置@spring.profiles.active@时编译后没有生成对应环境的问题 -->
+                <filtering>true</filtering>
+                <!-- 只打包具体的环境，不打包其它环境的配置文件 -->
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>application.yml</include>
+                    <include>application-${spring.profiles.active}*.yml</include>
+                    <include>application.properties</include>
+                    <include>application-${spring.profiles.active}*.properties</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <!-- 环境配置 -->

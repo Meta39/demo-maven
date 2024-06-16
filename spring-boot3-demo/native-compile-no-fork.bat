@@ -7,7 +7,7 @@ set THREAD=1C
 set JAVA_HOME=C:/Users/X/.jdks/graalvm-jdk-21.0.3
 
 @REM 用于启动运行 Maven 的 JVM 的参数
-set MAVEN_OPTS= -Xms1024m -Xmx2048m -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=512m
+set MAVEN_OPTS= -Xms2048m -Xmx2048m -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=512m
 
 @REM 从 Maven 3.9.0 开始，此变量包含在 CLI 参数之前传递给 Maven 的参数。“^”符号表示命令将在下一行继续
 set MAVEN_ARGS=-Dmaven.test.skip=true ^
@@ -36,7 +36,7 @@ if %ERRORLEVEL% neq 0 (
 )
 
 echo mvn native:compile-no-fork ......
-start /B /WAIT cmd /c "mvn native:compile-no-fork -f pom.xml -P native,%PROFILES%"
+start /B /WAIT cmd /c "mvn native:compile-no-fork -f pom.xml -P native,%PROFILES% -Dnative-image.compiler-option=--local-images"
 if %ERRORLEVEL% neq 0 (
     echo Error: mvn native:compile-no-fork failed.
     exit /b %ERRORLEVEL%
