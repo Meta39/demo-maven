@@ -44,23 +44,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <!-- 使用 tomcat-embed-programmatic 需要排除 tomcat-embed-core 和 tomcat-embed-websocket 依赖 -->
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-websocket</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- tomcat-embed-programmatic 是一个实验性的Tomcat 依赖项，旨在降低内存占用。使用它会产生更小的原生镜像。 -->
-        <dependency>
-            <groupId>org.apache.tomcat.experimental</groupId>
-            <artifactId>tomcat-embed-programmatic</artifactId>
-            <version>${tomcat.version}</version>
         </dependency>
         <!-- 测试类 -->
         <dependency>
