@@ -117,27 +117,6 @@
                     <verbose>false</verbose>
                 </configuration>
             </plugin>
-            <!-- maven 编译插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <!-- 指定编码 -->
-                    <encoding>UTF-8</encoding>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <!-- 指定要针对哪个 Java SE 版本构建项目 -->
-                    <release>${java.version}</release>
-                    <fork>true</fork>
-                    <!-- 传给 javac 的参数 -->
-                    <compilerArgs>
-                        <!-- 启用 jdk8+ 参数 parameters【编译前后方法的参数名称一致】 -->
-                        <arg>-parameters</arg>
-                        <!-- 启用 21 参数 enable-preview【使用预览功能】 -->
-                        <arg>--enable-preview</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
             <!-- Spring Boot Maven 插件【前面设置了版本就会替换掉 spring-boot-maven-plugin 里默认的版本号】 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
