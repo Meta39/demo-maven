@@ -240,26 +240,6 @@
     <build>
         <finalName>${project.artifactId}-${spring.profiles.active}</finalName>
         <plugins>
-            <!-- 指定项目Java编译版本 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <fork>true</fork>
-                    <!-- 设置编译初始内存大小，在IDEA设置了，这里就不用设置了【Oracle 建议将年轻代的大小保持在总堆大小的 25% 以上和 50% 以下】 -->
-<!--                    <meminitial>1024m</meminitial>-->
-                    <!-- 设置编译最大内存大小，在IDEA设置了，这里就不用设置了【Oracle 建议对于服务器部署，-Xms和-Xmx通常设置为相同的值。】 -->
-<!--                    <maxmem>2048m</maxmem>-->
-                    <!-- 传给 javac 的参数 -->
-                    <compilerArgs>
-                        <!-- 启用 jdk8+ 参数 parameters【编译前后方法的参数名称一致】 -->
-                        <arg>-parameters</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
