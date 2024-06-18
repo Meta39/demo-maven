@@ -16,7 +16,6 @@ import com.baomidou.mybatisplus.extension.handlers.FastjsonTypeHandler;
 import com.baomidou.mybatisplus.extension.handlers.GsonTypeHandler;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -49,6 +48,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -103,8 +104,9 @@ public class MyBatisNativeConfiguration {
     @Override
     public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
       Stream.of(RawLanguageDriver.class,
+          XMLLanguageDriver.class,
           // TODO 增加了MybatisXMLLanguageDriver.class
-          XMLLanguageDriver.class, MybatisXMLLanguageDriver.class,
+          MybatisXMLLanguageDriver.class,
           RuntimeSupport.class,
           ProxyFactory.class,
           Slf4jImpl.class,
@@ -120,8 +122,9 @@ public class MyBatisNativeConfiguration {
           LruCache.class,
           SoftCache.class,
           WeakCache.class,
+          SqlSessionFactoryBean.class,
           //TODO 增加了MybatisSqlSessionFactoryBean.class
-          SqlSessionFactoryBean.class, MybatisSqlSessionFactoryBean.class,
+          MybatisSqlSessionFactoryBean.class,
           ArrayList.class,
           HashMap.class,
           TreeSet.class,
@@ -263,9 +266,8 @@ public class MyBatisNativeConfiguration {
         } else {
           result = (Class<?>) src;
         }
-      } else if (src instanceof ParameterizedType) {
-        ParameterizedType parameterizedType = (ParameterizedType) src;
-        int index = (parameterizedType.getRawType() instanceof Class
+      } else if (src instanceof ParameterizedType parameterizedType) {
+          int index = (parameterizedType.getRawType() instanceof Class
             && Map.class.isAssignableFrom((Class<?>) parameterizedType.getRawType())
             && parameterizedType.getActualTypeArguments().length > 1) ? 1 : 0;
         Type actualType = parameterizedType.getActualTypeArguments()[index];
@@ -281,8 +283,7 @@ public class MyBatisNativeConfiguration {
 
   static class MyBatisMapperFactoryBeanPostProcessor implements MergedBeanDefinitionPostProcessor, BeanFactoryAware {
 
-    private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(
-        MyBatisMapperFactoryBeanPostProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(MyBatisMapperFactoryBeanPostProcessor.class);
 
     private static final String MAPPER_FACTORY_BEAN = "org.mybatis.spring.mapper.MapperFactoryBean";
 
@@ -319,9 +320,8 @@ public class MyBatisNativeConfiguration {
     private Class<?> getMapperInterface(RootBeanDefinition beanDefinition) {
       try {
         return (Class<?>) beanDefinition.getPropertyValues().get("mapperInterface");
-      }
-      catch (Exception e) {
-        LOG.debug("Fail getting mapper interface type.", e);
+      } catch (Exception e) {
+        log.debug("Fail getting mapper interface type.", e);
         return null;
       }
     }
