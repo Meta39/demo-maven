@@ -4,12 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.concurrent.Executors;
-import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
-import static java.lang.StringTemplate.STR;
 
 
 /**
@@ -26,7 +24,7 @@ public class VirtualThreadTests {
         try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
             IntStream.range(0, 10_000).forEach(i -> executor.submit(() -> {
                 Thread.sleep(Duration.ofSeconds(1));
-                System.out.println(STR."task: \{i}");
+                System.out.println("task: " + i);
                 return i;
             }));
         }
@@ -47,7 +45,7 @@ public class VirtualThreadTests {
         // 手动启动虚拟线程
         thread.start();
         // 打印线程对象：VirtualThread[#21,pack]/runnable
-        System.out.println(STR."VirtualThread1: \{thread}");
+        System.out.println("VirtualThread1: " + thread);
     }
 
     /**
@@ -65,7 +63,7 @@ public class VirtualThreadTests {
      */
     @Test
     void testVirtualThread4() {
-        Thread.startVirtualThread(() -> System.out.printf("线程ID：%s - 任务执行完成", Thread.currentThread().threadId())) ;
+        Thread.startVirtualThread(() -> System.out.printf("线程ID：%s - 任务执行完成", Thread.currentThread().threadId()));
     }
 
     /**
@@ -74,7 +72,7 @@ public class VirtualThreadTests {
      */
     @Test
     void testVirtualThread5() throws InterruptedException {
-        try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
+        /*try (var scope = new StructuredTaskScope.ShutdownOnFailure()) {
             StructuredTaskScope.Subtask<String> fork1 = scope.fork(VirtualThreadTests::task1);
             StructuredTaskScope.Subtask<String> fork2 = scope.fork(VirtualThreadTests::task2);
             StructuredTaskScope.Subtask<String> fork3 = scope.fork(VirtualThreadTests::task3);
@@ -82,22 +80,22 @@ public class VirtualThreadTests {
             System.out.println(fork1);
             System.out.println(fork2);
             System.out.println(fork3);
-        }
+        }*/
     }
 
     private static String task1() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(3) ;
+        TimeUnit.SECONDS.sleep(3);
         return "task1 ok";
     }
 
     private static String task2() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(2) ;
-        System.out.println(1 / 0) ;
+        TimeUnit.SECONDS.sleep(2);
+        System.out.println(1 / 0);
         return "task2 ok";
     }
 
     private static String task3() throws InterruptedException {
-        TimeUnit.SECONDS.sleep(1) ;
+        TimeUnit.SECONDS.sleep(1);
         return "task3 ok";
     }
 
