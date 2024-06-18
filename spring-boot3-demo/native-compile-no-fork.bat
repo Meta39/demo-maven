@@ -1,13 +1,14 @@
 @echo off
+@REM 启动exe的时候要追加 -Djavax.xml.accessExternalDTD=all 参数使用 mybatis 的 xml 文件
 @REM 确保 Windows 安装了 Visual Studio Community
-set PROFILES=dev
+set PROFILES=test
 set THREAD=1C
 
 @REM 如果JAVA_HOME和mvn不一致，则手动修改jdk版本，即：set JAVA_HOME=C:/Users/X/.jdks/graalvm-jdk-21.0.3
 set JAVA_HOME=C:/Users/X/.jdks/graalvm-jdk-21.0.3
 
 @REM 用于启动运行 Maven 的 JVM 的参数
-set MAVEN_OPTS= -Xms2048m -Xmx2048m -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=512m --enable-preview
+set MAVEN_OPTS= -Xms2048m -Xmx2048m -XX:MaxMetaspaceSize=512m -XX:ReservedCodeCacheSize=512m
 
 @REM 从 Maven 3.9.0 开始，此变量包含在 CLI 参数之前传递给 Maven 的参数。“^”符号表示命令将在下一行继续
 set MAVEN_ARGS=-Dmaven.test.skip=true ^

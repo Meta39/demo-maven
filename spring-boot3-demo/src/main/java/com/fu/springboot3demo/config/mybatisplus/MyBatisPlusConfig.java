@@ -1,4 +1,4 @@
-package com.fu.springboot3demo.config;
+package com.fu.springboot3demo.config.mybatisplus;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+//TODO 如果使用这个方式的话,记得一定要指定 sqlSessionTemplateRef 或 sqlSessionFactoryRef https://github.com/mybatis/spring-boot-starter/wiki/Quick-Start-for-building-native-image#how-to-use-mapperscan
+//@MapperScan(basePackages = "com.fu.springboot3demo", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class MyBatisPlusConfig {
 
     @Bean
