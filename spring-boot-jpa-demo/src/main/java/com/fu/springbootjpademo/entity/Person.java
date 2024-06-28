@@ -1,10 +1,7 @@
 package com.fu.springbootjpademo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.Table;
 import org.hibernate.proxy.HibernateProxy;
@@ -72,6 +69,16 @@ public class Person {
     @Comment("版本号")
     @Version//版本号一致才能修改、删除。一般不建议使用此注解。
     private Long objectVersion;*/
+
+    /**
+     *
+     * 在 PersonDetails 实体中，我们使用 @JoinColumn 来指定外键列的名称关联 Person 的主键。
+     * cascade = CascadeType.ALL 和 orphanRemoval = true 到 Person 实体中的 @OneToOne 注解。这意味着当删除一个 Person 时，它的 PersonDetails 也会被删除
+     */
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude//因为人员表和人员详情表是双向引用，这些类中生成的两个toString()方法都会无休止地相互调用导致出现java.lang.StackOverflowError。
+    @EqualsAndHashCode.Exclude//和ToString同理
+    private PersonDetails personDetails;
 
     @Override
     public final boolean equals(Object o) {

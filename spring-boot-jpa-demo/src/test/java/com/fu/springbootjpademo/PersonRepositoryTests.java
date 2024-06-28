@@ -1,6 +1,7 @@
 package com.fu.springbootjpademo;
 
 import com.fu.springbootjpademo.entity.Person;
+import com.fu.springbootjpademo.entity.PersonDetails;
 import com.fu.springbootjpademo.repositories.PersonRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Date;
 
 @Slf4j
 @SpringBootTest
@@ -19,19 +21,27 @@ public class PersonRepositoryTests {
      * 新增/修改
      */
     @Test
-    public void save(){
+    public void save() {
         Person person = new Person();
         person.setName("Meta");
         person.setSex(0);
-        this.personRepository.save(person);
-        log.info("{}",this.personRepository.save(person));
+
+        PersonDetails personDetails = new PersonDetails();
+        personDetails.setAddress("马路边");
+        personDetails.setBirthday(new Date());
+        personDetails.setPhone("12345678910");
+        personDetails.setPerson(person);//如果不设置person，则外键会为null
+
+        person.setPersonDetails(personDetails);
+        Person savePerson = personRepository.save(person);
+        log.info("{}", savePerson);
     }
 
     /**
      * 查询
      */
     @Test
-    public void search(){
+    public void search() {
 //        log.info("{}",this.personRepository.findById(1L));//使用框架自带的方法
 //        log.info("{}",this.personRepository.findByName("Meta"));//使用自定义根据名称查询方法
 //        log.info("{}",this.personRepository.findByNameLike("%t%"));//使用自定义模糊查询方法
@@ -45,9 +55,9 @@ public class PersonRepositoryTests {
      * 删除
      */
     @Test
-    public void delete(){
+    public void delete() {
         this.personRepository.deleteById(1L);//根据ID删除一条记录
-        this.personRepository.deleteAllById(Arrays.asList(1L,2L,3L));//根据ID集合批量删除记录
+        this.personRepository.deleteAllById(Arrays.asList(1L, 2L, 3L));//根据ID集合批量删除记录
     }
 
 }
