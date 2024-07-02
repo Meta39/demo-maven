@@ -1,0 +1,24 @@
+package com.fu.springbootwebservicedemo.util;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
+/**
+ * jackson 工具类
+ */
+public abstract class JacksonUtils {
+    public static final ObjectMapper JSON = new ObjectMapper();
+    public static final ObjectMapper XML = new XmlMapper();
+
+    static {
+        // json 配置
+        JSON.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        JSON.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // xml 配置
+        XML.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        XML.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    }
+
+}

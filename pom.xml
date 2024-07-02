@@ -31,6 +31,7 @@
         <module>spring-boot-feign-seata-demo</module>
         <module>spring-boot-readwrite-splitting-demo</module>
         <module>spring-boot-starter-mybatis-sql-log</module>
+        <module>spring-boot-webservice-demo</module>
     </modules>
 
     <properties>
@@ -63,6 +64,7 @@
         <minio.version>7.1.0</minio.version>
         <rocketmq-spring-boot-starter.version>2.3.0</rocketmq-spring-boot-starter.version>
         <caffeine.version>2.9.3</caffeine.version>
+        <cxf-spring-boot-starter-jaxws.version>3.6.3</cxf-spring-boot-starter-jaxws.version>
     </properties>
 
     <!-- 必要依赖 -->
@@ -209,6 +211,12 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${caffeine.version}</version>
+            </dependency>
+            <!-- apache cxf -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+                <version>${cxf-spring-boot-starter-jaxws.version}</version>
             </dependency>
             <!-- Spring Boot 【放到最后面，因为前面定义了版本的话，就会覆盖Spring Boot自带的版本号】-->
             <dependency>
