@@ -1,5 +1,6 @@
 package com.fu.springbootwebservicedemo.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -14,9 +15,11 @@ public abstract class JacksonUtils {
 
     static {
         // json 配置
+        JSON.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         JSON.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         JSON.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         // xml 配置
+        XML.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         XML.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         XML.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
