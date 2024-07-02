@@ -30,7 +30,7 @@ public class WebServiceConfig {
     }
 
     @Bean
-    public Endpoint helloServiceEndpoint() {
+    public Endpoint endpoint() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), new WebServiceEntry());
         endpoint.publish("/WebServiceEntry");
         return endpoint;
