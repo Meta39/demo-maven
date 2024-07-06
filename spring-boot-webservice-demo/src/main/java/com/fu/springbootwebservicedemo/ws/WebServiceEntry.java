@@ -27,7 +27,13 @@ public class WebServiceEntry {
     @WebMethod
     public String invoke(@WebParam(name = "service") String service, @WebParam(name = "parameter") String parameter) throws JsonProcessingException {
         IWebService webService = (IWebService) ApplicationContextUtils.getBean(service);
-        R<?> r = webService.handle(parameter);
+        R<?> r;
+        try {
+            r = webService.handle(parameter);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            r = R.err(e.getMessage());
+        }
         return JacksonUtils.XML.writeValueAsString(r);
     }
 
