@@ -20,6 +20,7 @@
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.build.timestamp.format>yyyy-MM-dd_(HH+8)-mm-ss</maven.build.timestamp.format>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
@@ -128,6 +129,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
         <plugins>
             <!-- AOT Graalvm native maven 插件 -->
             <plugin>
