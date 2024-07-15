@@ -1,25 +1,24 @@
-package com.bsoft.bsjkt.util;
+package com.fu.springbootdemo.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 日期时间工具类
  *
- * @author zhongyf
  * @since 2024-07-05
  */
 public class DateTimeUtils {
     private DateTimeUtils() {
     }
 
-    //自定义格式(没有的格式在自定义格式后面加，不要在默认格式后面加！)
+    // 自定义格式
     public static final String DIY_TIME_FORMAT_NO_SECOND = "HH:mm";
     public static final String DIY_TIME_FORMAT = "HHmmss";
     public static final String DIY_DATE_FORMAT = "yyyyMMdd";
@@ -29,6 +28,13 @@ public class DateTimeUtils {
     public static final String DEFAULT_TIME_FORMAT = "HH:mm:ss";
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd";
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    // 缓存DateTimeFormatter实例
+    private static final ConcurrentMap<String, DateTimeFormatter> formatterCache = new ConcurrentHashMap<>();
+
+    private static DateTimeFormatter getFormatter(String format) {
+        return formatterCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
+    }
 
     // Date to LocalDate
     public static LocalDate dateToLocalDate(Date date) {
@@ -67,7 +73,7 @@ public class DateTimeUtils {
 
     // String to LocalDate with specified format
     public static LocalDate stringToLocalDate(String dateStr, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return LocalDate.parse(dateStr, formatter);
     }
 
@@ -78,7 +84,7 @@ public class DateTimeUtils {
 
     // String to LocalTime with specified format
     public static LocalTime stringToLocalTime(String timeStr, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return LocalTime.parse(timeStr, formatter);
     }
 
@@ -89,7 +95,7 @@ public class DateTimeUtils {
 
     // String to LocalDateTime with specified format
     public static LocalDateTime stringToLocalDateTime(String dateTimeStr, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return LocalDateTime.parse(dateTimeStr, formatter);
     }
 
@@ -100,7 +106,7 @@ public class DateTimeUtils {
 
     // LocalDate to String with specified format
     public static String localDateToString(LocalDate localDate, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return localDate.format(formatter);
     }
 
@@ -111,7 +117,7 @@ public class DateTimeUtils {
 
     // LocalTime to String with specified format
     public static String localTimeToString(LocalTime localTime, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return localTime.format(formatter);
     }
 
@@ -122,7 +128,7 @@ public class DateTimeUtils {
 
     // LocalDateTime to String with specified format
     public static String localDateTimeToString(LocalDateTime localDateTime, String format) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        DateTimeFormatter formatter = getFormatter(format);
         return localDateTime.format(formatter);
     }
 
@@ -133,12 +139,9 @@ public class DateTimeUtils {
 
     // String to Date with specified format
     public static Date stringToDate(String dateStr, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        try {
-            return sdf.parse(dateStr);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        DateTimeFormatter formatter = getFormatter(format);
+        LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
     // Date to String with default format
@@ -148,8 +151,8 @@ public class DateTimeUtils {
 
     // Date to String with specified format
     public static String dateToString(Date date, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        return sdf.format(date);
+        DateTimeFormatter formatter = getFormatter(format);
+        return formatter.format(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
     }
 
 }
