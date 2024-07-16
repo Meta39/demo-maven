@@ -13,15 +13,12 @@ import java.lang.reflect.Method;
  */
 @Getter
 @AllArgsConstructor
-public class ServiceInfo<T, R> {
-    private final GenericService<T, R> service;
+public class ServiceInfo<T> {
+    private final GenericService<T> service;
     private final Method method;
     private final Class<T> requestType;
-    private final Class<R> responseType;
 
-    @SuppressWarnings("unchecked")
-    public R invoke(Object requestObject) throws IllegalAccessException, InvocationTargetException {
-        return (R) method.invoke(service, requestObject);
+    public Object invoke(Object requestObject) throws IllegalAccessException, InvocationTargetException {
+        return method.invoke(service, requestObject);
     }
 }
-

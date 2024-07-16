@@ -13,6 +13,6 @@ public class ServiceCacheUtils {
 
     }
 
-    public static ConcurrentHashMap<String, ServiceInfo<?, ?>> cache = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, ServiceInfo<?>> cache = new ConcurrentHashMap<>();
 
 }

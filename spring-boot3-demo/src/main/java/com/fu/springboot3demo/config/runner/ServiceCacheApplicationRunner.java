@@ -25,14 +25,13 @@ public class ServiceCacheApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws NoSuchMethodException {
         String[] beanNames = ApplicationContextUtils.getBeanNamesForType(GenericService.class);
         for (String beanName : beanNames) {
-            GenericService<?, ?> service = (GenericService<?, ?>) ApplicationContextUtils.getBean(beanName);
+            GenericService<Object> service = (GenericService<Object>) ApplicationContextUtils.getBean(beanName);
             Type[] genericInterfaces = service.getClass().getGenericInterfaces();
             ParameterizedType parameterizedType = (ParameterizedType) genericInterfaces[0];
-            Class<?> requestType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-            Class<?> responseType = (Class<?>) parameterizedType.getActualTypeArguments()[1];
+            Class<Object> requestType = (Class<Object>) parameterizedType.getActualTypeArguments()[0];
             Method method = service.getClass().getMethod("invoke", requestType);
             // 显式类型转换
-            ServiceInfo<Object, Object> serviceInfo = new ServiceInfo<>((GenericService<Object, Object>) service, method, (Class<Object>) requestType, (Class<Object>) responseType);
+            ServiceInfo<Object> serviceInfo = new ServiceInfo<>(service, method, requestType);
             //写入缓存
             ServiceCacheUtils.cache.put(beanName, serviceInfo);
         }

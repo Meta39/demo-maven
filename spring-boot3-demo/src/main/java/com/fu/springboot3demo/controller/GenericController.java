@@ -26,15 +26,14 @@ public class GenericController {
     public Object invokeService(@PathVariable String serviceName, @RequestBody(required = false) Map<String, Object> requestBody) throws InvocationTargetException, IllegalAccessException {
 //        log.info("{}接口入参：{}", serviceName, requestBody);
         // 从缓存获取ServiceInfo
-        ServiceInfo<?, ?> serviceInfo = ServiceCacheUtils.cache.get(serviceName);
+        ServiceInfo<?> serviceInfo = ServiceCacheUtils.cache.get(serviceName);
         //这里可以进行判空，但是没必要。没有的就让它抛异常。
         // 将请求参数转换为具体的类型
         Object requestObject = objectMapper.convertValue(requestBody, serviceInfo.getRequestType());
         // 调用Service的invoke方法并获取返回值
         Object responseObject = serviceInfo.invoke(requestObject);
 //        log.info("{}接口出参：{}", serviceName, responseObject);
-        // 返回结果
-        return objectMapper.convertValue(responseObject, serviceInfo.getResponseType());
+        return responseObject;
     }
 
 }

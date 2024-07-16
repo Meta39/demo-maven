@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service("helloWorld")
-public class HelloWorldGenericServiceImpl implements GenericService<GenericServiceDto, String> {
+public class HelloWorldGenericServiceImpl implements GenericService<GenericServiceDto> {
 
     @Override
     public String invoke(GenericServiceDto request) {

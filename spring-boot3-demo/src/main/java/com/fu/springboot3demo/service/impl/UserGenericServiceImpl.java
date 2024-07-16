@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service("user")
-public class UserGenericServiceImpl implements GenericService<GenericServiceDto, User> {
+public class UserGenericServiceImpl implements GenericService<GenericServiceDto> {
 
     @Override
     public User invoke(GenericServiceDto request) {
