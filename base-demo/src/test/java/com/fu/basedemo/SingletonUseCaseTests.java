@@ -1,5 +1,6 @@
 package com.fu.basedemo;
 
+import com.fu.basedemo.designpattern.singleton.usecase.ConfigurationManager;
 import com.fu.basedemo.designpattern.singleton.usecase.DatabaseAccess;
 import com.fu.basedemo.entity.User;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,15 @@ public class SingletonUseCaseTests {
     void testSingletonUseCase() {
         DatabaseAccess databaseAccess = new DatabaseAccess();
         System.out.println(databaseAccess.getUsers(User.class));;
+    }
+
+    /**
+     * 测试配置管理
+     */
+    @Test
+    void testConfigurationManager() {
+        String app = ConfigurationManager.getProperty("params.app");
+        System.out.println(app);
     }
 
 }
