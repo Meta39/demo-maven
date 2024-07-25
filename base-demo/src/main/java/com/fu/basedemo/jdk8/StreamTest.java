@@ -3,6 +3,7 @@ package com.fu.basedemo.jdk8;
 import com.fu.basedemo.entity.User;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,13 +19,7 @@ import java.util.stream.Collectors;
 public class StreamTest {
 
     private static List<User> getData(){
-        return Arrays.asList(
-                new User("张三"),
-                new User("李四"),
-                new User("八嘎压路"),
-                new User("张三"),
-                new User("王小明")
-        );
+        return new ArrayList<>();
     }
 
     // 筛选与切片
