@@ -16,13 +16,14 @@ public class ForkJoinTests {
         //创建MyTask对象
         MyTask myTask = new MyTask(0,100);
         //创建分支合并池对象
-        ForkJoinPool forkJoinPool = new ForkJoinPool();
-        ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(myTask);
-        //获取最终合并的结果
-        Integer result = forkJoinTask.get();
-        System.out.println(result);
-        //关闭池对象
-        forkJoinPool.shutdown();
+        try (ForkJoinPool forkJoinPool = new ForkJoinPool()) {
+            ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(myTask);
+            //获取最终合并的结果
+            Integer result = forkJoinTask.get();
+            System.out.println(result);
+            //关闭池对象
+            forkJoinPool.shutdown();
+        }
     }
 }
 
@@ -30,8 +31,8 @@ public class ForkJoinTests {
 class MyTask extends RecursiveTask<Integer> {
     //拆分差值不能超过VALUE，计算VALUE以内的运算。
     private static final Integer VALUE = 10;
-    private int begin; //拆分开始值
-    private int end; //拆分结束值
+    private final int begin; //拆分开始值
+    private final int end; //拆分结束值
     private int result; //返回结果
 
     //2.创建有参构造函数
