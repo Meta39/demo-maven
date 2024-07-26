@@ -16,14 +16,13 @@ public class ForkJoinTests {
         //创建MyTask对象
         MyTask myTask = new MyTask(0,100);
         //创建分支合并池对象
-        try (ForkJoinPool forkJoinPool = new ForkJoinPool()) {
-            ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(myTask);
-            //获取最终合并的结果
-            Integer result = forkJoinTask.get();
-            System.out.println(result);
-            //关闭池对象
-            forkJoinPool.shutdown();
-        }
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        ForkJoinTask<Integer> forkJoinTask = forkJoinPool.submit(myTask);
+        //获取最终合并的结果
+        Integer result = forkJoinTask.get();
+        System.out.println(result);
+        //关闭池对象
+        forkJoinPool.shutdown();
     }
 }
 
