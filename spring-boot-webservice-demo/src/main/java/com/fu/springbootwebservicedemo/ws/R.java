@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-@AllArgsConstructor
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @JacksonXmlRootElement(localName = "R")
 public class R<T> {
     @JacksonXmlProperty(localName = "Code")

@@ -19,6 +19,14 @@ public class Res<T> implements Serializable {
     private T data; //数据
 
     /**
+     * 成功（前端没有特别要求状态码，无参数返回，直接用这个。）
+     *
+     */
+    public static <T> Res<T> ok() {
+        return ok("success", null);
+    }
+
+    /**
      * 成功（前端没有特别要求状态码，直接用这个。）
      *
      * @param data 数据
