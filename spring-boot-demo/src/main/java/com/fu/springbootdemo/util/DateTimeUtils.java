@@ -6,8 +6,8 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * 日期时间工具类
@@ -30,7 +30,7 @@ public class DateTimeUtils {
     public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     // 缓存DateTimeFormatter实例
-    private static final ConcurrentMap<String, DateTimeFormatter> formatterCache = new ConcurrentHashMap<>();
+    private static final Map<String, DateTimeFormatter> formatterCache = new ConcurrentHashMap<>();
 
     public static DateTimeFormatter getFormatter(String format) {
         return formatterCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
