@@ -7,7 +7,6 @@
         <el-breadcrumb-item>{{ currentPathName }}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
-    <router-link to="/Toolbox"><el-tag size="medium">工具箱</el-tag></router-link>
     <el-dropdown style="width: 150px; cursor: pointer; text-align: right">
       <div style="display: inline-block">
         <span>{{user.nickname}}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>

@@ -1,8 +1,0 @@
-spring:
-  profiles:
-    active: '@spring.profiles.active@'
-  application:
-    name: '@artifactId@'
-
-logging:
-  config: classpath:logback/@spring.profiles.active@.xml

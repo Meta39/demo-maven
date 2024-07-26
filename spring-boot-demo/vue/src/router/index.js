@@ -48,8 +48,7 @@ export const setRoutes = () => {
       const manageRoute = { path: '/', name: 'Manage', component: () => import('../components/Manage.vue'), redirect: "/home" ,children: [
           { path: 'home', name: '主页', component: () => import('../components/Home.vue')},
           { path: 'person', name: '个人信息', component: () => import('../components/person/Person.vue')},
-          { path: 'password', name: '修改密码', component: () => import('../components/person/Password.vue')},
-          { path: 'toolbox', name: '工具箱', component: () => import('../components/Toolbox.vue')}
+          { path: 'password', name: '修改密码', component: () => import('../components/person/Password.vue')}
         ] }
       const menus = JSON.parse(storeMenus)
       menus.forEach(item => {

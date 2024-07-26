@@ -11,9 +11,7 @@
 
     <!-- 子模块 -->
     <modules>
-        <!-- 下面这2个项目依赖一个第三方jar包，所以注释掉。需要的时候放开即可。 -->
-        <!--<module>transform</module>
-        <module>spring-boot-demo</module>-->
+        <module>spring-boot-demo</module>
         <module>base-demo</module>
         <module>easy-es-demo</module>
         <module>mybatis-plus-demo</module>
