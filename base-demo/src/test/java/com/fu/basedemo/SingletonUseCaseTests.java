@@ -2,6 +2,7 @@ package com.fu.basedemo;
 
 import com.fu.basedemo.designpattern.singleton.usecase.ConfigurationManager;
 import com.fu.basedemo.designpattern.singleton.usecase.DatabaseAccess;
+import com.fu.basedemo.designpattern.singleton.usecase.LoggerAsync;
 import com.fu.basedemo.designpattern.singleton.usecase.SingletonCache;
 import com.fu.basedemo.designpattern.singleton.usecase.async.AsyncExecutor;
 import com.fu.basedemo.designpattern.singleton.usecase.async.AsyncInvocationHandler;
@@ -62,6 +63,15 @@ public class SingletonUseCaseTests {
     void testSingletonCache() {
         SingletonCache.put("key", "value");
         System.out.println(SingletonCache.get("key"));
+    }
+
+    /**
+     * 测试日志记录
+     */
+    @Test
+    void testLogger() {
+        LoggerAsync logger = LoggerAsync.getInstance();
+        logger.log("哈哈");
     }
 
 }
