@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,10 +16,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("user")
+@RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * 根据ID查询用户

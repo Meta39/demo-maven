@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.entity.Role;
 import com.fu.springbootdemo.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,10 +16,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("role")
+@RequiredArgsConstructor
 public class RoleController {
-
-    @Autowired
-    private RoleService roleService;
+    private final RoleService roleService;
 
     /**
      * 根据ID查询角色

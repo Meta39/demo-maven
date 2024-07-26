@@ -2,12 +2,11 @@ package com.fu.springbootdemo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.entity.Article;
 import com.fu.springbootdemo.mapper.ArticleMapper;
 import com.fu.springbootdemo.service.ArticleService;
 import com.fu.springbootdemo.util.CurrentLoginUserUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -20,9 +19,9 @@ import java.util.List;
  * @since 2023-04-15 23:06:07
  */
 @Service
-public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
-    @Autowired
-    private ArticleMapper articleMapper;
+@RequiredArgsConstructor
+public class ArticleServiceImpl implements ArticleService {
+    private final ArticleMapper articleMapper;
 
     /**
      * 根据ID查询文章

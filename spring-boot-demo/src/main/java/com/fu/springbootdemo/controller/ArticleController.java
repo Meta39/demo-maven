@@ -3,7 +3,7 @@ package com.fu.springbootdemo.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fu.springbootdemo.entity.Article;
 import com.fu.springbootdemo.service.ArticleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,10 +17,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("article")
+@RequiredArgsConstructor
 public class ArticleController {
-
-    @Autowired
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
     /**
      * 根据ID查询文章

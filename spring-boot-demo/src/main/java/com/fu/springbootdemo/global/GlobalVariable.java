@@ -1,7 +1,5 @@
 package com.fu.springbootdemo.global;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * 全局变量
  */
@@ -12,8 +10,6 @@ public class GlobalVariable {
     public static final String TOKEN = "token";//请求头token名称
 
     public static final String ENCRYPT_TYPE = "RSA"; //加密类型：RSA非对称加密
-
-    public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(); //因为ObjectMapper是线程安全的，所以全局只需要new一个即可。
 
     //Token RSA 公钥（项目正在运行就不要改，如果要改就清空Redis的Token，再重新生成密钥对，替换成公钥字符串）
     public static final String RSA_TOKEN_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCatK5Aw6QoIKgMN8uOUsAMq+l+uzdfh91LIIgyigh6/HwJPXYCqMAUA2sXKaRqpIzr0XZRq0z3A4LmLHLlikmcjwgFjvsu9tS4opaW263VPgtr4VRfSqUl4Qzi53Ypp+UPDQ/xTkuDmDuR4qdftM9BDKE0ZvvS0XljNzSGUkNJuQIDAQAB";

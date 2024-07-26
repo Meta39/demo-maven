@@ -1,7 +1,7 @@
 package com.fu.springbootdemo.strategy.controller;
 
 import com.fu.springbootdemo.strategy.ExecuteStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("strategy")
+@RequiredArgsConstructor
 public class StrategyController {
-    @Autowired
-    private ExecuteStrategy executeStrategy;
+    private final ExecuteStrategy executeStrategy;
 
     /**
      * 登录接口

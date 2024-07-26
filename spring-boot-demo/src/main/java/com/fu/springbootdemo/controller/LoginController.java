@@ -4,8 +4,10 @@ import com.fu.springbootdemo.global.LoginDTO;
 import com.fu.springbootdemo.global.TokenInfo;
 import com.fu.springbootdemo.global.UpdatePwdDTO;
 import com.fu.springbootdemo.service.LoginService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -14,9 +16,9 @@ import javax.validation.Valid;
  * 登录相关接口
  */
 @RestController
+@RequiredArgsConstructor
 public class LoginController {
-    @Autowired
-    private LoginService loginService;
+    private final LoginService loginService;
 
     /**
      * 登录

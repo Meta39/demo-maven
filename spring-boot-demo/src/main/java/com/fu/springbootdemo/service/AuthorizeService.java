@@ -1,12 +1,11 @@
 package com.fu.springbootdemo.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.fu.springbootdemo.entity.Authorize;
 
 import java.util.List;
 
-public interface AuthorizeService extends IService<Authorize> {
+public interface AuthorizeService {
     /**
      * 根据ID查询权限
      */

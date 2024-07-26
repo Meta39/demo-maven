@@ -1,8 +1,7 @@
 package com.fu.springbootdemo.service;
 
-import com.fu.springbootdemo.entity.Article;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.fu.springbootdemo.entity.Article;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * @author Meta39
  * @since 2023-04-15 23:06:07
  */
-public interface ArticleService extends IService<Article> {
+public interface ArticleService {
     /**
      * 根据ID查询文章
      */

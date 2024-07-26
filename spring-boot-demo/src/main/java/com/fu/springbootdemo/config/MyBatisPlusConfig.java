@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.fu.springbootdemo.util.DateTimeUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -18,17 +19,12 @@ import org.springframework.context.annotation.Configuration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * MyBatisPlus分页、乐观锁插件
  */
 @Configuration
 public class MyBatisPlusConfig implements MetaObjectHandler{
-
-    private final String localDateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-    private final String localDateFormat = "yyyy-MM-dd";
-    private final String localTimeFormat = "HH:mm:ss";
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor(){
@@ -57,19 +53,19 @@ public class MyBatisPlusConfig implements MetaObjectHandler{
 
             // 反序列化（接收数据）
             builder.deserializerByType(LocalDateTime.class,
-                    new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimeFormat)));
+                    new LocalDateTimeDeserializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_DATE_TIME_FORMAT)));
             builder.deserializerByType(LocalDate.class,
-                    new LocalDateDeserializer(DateTimeFormatter.ofPattern(localDateFormat)));
+                    new LocalDateDeserializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_DATE_FORMAT)));
             builder.deserializerByType(LocalTime.class,
-                    new LocalTimeDeserializer(DateTimeFormatter.ofPattern(localTimeFormat)));
+                    new LocalTimeDeserializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_TIME_FORMAT)));
 
             // 序列化（返回数据）
             builder.serializerByType(LocalDateTime.class,
-                    new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimeFormat)));
+                    new LocalDateTimeSerializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_DATE_TIME_FORMAT)));
             builder.serializerByType(LocalDate.class,
-                    new LocalDateSerializer(DateTimeFormatter.ofPattern(localDateFormat)));
+                    new LocalDateSerializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_DATE_FORMAT)));
             builder.serializerByType(LocalTime.class,
-                    new LocalTimeSerializer(DateTimeFormatter.ofPattern(localTimeFormat)));
+                    new LocalTimeSerializer(DateTimeUtils.getFormatter(DateTimeUtils.DEFAULT_TIME_FORMAT)));
         };
     }
 }

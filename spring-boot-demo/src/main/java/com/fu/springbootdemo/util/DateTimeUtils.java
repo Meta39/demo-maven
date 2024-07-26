@@ -32,7 +32,7 @@ public class DateTimeUtils {
     // 缓存DateTimeFormatter实例
     private static final ConcurrentMap<String, DateTimeFormatter> formatterCache = new ConcurrentHashMap<>();
 
-    private static DateTimeFormatter getFormatter(String format) {
+    public static DateTimeFormatter getFormatter(String format) {
         return formatterCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
     }
 

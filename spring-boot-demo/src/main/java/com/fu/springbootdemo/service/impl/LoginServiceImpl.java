@@ -15,8 +15,8 @@ import com.fu.springbootdemo.mapper.UserMapper;
 import com.fu.springbootdemo.service.LoginService;
 import com.fu.springbootdemo.util.CurrentLoginUserUtil;
 import com.fu.springbootdemo.util.RSAUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -28,21 +28,16 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class LoginServiceImpl implements LoginService {
     private static final int NODE_TYPE = 3;//节点类型为按钮：1、文件夹 2、页面 3、按钮
     private static final int ADMIN_ROLE_ID = 1;//超级管理员角色ID
-    @Autowired
-    private GlobalAuthenticationFilter globalAuthenticationFilter;
-    @Autowired
-    private LoginMapper loginMapper;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private RoleAuthorizeMapper roleAuthorizeMapper;
-    @Autowired
-    private AuthorizeMapper authorizeMapper;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final GlobalAuthenticationFilter globalAuthenticationFilter;
+    private final LoginMapper loginMapper;
+    private final UserMapper userMapper;
+    private final RoleAuthorizeMapper roleAuthorizeMapper;
+    private final AuthorizeMapper authorizeMapper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 登录

@@ -1,7 +1,7 @@
 package com.fu.springbootdemo.async;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MainThread {
-    @Autowired
-    private AsyncThread asyncThread;
+    private final AsyncThread asyncThread;
 
     public String mainThread(){
         log.info("主线程开始执行...");

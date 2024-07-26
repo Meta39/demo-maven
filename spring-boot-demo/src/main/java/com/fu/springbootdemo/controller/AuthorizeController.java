@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.service.AuthorizeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,10 +15,9 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("authorize")
+@RequiredArgsConstructor
 public class AuthorizeController {
-
-    @Autowired
-    private AuthorizeService authorizeService;
+    private final AuthorizeService authorizeService;
 
     /**
      * 根据ID查询权限

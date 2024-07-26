@@ -2,20 +2,19 @@ package com.fu.springbootdemo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.mapper.AuthorizeMapper;
 import com.fu.springbootdemo.service.AuthorizeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthorizeServiceImpl extends ServiceImpl<AuthorizeMapper, Authorize> implements AuthorizeService {
-    @Autowired
-    private AuthorizeMapper authorizeMapper;
+@RequiredArgsConstructor
+public class AuthorizeServiceImpl implements AuthorizeService {
+    private final AuthorizeMapper authorizeMapper;
 
     /**
      * 根据ID查询权限

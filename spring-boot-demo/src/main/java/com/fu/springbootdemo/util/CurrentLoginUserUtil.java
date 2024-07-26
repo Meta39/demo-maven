@@ -2,8 +2,7 @@ package com.fu.springbootdemo.util;
 
 import com.fu.springbootdemo.exception.UnauthorizedException;
 import com.fu.springbootdemo.global.GlobalVariable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -14,9 +13,8 @@ import java.util.Objects;
 /**
  * 当前登录用户工具类
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class CurrentLoginUserUtil {
-    private static final Logger log = LoggerFactory.getLogger(CurrentLoginUserUtil.class);
-    private CurrentLoginUserUtil(){}
 
     /**
      * 根据Token获取当前登录用户的ID。

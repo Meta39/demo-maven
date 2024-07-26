@@ -4,7 +4,7 @@ import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.annotation.ReturnMeta;
 import com.fu.springbootdemo.async.MainThread;
 import com.fu.springbootdemo.util.CurrentLoginUserUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("test")
+@RequiredArgsConstructor
 public class TestController {
-    @Autowired
-    private MainThread mainThread;
+    private final MainThread mainThread;
 
     @ReturnMeta //返回原始数据，不用全局返回类封装。
     @GetMapping("hello")

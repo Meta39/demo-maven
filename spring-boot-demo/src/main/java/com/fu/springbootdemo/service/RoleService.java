@@ -1,13 +1,12 @@
 package com.fu.springbootdemo.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.fu.springbootdemo.entity.Role;
 
 import java.util.List;
 import java.util.Map;
 
-public interface RoleService extends IService<Role> {
+public interface RoleService {
     /**
      * 根据ID查询角色
      */

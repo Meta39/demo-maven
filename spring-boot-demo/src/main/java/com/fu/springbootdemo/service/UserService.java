@@ -1,13 +1,12 @@
 package com.fu.springbootdemo.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.fu.springbootdemo.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface UserService extends IService<User> {
+public interface UserService {
     /**
      * 根据ID查询用户
      */

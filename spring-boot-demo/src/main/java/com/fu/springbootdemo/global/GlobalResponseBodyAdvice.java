@@ -2,7 +2,7 @@ package com.fu.springbootdemo.global;
 
 import com.fu.springbootdemo.annotation.ReturnMeta;
 import com.fu.springbootdemo.exception.CommonException;
-import com.fu.springbootdemo.util.ObjectMapperUtil;
+import com.fu.springbootdemo.util.JacksonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -95,7 +95,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         if (body instanceof String) {//String类型要特殊处理
-            return ObjectMapperUtil.writeValueAsString(Res.ok(body));
+            return JacksonUtils.writeValueAsString(Res.ok(body));
         } else if (body instanceof Res) {//本身是Res直接返回即可。例如：全局异常处理，返回的就是Res
             return body;
         } else if (body instanceof LinkedHashMap) {//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断

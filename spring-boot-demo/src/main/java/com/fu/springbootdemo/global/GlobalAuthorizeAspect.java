@@ -2,11 +2,11 @@ package com.fu.springbootdemo.global;
 
 import com.fu.springbootdemo.annotation.PreAuthorize;
 import com.fu.springbootdemo.exception.ForbiddenException;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -22,12 +22,10 @@ import static com.fu.springbootdemo.global.GlobalVariable.TOKEN;
  */
 @Aspect
 @Component
+@RequiredArgsConstructor
 public class GlobalAuthorizeAspect {
-    @Autowired
-    private GlobalAuthenticationFilter globalAuthenticationFilter;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private final GlobalAuthenticationFilter globalAuthenticationFilter;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     //用自定义注解作为切点
     @Pointcut("@annotation(com.fu.springbootdemo.annotation.PreAuthorize)")
