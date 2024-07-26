@@ -2,6 +2,10 @@ package com.fu.basedemo;
 
 import com.fu.basedemo.designpattern.singleton.usecase.ConfigurationManager;
 import com.fu.basedemo.designpattern.singleton.usecase.DatabaseAccess;
+import com.fu.basedemo.designpattern.singleton.usecase.async.AsyncExecutor;
+import com.fu.basedemo.designpattern.singleton.usecase.async.AsyncInvocationHandler;
+import com.fu.basedemo.designpattern.singleton.usecase.async.MyService;
+import com.fu.basedemo.designpattern.singleton.usecase.async.MyServiceImpl;
 import com.fu.basedemo.entity.User;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +32,26 @@ public class SingletonUseCaseTests {
     void testConfigurationManager() {
         String app = ConfigurationManager.getProperty("params.app");
         System.out.println(app);
+    }
+
+    /**
+     * 测试线程池管理
+     */
+    public static void main(String[] args) {
+
+        // 创建 MyService 的代理实例
+        MyService myService = AsyncInvocationHandler.createAsyncProxy(new MyServiceImpl(), MyService.class);
+
+        // 调用异步方法
+        for (int i = 0; i < 10000; i++) {
+            myService.asyncMethod();
+        }
+
+        // 调用普通方法
+        myService.normalMethod();
+
+        // 关闭线程池
+        AsyncExecutor.shutdown();
     }
 
 }
