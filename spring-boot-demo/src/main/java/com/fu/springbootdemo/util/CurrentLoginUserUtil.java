@@ -14,7 +14,7 @@ import java.util.Objects;
  * 当前登录用户工具类
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class CurrentLoginUserUtil {
+public abstract class CurrentLoginUserUtil {
 
     /**
      * 根据Token获取当前登录用户的ID。

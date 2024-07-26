@@ -21,7 +21,7 @@ import static com.fu.springbootdemo.global.GlobalVariable.*;
 /**
  * 数据库密码加密工具类
  */
-public class RSAUtil {
+public abstract class RSAUtil {
     //私有化构造方法，防止其它人实例化
     private RSAUtil() {
     }

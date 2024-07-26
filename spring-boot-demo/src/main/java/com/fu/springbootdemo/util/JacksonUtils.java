@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * jackson 工具类
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class JacksonUtils {
+public abstract class JacksonUtils {
     public static final ObjectMapper json = new ObjectMapper();
     public static final ObjectMapper xml = new XmlMapper();
 

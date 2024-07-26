@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @since 2024-07-05
  */
-public class DateTimeUtils {
+public abstract class DateTimeUtils {
     private DateTimeUtils() {
     }
 

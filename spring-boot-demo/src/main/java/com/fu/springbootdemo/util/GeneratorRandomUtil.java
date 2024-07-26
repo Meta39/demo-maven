@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * 生成随机工具类
  */
-public class GeneratorRandomUtil {
+public abstract class GeneratorRandomUtil {
     private static final String ALPHABETS_IN_UPPER_CASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String ALPHABETS_IN_LOWER_CASE = "abcdefghijklmnopqrstuvwxyz";
     private static final String NUMBERS = "0123456789";
