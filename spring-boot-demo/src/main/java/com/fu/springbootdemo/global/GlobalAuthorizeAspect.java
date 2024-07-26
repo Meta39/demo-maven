@@ -1,6 +1,7 @@
 package com.fu.springbootdemo.global;
 
 import com.fu.springbootdemo.annotation.PreAuthorize;
+import com.fu.springbootdemo.exception.ForbiddenException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -46,15 +47,15 @@ public class GlobalAuthorizeAspect {
             String authorize = preAuthorize.value();
             TokenInfo tokenInfo = (TokenInfo) this.redisTemplate.opsForValue().get(redisTokenKey);
             if (tokenInfo == null) {
-                throw Err.msg("登录时没有把TokenInfo放入Redis！");
+                throw new ForbiddenException("登录时没有把TokenInfo放入Redis！");
             }
             if (tokenInfo.getRoleIds() == null || tokenInfo.getRoleIds().isEmpty()) {
-                throw Err.msg("当前登录用户没有分配角色。所以没有相应的权限，如需访问，请联系管理员分配相应授权的角色。");
+                throw new ForbiddenException("当前登录用户没有分配角色。所以没有相应的权限，如需访问，请联系管理员分配相应授权的角色。");
             }
             boolean admin = tokenInfo.getRoleIds().stream().anyMatch(roleId -> roleId == 1);
             //不是超级管理员则进行鉴权，超级管理员角色直接跳过鉴权
             if (!admin && (tokenInfo.getAuthorizes() == null || tokenInfo.getAuthorizes().isEmpty() || tokenInfo.getAuthorizes().stream().noneMatch(a -> Objects.equals(a, authorize)))) {
-                throw Err.codeAndMsg(Code.NOT_PURVIEW);
+                throw new ForbiddenException();
             }
         }
     }

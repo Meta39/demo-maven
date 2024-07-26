@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.easyexcel.UserReadListener;
 import com.fu.springbootdemo.entity.User;
 import com.fu.springbootdemo.entity.UserRole;
-import com.fu.springbootdemo.global.Err;
 import com.fu.springbootdemo.global.GlobalVariable;
 import com.fu.springbootdemo.mapper.RoleMapper;
 import com.fu.springbootdemo.mapper.UserMapper;
@@ -54,7 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int insertUser(User user) {
         if (!StringUtils.hasLength(user.getPwd())) {
-            throw Err.msg("密码不能为空");
+            new RuntimeException("密码不能为空");
         }
         user.setPwd(RSAUtil.encrypt(GlobalVariable.RSA_TOKEN_PUBLIC_KEY,user.getPwd()));
         return this.userMapper.insert(user);
@@ -66,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int updateUser(User user) {
         if (StringUtils.hasLength(user.getPwd())) {
-            throw Err.msg("更新用户时不允许修改密码");
+            new RuntimeException("更新用户时不允许修改密码");
         }
         return this.userMapper.updateById(user);
     }
@@ -74,7 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int shareRoles(Integer userId,List<Integer> roleIds) {
         if (userId == 1){
-            throw Err.msg("不允许给超级用户分配其它角色");
+            new RuntimeException("不允许给超级用户分配其它角色");
         }
         //省事做法：不管之前有没有角色，都把之前的该用户的角色删光。再从新插入角色。
         this.userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId,userId));
@@ -102,7 +101,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int deleteUserById(Integer id) {
         if (id == 1) {
-            throw Err.msg("不允许删除超级用户");
+            new RuntimeException("不允许删除超级用户");
         }
         return this.userMapper.deleteById(id);
     }
@@ -134,7 +133,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int deleteUserByIds(List<Integer> ids) {
         if (ids != null && !ids.isEmpty() && ids.stream().anyMatch(id -> id == 1)) {
-            throw Err.msg("不允许删除超级用户");
+            new RuntimeException("不允许删除超级用户");
         }
         return this.userMapper.deleteBatchIds(ids);
     }

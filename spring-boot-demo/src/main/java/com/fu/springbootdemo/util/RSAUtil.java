@@ -1,15 +1,17 @@
 package com.fu.springbootdemo.util;
 
-import com.fu.springbootdemo.global.Code;
-import com.fu.springbootdemo.global.Err;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -21,7 +23,9 @@ import static com.fu.springbootdemo.global.GlobalVariable.*;
  */
 public class RSAUtil {
     //私有化构造方法，防止其它人实例化
-    private RSAUtil() {}
+    private RSAUtil() {
+    }
+
     private static final Logger log = LoggerFactory.getLogger(RSAUtil.class);
     private static final int KEY_SIZE = 1024; //密钥长度 于原文长度对应 以及越长速度越慢，推荐：1024或2048
 
@@ -34,8 +38,7 @@ public class RSAUtil {
         try {
             keyPairGen = KeyPairGenerator.getInstance(ENCRYPT_TYPE);
         } catch (NoSuchAlgorithmException e) {
-            log.error("获取加密算法" + ENCRYPT_TYPE + "单例异常：", e);
-            throw Err.codeAndMsg(Code.ENCRYPT_ALGORITHM_ERROR);
+            throw new RuntimeException(e);
         }
         // 初始化密钥对生成器
         keyPairGen.initialize(KEY_SIZE, new SecureRandom());
@@ -60,17 +63,19 @@ public class RSAUtil {
      * @param originString    原始数据
      */
     public static String encrypt(String publicKeyString, String originString) {
+        //base64编码的公钥
+        byte[] decoded = Base64.getMimeDecoder().decode(publicKeyString);
+        RSAPublicKey pubKey;
+        //RSA加密
+        Cipher cipher;
         try {
-            //base64编码的公钥
-            byte[] decoded = Base64.getMimeDecoder().decode(publicKeyString);
-            RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance(ENCRYPT_TYPE).generatePublic(new X509EncodedKeySpec(decoded));
-            //RSA加密
-            Cipher cipher = Cipher.getInstance(ENCRYPT_TYPE);
+            pubKey = (RSAPublicKey) KeyFactory.getInstance(ENCRYPT_TYPE).generatePublic(new X509EncodedKeySpec(decoded));
+            cipher = Cipher.getInstance(ENCRYPT_TYPE);
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
             return Base64.getEncoder().encodeToString(cipher.doFinal(originString.getBytes(StandardCharsets.UTF_8)));
-        } catch (Exception e) {
-            log.error("加密失败：", e);
-            throw Err.codeAndMsg(Code.ENCRYPT_ERROR);
+        } catch (InvalidKeySpecException | NoSuchAlgorithmException | NoSuchPaddingException |
+                 IllegalBlockSizeException | BadPaddingException | InvalidKeyException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -81,19 +86,19 @@ public class RSAUtil {
      * @param encryptString    加密字符串
      */
     public static String decrypt(String privateKeyString, String encryptString) {
+        //64位解码加密后的字符串
+        byte[] inputByte = Base64.getMimeDecoder().decode(encryptString);
+        //base64编码的私钥
+        byte[] decoded = Base64.getMimeDecoder().decode(privateKeyString);
         try {
-            //64位解码加密后的字符串
-            byte[] inputByte = Base64.getMimeDecoder().decode(encryptString);
-            //base64编码的私钥
-            byte[] decoded = Base64.getMimeDecoder().decode(privateKeyString);
             RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance(ENCRYPT_TYPE).generatePrivate(new PKCS8EncodedKeySpec(decoded));
             //RSA解密
             Cipher cipher = Cipher.getInstance(ENCRYPT_TYPE);
             cipher.init(Cipher.DECRYPT_MODE, priKey);
             return new String(cipher.doFinal(inputByte), StandardCharsets.UTF_8);//原始数据
-        } catch (Exception e) {
-            log.error("解密失败：", e);
-            throw Err.codeAndMsg(Code.DECRYPT_ERROR);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException | InvalidKeySpecException |
+                 NoSuchAlgorithmException | BadPaddingException | InvalidKeyException e) {
+            throw new RuntimeException(e);
         }
     }
 

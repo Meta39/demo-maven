@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.entity.Role;
 import com.fu.springbootdemo.entity.RoleAuthorize;
-import com.fu.springbootdemo.global.Err;
 import com.fu.springbootdemo.mapper.AuthorizeMapper;
 import com.fu.springbootdemo.mapper.RoleAuthorizeMapper;
 import com.fu.springbootdemo.mapper.RoleMapper;
@@ -74,7 +73,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public int updateRole(Role role) {
         if (Objects.nonNull(role) && role.getId() == 1){
-            throw Err.msg("禁止修改超级管理员角色信息");
+            throw new RuntimeException("禁止修改超级管理员角色信息");
         }
         return this.roleMapper.updateById(role);
     }
@@ -83,7 +82,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public int roleMenu(Integer roleId, List<Integer> authorizeIds) {
         if (roleId == 1){
-            throw Err.msg("禁止给超级管理员分配菜单权限，因为超级管理员默认拥有全部权限！");
+            throw new RuntimeException("禁止给超级管理员分配菜单权限，因为超级管理员默认拥有全部权限！");
         }
         //省事做法：不管之前有没有分配权限，都把之前的该角色的权限删光。再从新插入权限。
         this.roleAuthorizeMapper.delete(new LambdaQueryWrapper<RoleAuthorize>().eq(RoleAuthorize::getRoleId,roleId));
@@ -104,7 +103,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public int deleteRoleById(Integer id) {
         if (id == 1){
-            throw Err.msg("禁止删除超级管理员角色！");
+            throw new RuntimeException("禁止删除超级管理员角色！");
         }
         return this.roleMapper.deleteById(id);
     }
@@ -138,7 +137,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public int deleteRoleByIds(List<Integer> ids) {
         if (ids != null && !ids.isEmpty() && ids.stream().anyMatch(id -> id == 1)){
-            throw Err.msg("禁止删除超级管理员角色！");
+            throw new RuntimeException("禁止删除超级管理员角色！");
         }
         return this.roleMapper.deleteBatchIds(ids);
     }

@@ -1,7 +1,6 @@
 package com.fu.springbootdemo.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fu.springbootdemo.global.Err;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +22,7 @@ public class ObjectMapperUtil {
         try {
             return OBJECT_MAPPER.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            log.error("ObjectMapperUtil序列化异常：",e);
-            throw Err.msg("序列化异常："+e.getMessage());
+            throw new RuntimeException("序列化异常："+e.getMessage());
         }
     }
 
@@ -38,7 +36,7 @@ public class ObjectMapperUtil {
             return OBJECT_MAPPER.readValue(content,valueType);
         } catch (JsonProcessingException e) {
             log.error("ObjectMapperUtil反序列化异常：",e);
-            throw Err.msg("反序列化异常："+e.getMessage());
+            throw new RuntimeException("反序列化异常："+e.getMessage());
         }
     }
 

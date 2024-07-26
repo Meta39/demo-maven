@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fu.springbootdemo.entity.Authorize;
-import com.fu.springbootdemo.global.Err;
 import com.fu.springbootdemo.mapper.AuthorizeMapper;
 import com.fu.springbootdemo.service.AuthorizeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class AuthorizeServiceImpl extends ServiceImpl<AuthorizeMapper, Authorize
     @Override
     public int updateAuthorize(Authorize authorize) {
         if (authorize.getId() == 1){
-            throw Err.msg("不允许修改id为1的内容");
+            throw new RuntimeException("不允许修改id为1的内容");
         }
         return this.authorizeMapper.updateById(authorize);
     }
@@ -51,7 +50,7 @@ public class AuthorizeServiceImpl extends ServiceImpl<AuthorizeMapper, Authorize
     @Override
     public int deleteAuthorizeById(Integer id) {
         if (id == 1){
-            throw Err.msg("不允许删除id为1的内容");
+            throw new RuntimeException("不允许删除id为1的内容");
         }
         return this.authorizeMapper.deleteById(id);
     }
@@ -81,7 +80,7 @@ public class AuthorizeServiceImpl extends ServiceImpl<AuthorizeMapper, Authorize
     @Override
     public int deleteAuthorizeByIds(List<Integer> ids) {
         if (ids.stream().anyMatch(id -> id == 1)){
-            throw Err.msg("不允许删除id为1的内容");
+            throw new RuntimeException("不允许删除id为1的内容");
         }
         return this.authorizeMapper.deleteBatchIds(ids);
     }

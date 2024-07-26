@@ -1,6 +1,5 @@
 package com.fu.springbootdemo.util;
 
-import com.fu.springbootdemo.global.Err;
 
 import java.util.Random;
 
@@ -49,7 +48,7 @@ public class GeneratorRandomUtil {
     //------------------------------------私有方法---------------------------------------------
     private static void checkLength(int length){
         if (length < 1){
-            throw Err.msg("长度不能小于1");
+            throw new RuntimeException("长度不能小于1");
         }
     }
 

@@ -6,8 +6,12 @@ import com.fu.springbootdemo.entity.Authorize;
 import com.fu.springbootdemo.entity.Role;
 import com.fu.springbootdemo.entity.RoleAuthorize;
 import com.fu.springbootdemo.entity.User;
+import com.fu.springbootdemo.exception.UnauthorizedException;
 import com.fu.springbootdemo.global.*;
-import com.fu.springbootdemo.mapper.*;
+import com.fu.springbootdemo.mapper.AuthorizeMapper;
+import com.fu.springbootdemo.mapper.LoginMapper;
+import com.fu.springbootdemo.mapper.RoleAuthorizeMapper;
+import com.fu.springbootdemo.mapper.UserMapper;
 import com.fu.springbootdemo.service.LoginService;
 import com.fu.springbootdemo.util.CurrentLoginUserUtil;
 import com.fu.springbootdemo.util.RSAUtil;
@@ -49,14 +53,14 @@ public class LoginServiceImpl implements LoginService {
         String password = loginDTO.getPwd();
         User user = this.userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if (user == null) {
-            throw Err.msg("登录用户名不存在");
+            throw new RuntimeException("登录用户名不存在");
         }
         if (user.getIsBan() == 1) {
-            throw Err.msg("登录用户被禁用");
+            throw new RuntimeException("登录用户被禁用");
         }
         //前端RSA加密字符串解密后和数据库的密码解密进行匹配
         if (!Objects.equals(RSAUtil.decrypt(GlobalVariable.RSA_TOKEN_PRIVATE_KEY,password),RSAUtil.decrypt(GlobalVariable.RSA_TOKEN_PRIVATE_KEY,user.getPwd()))) {
-            throw Err.msg("密码错误");
+            throw new RuntimeException("密码错误");
         }
         // TODO 验证码
         TokenInfo tokenInfo = new TokenInfo();
@@ -117,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
         if (Boolean.TRUE.equals(this.redisTemplate.hasKey(tokenRedisKey))) {
             return this.redisTemplate.delete(tokenRedisKey);
         }
-        throw Err.codeAndMsg(Code.NOT_LOGIN);
+        throw new UnauthorizedException();
     }
 
     /**
@@ -128,7 +132,7 @@ public class LoginServiceImpl implements LoginService {
         int userId = CurrentLoginUserUtil.getUserId();
         User userInfo = this.userMapper.selectById(userId);
         if (!Objects.equals(RSAUtil.decrypt(GlobalVariable.RSA_TOKEN_PRIVATE_KEY,userInfo.getPwd()),RSAUtil.decrypt(GlobalVariable.RSA_TOKEN_PRIVATE_KEY,updatePwdDTO.getPwd()))){
-            throw Err.msg("旧密码错误！");
+            throw new RuntimeException("旧密码错误！");
         }
         //加密密码
         LambdaUpdateWrapper<User> setUserPwd = new LambdaUpdateWrapper<User>()
@@ -147,7 +151,7 @@ public class LoginServiceImpl implements LoginService {
         if (Boolean.TRUE.equals(this.redisTemplate.hasKey(tokenRedisKey))) {
             return this.redisTemplate.expire(tokenRedisKey, Duration.ofSeconds(globalAuthenticationFilter.getTokenTimeout()));
         }
-        throw Err.codeAndMsg(Code.NOT_LOGIN);
+        throw new UnauthorizedException();
     }
 
     //-----------------------------------------内部方法------------------------------------------------------

@@ -1,5 +1,6 @@
 package com.fu.springbootdemo.global;
 
+import com.fu.springbootdemo.exception.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -70,7 +71,7 @@ public class GlobalAuthenticationFilter implements Filter {
             filterChain.doFilter(request, response);//放行
         } else {
             //未认证
-            this.resolver.resolveException(request, response, null, Err.codeAndMsg(Code.NOT_LOGIN));
+            this.resolver.resolveException(request, response, null, new UnauthorizedException());
         }
     }
 

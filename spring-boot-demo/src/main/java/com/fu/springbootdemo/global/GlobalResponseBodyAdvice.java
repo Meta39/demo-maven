@@ -1,6 +1,7 @@
 package com.fu.springbootdemo.global;
 
 import com.fu.springbootdemo.annotation.ReturnMeta;
+import com.fu.springbootdemo.exception.CommonException;
 import com.fu.springbootdemo.util.ObjectMapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,18 +32,22 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     /**
      * 自定义异常
      */
-    @ExceptionHandler(value =Err.class)
-    public Res<Object> err(Err e){
-        return Res.err(e.getCode(),e.getMsg());
+    @ExceptionHandler(value = CommonException.class)
+    public Res<Object> forbiddenException(CommonException e) {
+        int code = e.getCode();
+        String message = e.getMessage();
+        log.error(code + ":" + message, e);
+        return Res.err(code, message);
     }
 
     /**
      * 服务器异常
      */
-    @ExceptionHandler(value =Exception.class)
-    public Res<Object> exception(Exception e){
-        log.error("Exception异常：",e);
-        return Res.err("异常信息：" + e.getMessage());
+    @ExceptionHandler(value = Exception.class)
+    public Res<Object> exception(Exception e) {
+        String message = e.getMessage();
+        log.error(message, e);
+        return Res.err(message);
     }
 
     /**
@@ -50,14 +55,14 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public Res<Object> missingServletRequestParameterException(MissingServletRequestParameterException e) {
-        return Res.err("异常信息：" + e.getMessage());
+        return Res.err(e.getMessage());
     }
 
     /**
      * validation参数校验
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Res<Object> methodArgumentNotValidException(MethodArgumentNotValidException e){
+    public Res<Object> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         return Res.err(e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(";")));
     }
 
@@ -67,7 +72,8 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     /**
      * 是否把返回内容存放到Res返回给前端
-     * @param returnType 返回类型
+     *
+     * @param returnType    返回类型
      * @param converterType 转换器类型
      */
     @Override
@@ -80,22 +86,23 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     /**
      * 把返回内容存放到Res返回给前端
-     * @param body                  原始数据
-     * @param returnType            原始返回给前端的数据类型
-     * @param request               请求
-     * @param response              响应
+     *
+     * @param body       原始数据
+     * @param returnType 原始返回给前端的数据类型
+     * @param request    请求
+     * @param response   响应
      */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if(body instanceof String){//String类型要特殊处理
+        if (body instanceof String) {//String类型要特殊处理
             return ObjectMapperUtil.writeValueAsString(Res.ok(body));
         } else if (body instanceof Res) {//本身是Res直接返回即可。例如：全局异常处理，返回的就是Res
             return body;
-        }else if (body instanceof LinkedHashMap){//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
+        } else if (body instanceof LinkedHashMap) {//解决404、500等spring没有捕获的异常问题，只能放到最后的判断条件去判断
             LinkedHashMap map = (LinkedHashMap) body;//强转
             //如果LinkedHashMap包含status状态码的key，则抛出异常。
             if (map.containsKey("status") && map.containsKey("error") && map.containsKey("message")) {
-                log.error("全局返回异常捕获到LinkedHashMap：{}",map);
+                log.error("全局返回异常捕获到LinkedHashMap：{}", map);
                 String errorMessage = "error：" + map.get("error") + ",message：" + map.get("message") + ",path：" + map.get("path");
                 return Res.err((Integer) map.get("status"), errorMessage);
             }

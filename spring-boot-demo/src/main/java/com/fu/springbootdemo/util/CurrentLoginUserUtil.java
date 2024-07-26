@@ -1,7 +1,6 @@
 package com.fu.springbootdemo.util;
 
-import com.fu.springbootdemo.global.Code;
-import com.fu.springbootdemo.global.Err;
+import com.fu.springbootdemo.exception.UnauthorizedException;
 import com.fu.springbootdemo.global.GlobalVariable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +27,7 @@ public class CurrentLoginUserUtil {
         //Redis的Token key 就是UUID + 用户ID，删除32位长度的UUID以后就是用户ID。
         String redisTokenKey = request.getHeader(GlobalVariable.TOKEN);
         if (!StringUtils.hasText(redisTokenKey)){
-            log.error("errCode:{},errMessage:{}",Code.NOT_LOGIN.getErrCode(),Code.NOT_LOGIN.getErrMessage());
-            throw Err.codeAndMsg(Code.NOT_LOGIN);
+            throw new UnauthorizedException();
         }
         return Integer.parseInt(redisTokenKey.substring(32));
     }
