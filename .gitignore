@@ -3,7 +3,6 @@ HELP.md
 build/
 !gradle/wrapper/gradle-wrapper.jar
 ##这个是不需要提交的文件
-**/aspose-words-21.1.0-jdk17-d.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
