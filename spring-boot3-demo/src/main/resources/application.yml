@@ -6,7 +6,7 @@ server:
 
 # RestClient 和 RestTemplate 请求 url 路径
 rest:
-  base-url: "127.0.0.1:${server.port}"
+  base-url: "http://127.0.0.1:${server.port}"
 
 #日志配置
 logging:
