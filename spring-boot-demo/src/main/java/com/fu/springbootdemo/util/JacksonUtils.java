@@ -3,8 +3,8 @@ package com.fu.springbootdemo.util;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.NoArgsConstructor;
@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public abstract class JacksonUtils {
-    public static final ObjectMapper json = new ObjectMapper();
-    public static final ObjectMapper xml = new XmlMapper();
+    public static final JsonMapper json = new JsonMapper();
+    public static final XmlMapper xml = new XmlMapper();
 
     static {
         // json 配置
