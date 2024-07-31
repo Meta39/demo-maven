@@ -2,6 +2,7 @@ package com.fu.springbootdemo.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -30,9 +31,17 @@ public abstract class JacksonUtils {
         xml.registerModule(new JavaTimeModule());
     }
 
-    public static String writeValueAsString(Object object) {
+    public static String writeValueAsStringJson(Object object) {
         try {
             return json.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T readValueJson(String content, TypeReference<T> valueTypeRef) {
+        try {
+            return json.readValue(content, valueTypeRef);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

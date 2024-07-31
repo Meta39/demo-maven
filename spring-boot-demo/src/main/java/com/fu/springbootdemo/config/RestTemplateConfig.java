@@ -1,4 +1,4 @@
-package com.fu.mybatisplusdemo.config;
+package com.fu.springbootdemo.config;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
