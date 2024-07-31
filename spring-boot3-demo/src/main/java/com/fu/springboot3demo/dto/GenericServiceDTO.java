@@ -7,6 +7,6 @@ import lombok.Data;
  * @since 2024-07-16
  */
 @Data
-public class GenericServiceDto {
+public class GenericServiceDTO {
     private String name;
 }
