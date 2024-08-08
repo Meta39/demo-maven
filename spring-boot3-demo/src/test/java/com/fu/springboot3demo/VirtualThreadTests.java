@@ -38,10 +38,10 @@ public class VirtualThreadTests {
     @Test
     void testVirtualThread2() {
         // 创建虚拟线程并自动执行
-        Thread.Builder.OfVirtual virtual = Thread.ofVirtual().name("pack1");
-        virtual.start(() -> System.out.printf("%s - VirtualThread1自动执行任务完成\n", Thread.currentThread().getName()));
+        var virtual = Thread.ofVirtual().name("pack1");
+        virtual.start(() -> System.out.printf("%s - 自动执行任务完成\n", Thread.currentThread().getName()));
         // 创建不自动启动的线程
-        Thread thread = virtual.unstarted(() -> System.out.printf("%s - VirtualThread1手动执行任务完成\n", Thread.currentThread().getName()));
+        var thread = virtual.unstarted(() -> System.out.printf("%s - 手动执行任务完成\n", Thread.currentThread().getName()));
         // 手动启动虚拟线程
         thread.start();
         // 打印线程对象：VirtualThread[#21,pack]/runnable
