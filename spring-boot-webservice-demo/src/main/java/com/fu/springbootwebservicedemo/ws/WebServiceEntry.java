@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 /**
  * 创建日期：2024-07-01
@@ -31,10 +29,9 @@ public class WebServiceEntry {
     public <T> String invoke(@WebParam(name = "service") String service, @WebParam(name = "parameter") String parameter) throws JsonProcessingException {
         IWebService<T> webService = (IWebService<T>) ApplicationContextUtils.getBean(service);
 
-        // 获取 IWebService 实现类的泛型类型
-        Type genericInterface = webService.getClass().getGenericInterfaces()[0];
-        ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
-        Class<T> parameterType = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+        // 通过缓存获取 IWebService 实现类的 handle 函数泛型类型入参，这样就不用每次请求都通过反射去获取入参，提升了程序性能。
+        Class<T> parameterType = (Class<T>) WebServiceTypeCache.getParameterType(service);
+        // 使用 Jackson-XML 将 XML 字符串转换为 Java 对象
         T reqObject = JacksonUtils.XML.readValue(parameter, parameterType);
 
         R<?> r;

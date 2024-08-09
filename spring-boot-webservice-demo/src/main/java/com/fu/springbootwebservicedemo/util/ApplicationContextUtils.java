@@ -5,13 +5,17 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 /**
  * 创建日期：2024-07-01
  */
 @Component
 public class ApplicationContextUtils implements ApplicationContextAware {
     //构造函数私有化，防止其它人实例化该对象
-    private ApplicationContextUtils(){}
+    private ApplicationContextUtils() {
+    }
+
     private static ApplicationContext applicationContext;
 
     @Override
@@ -32,6 +36,10 @@ public class ApplicationContextUtils implements ApplicationContextAware {
     //通过name,以及Clazz返回指定的Bean（这个是最稳妥的）
     public static <T> T getBean(String name, Class<T> clazz) {
         return applicationContext.getBean(name, clazz);
+    }
+
+    public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
+        return applicationContext.getBeansOfType(clazz);
     }
 
 }
