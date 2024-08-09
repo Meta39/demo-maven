@@ -28,7 +28,7 @@ public class GenericServiceTypeCache implements ApplicationRunner {
         beans.forEach((bean, type) -> {
             // AopProxyUtils.ultimateTargetClass 解决Spring Boot 使用 @Transactional 事务注解的问题。
             Class<?> beanClass = AopProxyUtils.ultimateTargetClass(type);
-            // 获取 IWebService 实现类的泛型类型
+            // 获取 GenericService 实现类的泛型类型
             Type[] genericInterfaces = beanClass.getGenericInterfaces();
             for (Type genericInterface : genericInterfaces) {
                 if (genericInterface instanceof ParameterizedType parameterizedType) {
