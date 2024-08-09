@@ -1,8 +1,8 @@
-package com.fu.springboot3demo.service.impl;
+package com.fu.springboot3demo.generic.impl;
 
 import com.fu.springboot3demo.dto.UserDTO;
 import com.fu.springboot3demo.entity.User;
-import com.fu.springboot3demo.service.GenericService;
+import com.fu.springboot3demo.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 public class UserGenericServiceImpl implements GenericService<UserDTO> {
 
     @Override
-    public User invoke(UserDTO dto) {
-        log.info("UserDTO:{}", dto);
+    public User invoke(UserDTO req) {
+        log.info("UserDTO:{}", req);
         User user = new User();
         user.setId(1L);
         user.setName("Meta39");
