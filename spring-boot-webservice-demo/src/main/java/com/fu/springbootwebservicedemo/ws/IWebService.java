@@ -6,6 +6,9 @@ package com.fu.springbootwebservicedemo.ws;
  */
 public interface IWebService<T> {
 
+    /**
+     * 如果实现的接口是无返回值 void，则返回 Void 对象
+     */
     Object handle(T req);
 
 }
