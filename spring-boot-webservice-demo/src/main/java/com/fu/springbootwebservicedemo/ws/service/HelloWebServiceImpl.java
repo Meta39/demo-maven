@@ -1,12 +1,9 @@
 package com.fu.springbootwebservicedemo.ws.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fu.springbootwebservicedemo.dto.HelloReq;
 import com.fu.springbootwebservicedemo.dto.HelloRes;
 import com.fu.springbootwebservicedemo.dto.Work;
-import com.fu.springbootwebservicedemo.util.JacksonUtils;
 import com.fu.springbootwebservicedemo.ws.IWebService;
-import com.fu.springbootwebservicedemo.ws.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -19,8 +16,8 @@ import java.util.List;
  * 创建日期：2024-07-02
  */
 @Slf4j
-@Service("Hello")//到时候会通过 http post 调用 <service>Hello</service>
-public class HelloWebServiceImpl implements IWebService {
+@Service("Hello")
+public class HelloWebServiceImpl implements IWebService<HelloReq> {
 
     /*
         请求示例：
@@ -58,14 +55,12 @@ public class HelloWebServiceImpl implements IWebService {
         <R><Code>200</Code><Message>success</Message><Data><Name>哈哈</Name><Age>18</Age></Data></R>
      */
     @Override
-    public R<?> handle(String parameter) throws JsonProcessingException {
-        HelloReq hello = JacksonUtils.XML.readValue(parameter, HelloReq.class);
-        String name = hello.getName();
-        List<Work> works = hello.getWorks();
+    public HelloRes handle(HelloReq req) {
+        String name = req.getName();
+        List<Work> works = req.getWorks();
 
         if (!StringUtils.hasText(name)) {
-            // throw new RuntimeException("Name 不能为空");//可以抛异常，也可以直接返回R对象。如果不涉及事务的情况下，推荐使用返回R对象。
-            return R.err("Name 不能为空");
+            throw new RuntimeException("Name 不能为空");
         }
         if (!CollectionUtils.isEmpty(works)) {
             for (Work work : works) {
@@ -77,8 +72,7 @@ public class HelloWebServiceImpl implements IWebService {
         HelloRes res = new HelloRes();
         res.setName(name);
         res.setAge(18);
-
-        return R.ok(res);
+        return res;
     }
 
 }
