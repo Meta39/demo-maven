@@ -3,6 +3,7 @@ package com.fu.springboot3demo.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fu.springboot3demo.generic.GenericService;
 import com.fu.springboot3demo.generic.GenericServiceTypeCache;
+import com.fu.springboot3demo.generic.R;
 import com.fu.springboot3demo.util.ApplicationContextUtils;
 import com.fu.springboot3demo.util.JacksonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +28,13 @@ public class GenericController {
         Class<T> requestType = (Class<T>) GenericServiceTypeCache.getRequestType(serviceName);
         // 将 JSON 字符串请求参数转换为具体的类型
         T reqObject = JacksonUtils.JSON.readValue(requestBody, requestType);
-        Object responseObject = genericService.invoke(reqObject);
-//        log.info("{}接口出参：{}", serviceName, responseObject);
-        return responseObject;
+        try {
+            return R.ok(genericService.invoke(reqObject));
+        } catch (Exception e) {
+            String message = e.getMessage();
+            log.error(e.getMessage(), e);
+            return R.err(message);
+        }
     }
 
 }

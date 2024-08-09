@@ -15,6 +15,9 @@ public class HelloWorldGenericServiceImpl implements GenericService<GenericServi
     @Override
     public String invoke(GenericServiceDTO req) {
         log.info("GenericServiceDto: {}", req);
+        /*if (true) {
+            throw new RuntimeException("运行时异常");
+        }*/
         return "Hello World";
     }
 
