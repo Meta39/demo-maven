@@ -1,6 +1,7 @@
 package com.fu.springbootwebservicedemo.ws;
 
 import com.fu.springbootwebservicedemo.util.ApplicationContextUtils;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -28,12 +29,22 @@ public class WebServiceTypeCache implements ApplicationRunner {
         Map<String, IWebService> beans = ApplicationContextUtils.getBeansOfType(IWebService.class);
         //循环map，forEach(key,value) 是最现代的方式，使用起来简洁明了。也可以用 for (Map.Entry<String, IWebService> entry : beans.entrySet()){}。
         beans.forEach((bean, type) -> {
+            // AopProxyUtils.ultimateTargetClass 解决Spring Boot 使用 @Transactional 事务注解的问题。
+            Class<?> beanClass = AopProxyUtils.ultimateTargetClass(type);
             // 获取 IWebService 实现类的泛型类型
-            Type genericInterface = ((IWebService<?>) type).getClass().getGenericInterfaces()[0];
-            ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
-            Class<?> parameterType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-            //把泛型入参放入缓存。防止每次请求都通过反射获取入参，影响程序性能。
-            typeCache.put(bean, parameterType);
+            Type[] genericInterfaces = beanClass.getGenericInterfaces();
+            for (Type genericInterface : genericInterfaces) {
+                if (genericInterface instanceof ParameterizedType) {
+                    ParameterizedType parameterizedType = (ParameterizedType) genericInterface;
+                    Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+
+                    if (actualTypeArguments.length > 0) {
+                        Class<?> parameterType = (Class<?>) actualTypeArguments[0];
+                        //把泛型入参放入缓存。防止每次请求都通过反射获取入参，影响程序性能。
+                        typeCache.put(bean, parameterType);
+                    }
+                }
+            }
         });
     }
 

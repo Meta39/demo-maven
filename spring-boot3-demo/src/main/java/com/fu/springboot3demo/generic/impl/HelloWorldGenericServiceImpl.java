@@ -4,6 +4,7 @@ import com.fu.springboot3demo.dto.GenericServiceDTO;
 import com.fu.springboot3demo.generic.GenericService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @since 2024-07-16
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class HelloWorldGenericServiceImpl implements GenericService<GenericServiceDTO> {
 
     @Override
+    @Transactional
     public String invoke(GenericServiceDTO req) {
         log.info("GenericServiceDto: {}", req);
         /*if (true) {
