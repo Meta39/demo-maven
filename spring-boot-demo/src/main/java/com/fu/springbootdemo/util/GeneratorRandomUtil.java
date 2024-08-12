@@ -56,9 +56,9 @@ public abstract class GeneratorRandomUtil {
 
     private static String generatorRandomNumbers(int length) {
         StringBuilder randomString = new StringBuilder();
+        ThreadLocalRandom current = ThreadLocalRandom.current();
         for (int i = 0; i < length; i++) {
-            int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * NUMBERS.length());
-            randomString.append(NUMBERS.charAt(randomIndex));
+            randomString.append(NUMBERS.charAt(current.nextInt(NUMBERS.length())));
         }
         return randomString.toString();
     }
@@ -66,9 +66,9 @@ public abstract class GeneratorRandomUtil {
     private static String generatorRandomStringAndNumbers(int length) {
         String allCharacters = ALPHABETS_IN_LOWER_CASE + ALPHABETS_IN_UPPER_CASE + NUMBERS;
         StringBuilder randomString = new StringBuilder();
+        ThreadLocalRandom current = ThreadLocalRandom.current();
         for (int i = 0; i < length; i++) {
-            int randomIndex = (int) (ThreadLocalRandom.current().nextDouble() * allCharacters.length());
-            randomString.append(allCharacters.charAt(randomIndex));
+            randomString.append(allCharacters.charAt(current.nextInt(allCharacters.length())));
         }
         return randomString.toString();
     }

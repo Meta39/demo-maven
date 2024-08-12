@@ -60,12 +60,11 @@ public class HelperClassesTests {
      * Semaphore信号灯
      * 应用场景：线程池数量、消息队列数量，总数只有这么多，超出了的就进行等待，直到前一个释放，其它才能竞争。
      */
-    @Test
-//    public static void main(String[] args) {
-    public void test3() {
+    public static void main(String[] args) {
         //创建Semaphore，设置许可数量
         Semaphore semaphore = new Semaphore(3);
         System.out.println("6辆汽车，停3个车位");
+        ThreadLocalRandom current = ThreadLocalRandom.current();
         for (int i = 1; i <= 6; i++) {
             new Thread(() -> {
                 try {
@@ -73,7 +72,7 @@ public class HelperClassesTests {
                     semaphore.acquire();
                     System.out.println(Thread.currentThread().getName() + "号汽车抢到了车位。");
                     //设置随机停车时间
-                    TimeUnit.SECONDS.sleep(ThreadLocalRandom.current().nextInt(5));
+                    TimeUnit.SECONDS.sleep(current.nextInt(5));
                     System.out.println(Thread.currentThread().getName() + "号汽车离开了车位。");
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
