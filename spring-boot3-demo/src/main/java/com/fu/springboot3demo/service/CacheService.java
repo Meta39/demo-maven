@@ -8,6 +8,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * caffeine 缓存使用
  * 创建日期：2024-06-04
@@ -38,7 +40,7 @@ public class CacheService {
     public String putCache(String cacheKey) {
         log.info("把返回内容写入对应的key：{}", cacheKey);
 //        return null;
-        return cacheKey + Math.random();
+        return cacheKey + ThreadLocalRandom.current().nextDouble();
     }
 
     /**

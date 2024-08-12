@@ -7,6 +7,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * 创建日期：2024-06-04
  */
@@ -31,7 +33,7 @@ public class CacheService2 {
     @CachePut(key = "#cacheKey")
     public String putCache(String cacheKey) {
         log.info("设置缓存：{}", cacheKey);
-        return cacheKey + Math.random();
+        return cacheKey + ThreadLocalRandom.current().nextDouble();
     }
 
     /**

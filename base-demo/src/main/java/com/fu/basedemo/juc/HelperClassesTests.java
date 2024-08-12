@@ -2,7 +2,6 @@ package com.fu.basedemo.juc;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
 import java.util.concurrent.*;
 
 /**
@@ -53,7 +52,7 @@ public class HelperClassesTests {
                 } catch (InterruptedException | BrokenBarrierException e) {
                     throw new RuntimeException(e);
                 }
-            },String.valueOf(i)).start();
+            }, String.valueOf(i)).start();
         }
     }
 
@@ -63,26 +62,26 @@ public class HelperClassesTests {
      */
     @Test
 //    public static void main(String[] args) {
-    public void test3(){
+    public void test3() {
         //创建Semaphore，设置许可数量
         Semaphore semaphore = new Semaphore(3);
         System.out.println("6辆汽车，停3个车位");
         for (int i = 1; i <= 6; i++) {
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     //抢占车位
                     semaphore.acquire();
-                    System.out.println(Thread.currentThread().getName()+"号汽车抢到了车位。");
+                    System.out.println(Thread.currentThread().getName() + "号汽车抢到了车位。");
                     //设置随机停车时间
-                    TimeUnit.SECONDS.sleep(new Random().nextInt(5));
-                    System.out.println(Thread.currentThread().getName()+"号汽车离开了车位。");
+                    TimeUnit.SECONDS.sleep(ThreadLocalRandom.current().nextInt(5));
+                    System.out.println(Thread.currentThread().getName() + "号汽车离开了车位。");
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
-                }finally {
+                } finally {
                     //释放车位
                     semaphore.release();
                 }
-            },String.valueOf(i)).start();
+            }, String.valueOf(i)).start();
         }
     }
 
