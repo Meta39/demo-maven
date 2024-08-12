@@ -52,6 +52,11 @@ spring:
     username: root
     password: 123456
 
+  # 定时任务线程池配置
+  scheduler:
+    poolSize: 8
+    thread-name-prefix: "myTaskScheduler"
+
 mybatis-plus:
   # 默认：classpath:/mapper/**.xml。对于 Maven 多模块项目，扫描路径应以 classpath*: 开头，以加载多个 JAR 包中的 XML 文件。
   mapper-locations: classpath:/mapper/**.xml
