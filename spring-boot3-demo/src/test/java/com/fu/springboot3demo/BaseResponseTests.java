@@ -18,10 +18,15 @@ public class BaseResponseTests {
         Response1 response1 = new Response1().ok();
         response1.setId(1L);
 
+        Response1 error1 = new Response1().err("error1");
+
         Response2 response2 = new Response2().ok();
         response2.setUsername("root");
 
+        Response2 error2 = new Response2().err("error2");
+
         log.info("Response1:{}\nResponse2:{}", JacksonUtils.JSON.writeValueAsString(response1), JacksonUtils.JSON.writeValueAsString(response2));
+        log.error("Response1 error:{}\nResponse2 error:{}", JacksonUtils.JSON.writeValueAsString(error1), JacksonUtils.JSON.writeValueAsString(error2));
     }
 
 }
