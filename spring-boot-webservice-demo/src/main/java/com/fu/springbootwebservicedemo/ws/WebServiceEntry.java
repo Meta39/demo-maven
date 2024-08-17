@@ -9,13 +9,18 @@ import org.springframework.stereotype.Service;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.xml.ws.BindingType;
+import javax.xml.ws.soap.SOAPBinding;
 
 /**
+ * SOAP 1.1(默认)
  * 创建日期：2024-07-01
  */
 @Slf4j
 @Service
 @WebService
+//主要是下面这行，并且这行要配合 Spring 的 @Component、@Service 类似的注入注解才能使 SOAP 1.1 生效（当前Apache CXF 默认是 SOAP 1.1）
+@BindingType(value = SOAPBinding.SOAP11HTTP_BINDING)
 public class WebServiceEntry {
 
     /**

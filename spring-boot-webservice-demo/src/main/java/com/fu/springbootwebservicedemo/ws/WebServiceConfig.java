@@ -29,10 +29,23 @@ public class WebServiceConfig {
         return new SpringBus();
     }
 
+    /**
+     * SOAP 1.1
+     */
     @Bean
-    public Endpoint endpoint() {
+    public Endpoint endpoint11() {
         EndpointImpl endpoint = new EndpointImpl(springBus(), new WebServiceEntry());
         endpoint.publish("/WebServiceEntry");
+        return endpoint;
+    }
+
+    /**
+     * SOAP 1.2
+     */
+    @Bean
+    public Endpoint endpoint12() {
+        EndpointImpl endpoint = new EndpointImpl(springBus(), new WebServiceEntry12());
+        endpoint.publish("/WebServiceEntry12");
         return endpoint;
     }
 
