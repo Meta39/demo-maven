@@ -1,9 +1,6 @@
 package com.fu.springbootdemo.util;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
@@ -19,6 +16,12 @@ public abstract class DateTimeUtils {
     }
 
     // 自定义格式
+    public static final String yyyy = "yyyy";
+    public static final String MM = "MM";
+    public static final String dd = "dd";
+    public static final String HH = "HH";
+    public static final String mm = "mm";
+    public static final String ss = "ss";
     public static final String DIY_TIME_FORMAT_NO_SECOND = "HH:mm";
     public static final String DIY_TIME_FORMAT = "HHmmss";
     public static final String DIY_DATE_FORMAT = "yyyyMMdd";
@@ -38,13 +41,13 @@ public abstract class DateTimeUtils {
 
     // 自动补全格式字符串中的缺失部分
     private static String autoCompleteFormat(String format) {
-        if (!format.contains("HH")) {
+        if (!format.contains(HH)) {
             format += " HH";  // 补全小时
         }
-        if (!format.contains("mm")) {
+        if (!format.contains(mm)) {
             format += ":mm";  // 补全分钟
         }
-        if (!format.contains("ss")) {
+        if (!format.contains(ss)) {
             format += ":ss";  // 补全秒
         }
         return format;
@@ -53,7 +56,7 @@ public abstract class DateTimeUtils {
     // 自动补全时间字符串中的缺失部分
     private static String autoCompleteDateTimeString(String dateTimeStr, String format) {
         // 判断输入是否包含日期部分（yyyy 或者 MM 或者 dd）
-        boolean containsDate = format.contains("yyyy") || format.contains("MM") || format.contains("dd");
+        boolean containsDate = format.contains(yyyy) || format.contains(MM) || format.contains(dd);
 
         // 如果输入的字符串只有时间部分（没有空格分割的日期部分）
         if (!containsDate && !dateTimeStr.contains(" ")) {
@@ -66,17 +69,17 @@ public abstract class DateTimeUtils {
         String timePart = dateTimeParts.length > 1 ? dateTimeParts[1] : "";  // 时间部分
 
         // 补全逻辑
-        if (format.contains("HH") && timePart.length() == 0) {
+        if (format.contains(HH) && timePart.isEmpty()) {
             timePart = "00";  // 默认补全小时为00
         }
 
         // 如果格式包含分钟并且时间部分少于5位（表示缺少分钟部分）
-        if (format.contains("mm") && timePart.length() == 2) {
+        if (format.contains(mm) && timePart.length() == 2) {
             timePart += ":00";  // 补全分钟
         }
 
         // 如果格式包含秒并且时间部分少于8位（表示缺少秒部分）
-        if (format.contains("ss") && timePart.length() == 5) {
+        if (format.contains(ss) && timePart.length() == 5) {
             timePart += ":00";  // 补全秒
         }
 
@@ -184,20 +187,45 @@ public abstract class DateTimeUtils {
         return stringToDate(dateStr, DEFAULT_DATE_TIME_FORMAT);
     }
 
-    // String to Date with specified format
+    /**
+     * String to Date with specified format
+     * @param dateStr 日期时间字符串
+     * @param format 转换格式
+     * @return date
+     */
     public static Date stringToDate(String dateStr, String format) {
         DateTimeFormatter formatter = getFormatter(format);
 
-        // 判断传入的格式是否只包含时间（即不包含日期部分）
-        if (format.contains("HH") && !(format.contains("yyyy") || format.contains("MM") || format.contains("dd"))) {
+        // 判断是否只包含年份
+        if (format.contains(yyyy) && !format.contains(MM) && !format.contains(dd) && !(format.contains(HH) || format.contains(mm) || format.contains(ss))) {
+            // 只包含年份，默认设置为该年的第一天
+            LocalDate localDate = LocalDate.parse(dateStr + "-01-01", getFormatter(DEFAULT_DATE_FORMAT));
+            return localDateToDate(localDate);
+        }
+        // 判断是否只包含年份和月份
+        else if (format.contains(yyyy) && format.contains(MM) && !format.contains(dd) && !(format.contains(HH) || format.contains(mm) || format.contains(ss))) {
+            // 只包含年份和月份，解析为 YearMonth
+            YearMonth yearMonth = YearMonth.parse(dateStr, formatter);
+            LocalDate localDate = yearMonth.atDay(1); // 默认第一天
+            return localDateToDate(localDate);
+        }
+        // 判断是否只包含日期部分
+        else if (format.contains(yyyy) && !format.contains(HH) && !format.contains(mm) && !format.contains(ss)) {
+            // 只包含完整日期，解析为 LocalDate
+            LocalDate localDate = LocalDate.parse(dateStr, formatter);
+            return localDateToDate(localDate);
+        }
+        // 判断是否只包含时间部分
+        else if (format.contains(HH) && !(format.contains(yyyy) || format.contains(MM) || format.contains(dd))) {
             // 只包含时间部分，解析为 LocalTime
             LocalTime localTime = LocalTime.parse(dateStr, formatter);
-            return localTimeToDate(localTime);
+            LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now(), localTime);
+            return localDateTimeToDate(localDateTime);
         } else {
-            // 包含日期部分，解析为 LocalDateTime
+            // 包含日期和时间，解析为 LocalDateTime
             String autoCompletedDateStr = autoCompleteDateTimeString(dateStr, format);
             LocalDateTime localDateTime = LocalDateTime.parse(autoCompletedDateStr, formatter);
-            return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+            return localDateTimeToDate(localDateTime);
         }
     }
 
