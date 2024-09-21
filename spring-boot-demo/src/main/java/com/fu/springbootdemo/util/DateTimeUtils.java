@@ -36,6 +36,45 @@ public abstract class DateTimeUtils {
         return formatterCache.computeIfAbsent(format, DateTimeFormatter::ofPattern);
     }
 
+    // 自动补全格式字符串中的缺失部分
+    private static String autoCompleteFormat(String format) {
+        if (!format.contains("HH")) {
+            format += " HH";  // 补全小时
+        }
+        if (!format.contains("mm")) {
+            format += ":mm";  // 补全分钟
+        }
+        if (!format.contains("ss")) {
+            format += ":ss";  // 补全秒
+        }
+        return format;
+    }
+
+    // 自动补全时间字符串中的缺失部分
+    private static String autoCompleteDateTimeString(String dateTimeStr, String format) {
+        // 分离日期和时间部分
+        String[] dateTimeParts = dateTimeStr.split(" ");
+        String datePart = dateTimeParts[0];  // 日期部分
+        String timePart = dateTimeParts.length > 1 ? dateTimeParts[1] : "";  // 时间部分
+
+        // 如果格式包含小时并且时间部分为空或不完整
+        if (format.contains("HH") && timePart.isEmpty()) {
+            timePart = "00";  // 默认补全小时为00
+        }
+
+        // 如果格式包含分钟并且时间部分少于5位（表示缺少分钟部分）
+        if (format.contains("mm") && timePart.length() == 2) {
+            timePart += ":00";  // 补全分钟
+        }
+
+        // 如果格式包含秒并且时间部分少于8位（表示缺少秒部分）
+        if (format.contains("ss") && timePart.length() == 5) {
+            timePart += ":00";  // 补全秒
+        }
+
+        return datePart + (timePart.isEmpty() ? "" : " " + timePart);
+    }
+
     // Date to LocalDate
     public static LocalDate dateToLocalDate(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -139,8 +178,13 @@ public abstract class DateTimeUtils {
 
     // String to Date with specified format
     public static Date stringToDate(String dateStr, String format) {
+        // 根据传入的格式自动补全缺失的部分
+        String autoCompletedDateStr = autoCompleteDateTimeString(dateStr, format);
+
         DateTimeFormatter formatter = getFormatter(format);
-        LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
+
+        // 正常解析为 LocalDateTime
+        LocalDateTime localDateTime = LocalDateTime.parse(autoCompletedDateStr, formatter);
         return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
