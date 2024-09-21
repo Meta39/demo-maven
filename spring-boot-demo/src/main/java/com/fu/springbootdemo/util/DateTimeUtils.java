@@ -52,13 +52,21 @@ public abstract class DateTimeUtils {
 
     // 自动补全时间字符串中的缺失部分
     private static String autoCompleteDateTimeString(String dateTimeStr, String format) {
+        // 判断输入是否包含日期部分（yyyy 或者 MM 或者 dd）
+        boolean containsDate = format.contains("yyyy") || format.contains("MM") || format.contains("dd");
+
+        // 如果输入的字符串只有时间部分（没有空格分割的日期部分）
+        if (!containsDate && !dateTimeStr.contains(" ")) {
+            return dateTimeStr;  // 不进行任何补全
+        }
+
         // 分离日期和时间部分
         String[] dateTimeParts = dateTimeStr.split(" ");
         String datePart = dateTimeParts[0];  // 日期部分
         String timePart = dateTimeParts.length > 1 ? dateTimeParts[1] : "";  // 时间部分
 
-        // 如果格式包含小时并且时间部分为空或不完整
-        if (format.contains("HH") && timePart.isEmpty()) {
+        // 补全逻辑
+        if (format.contains("HH") && timePart.length() == 0) {
             timePart = "00";  // 默认补全小时为00
         }
 
@@ -178,15 +186,21 @@ public abstract class DateTimeUtils {
 
     // String to Date with specified format
     public static Date stringToDate(String dateStr, String format) {
-        // 根据传入的格式自动补全缺失的部分
-        String autoCompletedDateStr = autoCompleteDateTimeString(dateStr, format);
-
         DateTimeFormatter formatter = getFormatter(format);
 
-        // 正常解析为 LocalDateTime
-        LocalDateTime localDateTime = LocalDateTime.parse(autoCompletedDateStr, formatter);
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        // 判断传入的格式是否只包含时间（即不包含日期部分）
+        if (format.contains("HH") && !(format.contains("yyyy") || format.contains("MM") || format.contains("dd"))) {
+            // 只包含时间部分，解析为 LocalTime
+            LocalTime localTime = LocalTime.parse(dateStr, formatter);
+            return localTimeToDate(localTime);
+        } else {
+            // 包含日期部分，解析为 LocalDateTime
+            String autoCompletedDateStr = autoCompleteDateTimeString(dateStr, format);
+            LocalDateTime localDateTime = LocalDateTime.parse(autoCompletedDateStr, formatter);
+            return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        }
     }
+
 
     // Date to String with default format
     public static String dateToString(Date date) {
