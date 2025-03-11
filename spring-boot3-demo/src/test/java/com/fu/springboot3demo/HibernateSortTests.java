@@ -22,8 +22,86 @@ public class HibernateSortTests {
     @Resource
     private InspectionTestRecordsMapper inspectionTestRecordsMapper;
 
+    // 模拟数据生成方法
+    private static List<Map<String, Object>> fetchData() {
+        List<Map<String, Object>> records = new ArrayList<>();
+        Map<String, Object> record = new HashMap<>();
+        record.put("SourcePatientId", 1);
+        record.put("MedicalCardType", 1);
+        record.put("MedicalCardID", "000001");
+        record.put("VisitDateTime", "2025-03-11 00:00:00");
+        record.put("DeptCode", 1758);
+        record.put("DeptName", "全科");
+        record.put("DoctorId", "5013999");
+        record.put("DoctorName", "管理员");
+        record.put("TotalCost", "10");
+        record.put("VisitId", 1);
+        record.put("Remark", "备注");
+        record.put("CostDate", "2025-03-11 00:00:00");
+        record.put("CostItemId", 1);
+        record.put("CostItemName", "西药");
+        record.put("CostItemCount", "1");
+        record.put("FeeNo", 1);
+        record.put("CostId", 1);
+        record.put("CostName", "布洛芬缓释胶囊");
+        record.put("DrugSpecifications", "30片/盒");
+        record.put("CostNumber", 1);
+        record.put("NumberUnit", "盒");
+        record.put("CostPrice", "10");
+        records.add(record);
+
+        Map<String, Object> record2 = new HashMap<>();
+        record2.put("SourcePatientId", 1);
+        record2.put("MedicalCardType", 1);
+        record2.put("MedicalCardID", "000001");
+        record2.put("VisitDateTime", "2025-03-12 00:00:00");
+        record2.put("DeptCode", 1758);
+        record2.put("DeptName", "全科");
+        record2.put("DoctorId", "5013999");
+        record2.put("DoctorName", "管理员");
+        record2.put("TotalCost", "10");
+        record2.put("VisitId", 2);
+        record2.put("Remark", "备注2");
+        record2.put("CostDate", "2025-03-12 00:00:00");
+        record2.put("CostItemId", 2);
+        record2.put("CostItemName", "西药");
+        record2.put("CostItemCount", "2");
+        record2.put("FeeNo", 2);
+        record2.put("CostId", 2);
+        record2.put("CostName", "感冒灵");
+        record2.put("DrugSpecifications", "1袋/盒");
+        record2.put("CostNumber", 2);
+        record2.put("NumberUnit", "盒");
+        record2.put("CostPrice", "5");
+        records.add(record2);
+        return records;
+    }
+
+    /**
+     * 适用于通用模板多层嵌套（并且数据库返回的结果是List<Map<String, Object>>类型时使用，不适用于对象）
+     */
     @Test
     public void test() throws JsonProcessingException {
+        // 模拟数据库查询出来的数据
+        List<Map<String, Object>> records = fetchData();
+
+        // 配置层级结构
+        List<Map<String, Object>> transformedData = new HierarchyConfig()
+                .addRootLevel(new String[]{"SourcePatientId"}, DataTransformer::createPatient)
+                .addChildLevel("MedicalInformations", new String[]{"VisitDateTime", "DeptCode", "DoctorId"}, DataTransformer::createMedicalInformations)
+                .addChildLevel("CostItemLists", new String[]{"CostDate", "CostItemId", "FeeNo"}, DataTransformer::createCostItemLists)
+                .addChildLevel("DetailsItemLists", new String[]{"CostId"}, DataTransformer::createDetailsItemLists)
+                .transform(records);
+
+        // 转换数据并输出结果
+        log.info("{}", JacksonUtils.JSON.writeValueAsString(transformedData));
+    }
+
+    /**
+     * 不适用模板时使用
+     */
+    @Test
+    public void test2() throws JsonProcessingException {
         // 第一层分组键：VisitOrganization + VisitOrganizationName + PatientType + Name
         Map<String, InspectionTestRecord> recordMap = new LinkedHashMap<>(); // 保持插入顺序
         //1.查询出来的结果，先在SQL中用ORDER BY 排好序，这样代码里只要保证顺序插入即可保证列表有序。如果排序错误就会导致丢失一部分，所以排序要小心。
