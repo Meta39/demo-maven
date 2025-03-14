@@ -12,9 +12,9 @@ public class DoubleCheckedLockingParam implements Serializable {
     // 使用volatile关键字确保多线程环境下的可见性和禁止指令重排序
     private static volatile DoubleCheckedLockingParam instance;
     // 参数
-    private String username;
-    private String password;
-    private String version;
+    private final String username;
+    private final String password;
+    private final String version;
 
     // 私有构造方法，防止外部实例化
     private DoubleCheckedLockingParam(String username, String password, String version) {
