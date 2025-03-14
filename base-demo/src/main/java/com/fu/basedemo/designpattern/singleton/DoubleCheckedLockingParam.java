@@ -18,10 +18,10 @@ public class DoubleCheckedLockingParam implements Serializable {
 
     // 私有构造方法，防止外部实例化
     private DoubleCheckedLockingParam(String username, String password, String version) {
-        // 有效防止反射攻击
-        if (instance != null) {
-            throw new RuntimeException("Instance already exists");
-        }
+        // 下面这个判断无法止反射攻击
+        /*if (instance != null) {
+            throw new RuntimeException("DoubleCheckedLockingParam 实例已创建");
+        }*/
         this.username = username;
         this.password = password;
         this.version = version;
@@ -37,13 +37,6 @@ public class DoubleCheckedLockingParam implements Serializable {
             }
         }
         return instance;
-    }
-
-    // 防止反序列化创建新实例
-    protected Object readResolve() {
-        // 可以选择重新初始化单例，或者返回现有的实例
-        // 这里选择返回现有实例，忽略传入的参数
-        return getInstance("", "", ""); // 或者其他逻辑以保持单例
     }
 
     @Override

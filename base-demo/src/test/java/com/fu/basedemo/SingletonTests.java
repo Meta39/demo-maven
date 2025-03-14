@@ -140,8 +140,8 @@ public class SingletonTests {
         // 验证线程安全性
         DoubleCheckedLockingParam singleton1 = DoubleCheckedLockingParam.getInstance("Meta", "123456", "1.0");
         DoubleCheckedLockingParam singleton2 = DoubleCheckedLockingParam.getInstance("Meta2", "234567", "2.0");
-        System.out.println("singleton1:"+ singleton1.toString());
-        System.out.println("singleton2:"+ singleton2.toString());
+        System.out.println("singleton1:" + singleton1.toString());
+        System.out.println("singleton2:" + singleton2.toString());
         System.out.println("singleton1 == singleton2: " + (singleton1 == singleton2)); // 应该输出true
 
         // 验证防止反序列化
@@ -161,6 +161,37 @@ public class SingletonTests {
         }
 
         System.out.println("singleton1 == singleton3: " + (singleton1 == singleton3)); // 应该输出true
+    }
+
+    /**
+     * （带参数）懒汉式双重检查锁定单例防止反射测试
+     * 结论：无法防止反射攻击
+     * 第一次创建实例:DoubleCheckedLockingParam{username='Meta2', password='234567', version='2.0'}
+     * 第二次创建实例:DoubleCheckedLockingParam{username='Meta3', password='345678', version='3.0'}
+     */
+    @Test
+    public void doubleCheckedLockingParamReflexTest() {
+        try {
+            // 获取ParameterizedSingleton类的Class对象
+            Class<?> clazz = DoubleCheckedLockingParam.class;
+
+            // 获取私有构造方法
+            Constructor<?> constructor = clazz.getDeclaredConstructor(String.class, String.class, String.class);
+
+            // 设置构造方法为可访问
+            constructor.setAccessible(true);
+
+            // 第一次通过反射创建实例
+            DoubleCheckedLockingParam instance1 = (DoubleCheckedLockingParam) constructor.newInstance("Meta2", "234567", "2.0");
+            System.out.println("第一次创建实例:" + instance1);
+
+            // 第二次通过反射创建实例，预期会抛出异常
+            DoubleCheckedLockingParam instance2 = (DoubleCheckedLockingParam) constructor.newInstance("Meta3", "345678", "3.0");
+            System.out.println("第二次创建实例:" + instance2);
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
