@@ -22,10 +22,10 @@ public class DoubleCheckedLocking implements Serializable {
 
     //私有化构造函数，防止外部实例化
     private DoubleCheckedLocking() {
-        // 有效防止反射攻击
-        if (instance != null) {
+        // 无法防止反射攻击
+        /*if (instance != null) {
             throw new RuntimeException("Instance already exists");
-        }
+        }*/
     }
 
     //获取实例
@@ -38,11 +38,6 @@ public class DoubleCheckedLocking implements Serializable {
             }
         }
         return instance;
-    }
-
-    // 防止反序列化创建新实例
-    private Object readResolve() {
-        return getInstance();
     }
 
 }

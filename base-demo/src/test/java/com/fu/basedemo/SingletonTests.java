@@ -80,7 +80,6 @@ public class SingletonTests {
      * 测试结果：
      * singleton1 == singleton2: true（线程安全）
      * singleton1 == singleton3: true（无法防止反序列化）
-     * Cannot create instance via reflection: java.lang.RuntimeException: Instance already exists（有效防止反射攻击）
      */
     @Test
     public void doubleCheckedLockingTest() throws IOException {
@@ -106,7 +105,15 @@ public class SingletonTests {
         }
 
         System.out.println("singleton1 == singleton3: " + (singleton1 == singleton3)); // 应该输出true
+    }
 
+    /**
+     * 懒汉式双重检查锁定单例反射测试
+     * 结论：无法防止反射攻击
+     * singleton1 == singleton2: false
+     */
+    @Test
+    public void doubleCheckedLockingReflexTest() {
         // 验证防止反射攻击
         try {
             // 获取类的Class对象
@@ -119,11 +126,11 @@ public class SingletonTests {
             declaredConstructor.setAccessible(true);
 
             // 创建实例
-            DoubleCheckedLocking singleton4 = declaredConstructor.newInstance();
-            System.out.println("singleton1 == singleton4: " + (singleton1 == singleton4)); // 不应该执行到这里
-        } catch (InvocationTargetException e) {
-            System.out.println("Cannot create instance via reflection: " + e.getCause()); // 应该输出
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            DoubleCheckedLocking singleton1 = declaredConstructor.newInstance();
+            DoubleCheckedLocking singleton2 = declaredConstructor.newInstance();
+            System.out.println("singleton1 == singleton2: " + (singleton1 == singleton2)); // 不应该执行到这里
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
