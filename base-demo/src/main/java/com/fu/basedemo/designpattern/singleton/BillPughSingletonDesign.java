@@ -21,10 +21,10 @@ public class BillPughSingletonDesign implements Serializable {
 
     //私有化构造函数，防止外部实例化
     private BillPughSingletonDesign() {
-        // 有效防止反射攻击，IDEA警告是错误的。它并不是一直为true.
-        if (SingletonHolder.INSTANCE != null) {
+        // 无法防止反射攻击，它一直为true.
+        /*if (SingletonHolder.INSTANCE != null) {
             throw new IllegalStateException("Instance already exists");
-        }
+        }*/
     }
 
     //静态内部类
@@ -34,11 +34,6 @@ public class BillPughSingletonDesign implements Serializable {
 
     //获取实例
     public static BillPughSingletonDesign getInstance() {
-        return SingletonHolder.INSTANCE;
-    }
-
-    // 防止反序列化创建新实例
-    private Object readResolve() {
         return SingletonHolder.INSTANCE;
     }
 

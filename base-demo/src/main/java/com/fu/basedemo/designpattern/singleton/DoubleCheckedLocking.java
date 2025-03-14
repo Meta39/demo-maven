@@ -22,10 +22,6 @@ public class DoubleCheckedLocking implements Serializable {
 
     //私有化构造函数，防止外部实例化
     private DoubleCheckedLocking() {
-        // 无法防止反射攻击
-        /*if (instance != null) {
-            throw new RuntimeException("Instance already exists");
-        }*/
     }
 
     //获取实例

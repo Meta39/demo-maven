@@ -18,22 +18,12 @@ public class EagerInitialization implements Serializable {
     private static final long serialVersionUID = 1L;
 
     //私有化构造函数，防止外部实例化。
-    private EagerInitialization() {
-        // 有效防止反射攻击
-        if (INSTANCE != null) {
-            throw new IllegalStateException("Instance already exists");
-        }
-    }
+    private EagerInitialization() {}
 
     private static final EagerInitialization INSTANCE = new EagerInitialization();
 
     //获取实例
     public static EagerInitialization getInstance() {
-        return INSTANCE;
-    }
-
-    // 防止反序列化创建新实例
-    private Object readResolve() {
         return INSTANCE;
     }
 
