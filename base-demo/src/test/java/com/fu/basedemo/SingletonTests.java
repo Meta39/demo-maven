@@ -2,6 +2,7 @@ package com.fu.basedemo;
 
 import com.fu.basedemo.designpattern.singleton.BillPughSingletonDesign;
 import com.fu.basedemo.designpattern.singleton.DoubleCheckedLocking;
+import com.fu.basedemo.designpattern.singleton.DoubleCheckedLockingParam;
 import com.fu.basedemo.designpattern.singleton.EagerInitialization;
 import org.junit.jupiter.api.Test;
 
@@ -125,6 +126,41 @@ public class SingletonTests {
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * （带参数）懒汉式双重检查锁定单例测试
+     * singleton1:DoubleCheckedLockingParam{username='Meta', password='123456', version='1.0'}
+     * singleton2:DoubleCheckedLockingParam{username='Meta', password='123456', version='1.0'}
+     * singleton1 == singleton2: true
+     * singleton1 == singleton3: true
+     */
+    @Test
+    public void doubleCheckedLockingParamTest() throws IOException {
+        // 验证线程安全性
+        DoubleCheckedLockingParam singleton1 = DoubleCheckedLockingParam.getInstance("Meta", "123456", "1.0");
+        DoubleCheckedLockingParam singleton2 = DoubleCheckedLockingParam.getInstance("Meta2", "234567", "2.0");
+        System.out.println("singleton1:"+ singleton1.toString());
+        System.out.println("singleton2:"+ singleton2.toString());
+        System.out.println("singleton1 == singleton2: " + (singleton1 == singleton2)); // 应该输出true
+
+        // 验证防止反序列化
+        Path path = Paths.get("singleton.txt");
+        try (ObjectOutput out = new ObjectOutputStream(Files.newOutputStream(path))) {
+            out.writeObject(DoubleCheckedLockingParam.getInstance("Meta", "123456", "1.0"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        DoubleCheckedLockingParam singleton3;
+        try (ObjectInput in = new ObjectInputStream(Files.newInputStream(path))) {
+            singleton3 = (DoubleCheckedLockingParam) in.readObject();
+            Files.delete(path); // 删除文件
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("singleton1 == singleton3: " + (singleton1 == singleton3)); // 应该输出true
     }
 
     /**
