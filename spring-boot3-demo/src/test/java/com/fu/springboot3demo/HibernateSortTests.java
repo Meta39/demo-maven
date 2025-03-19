@@ -2,9 +2,11 @@ package com.fu.springboot3demo;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fu.springboot3demo.entity.DynamicTransformer;
 import com.fu.springboot3demo.entity.InspectionTestRecords;
 import com.fu.springboot3demo.entity.hibernate.*;
 import com.fu.springboot3demo.mapper.InspectionTestRecordsMapper;
+import com.fu.springboot3demo.util.DateTimeUtils;
 import com.fu.springboot3demo.util.JacksonUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,7 @@ public class HibernateSortTests {
         record.put("TotalCost", "10");
         record.put("VisitId", 1);
         record.put("Remark", "备注");
-        record.put("CostDate", "2025-03-11 00:00:00");
+        record.put("CostDate", new Date());
         record.put("CostItemId", 1);
         record.put("CostItemName", "西药");
         record.put("CostItemCount", "1");
@@ -62,7 +64,7 @@ public class HibernateSortTests {
         record2.put("TotalCost", "10");
         record2.put("VisitId", 2);
         record2.put("Remark", "备注2");
-        record2.put("CostDate", "2025-03-12 00:00:00");
+        record2.put("CostDate", new Date());
         record2.put("CostItemId", 2);
         record2.put("CostItemName", "西药");
         record2.put("CostItemCount", "2");
@@ -78,23 +80,34 @@ public class HibernateSortTests {
     }
 
     /**
-     * 适用于通用模板多层嵌套（并且数据库返回的结果是List<Map<String, Object>>类型时使用，不适用于对象）
+     * 适用于通用模板多层嵌套返回JSON格式（并且数据库返回的结果是List<Map<String, Object>>类型时使用，不适用于对象）
+     * 1、支持替换数据库别名为其它变量名
+     * 2、支持变量值进行格式化。如：日期格式化、枚举值转文本、金额元转分（即：金额乘100）
      */
     @Test
-    public void test() throws JsonProcessingException {
+    public void testJson() throws JsonProcessingException {
         // 模拟数据库查询出来的数据
         List<Map<String, Object>> records = fetchData();
 
-        // 配置层级结构
-        List<Map<String, Object>> transformedData = new HierarchyConfig()
-                .addRootLevel(new String[]{"SourcePatientId"}, DataTransformer::createPatient)
-                .addChildLevel("MedicalInformations", new String[]{"VisitDateTime", "DeptCode", "DoctorId"}, DataTransformer::createMedicalInformations)
-                .addChildLevel("CostItemLists", new String[]{"CostDate", "CostItemId", "FeeNo"}, DataTransformer::createCostItemLists)
-                .addChildLevel("DetailsItemLists", new String[]{"CostId"}, DataTransformer::createDetailsItemLists)
-                .transform(records);
+        //修改返回的变量名
+        Map<String, String> costItemListsParams = new HashMap<>();
+        costItemListsParams.put("DeptCode", "KSDM");//修改 DeptCode 变量名为 KSDM
 
-        // 转换数据并输出结果
-        log.info("{}", JacksonUtils.JSON.writeValueAsString(transformedData));
+        // 使用构建器配置转换规则
+        List<Map<String, Object>> result = new DynamicTransformer
+                .Builder()
+                .addLevel("MedicalInformations", null, "SourcePatientId", "MedicalCardType", "MedicalCardID") // 第一级
+                .addLevel("CostItemLists", costItemListsParams, "VisitDateTime", "DeptCode", "DeptName", "DoctorId", "DoctorName", "TotalCost", "VisitId", "Remark") // 第二级
+                .addLevel("DetailsItemLists", null, "CostDate", "CostItemId", "CostItemName", "CostItemCount", "FeeNo") // 第三级
+                .addLevel(null, null, "CostId", "CostName", "DrugSpecifications", "CostNumber", "NumberUnit", "CostPrice") // 第四级
+                .addFieldFormatter("SourcePatientId", value -> Integer.parseInt(String.valueOf(value)) + 1)//修改字段值【时间格式化、枚举转换等】。如：每个值的SourcePatientId都进行 + 1
+                .addFieldFormatter("CostDate", value -> DateTimeUtils.dateToString((Date) value, DateTimeUtils.DEFAULT_DATE_TIME_FORMAT))//日期格式化
+                .build()//结束构建链
+                .transform(records);//传入原始数据，进行数据处理
+
+        log.info("对象（值为null也输出）{}", result);
+        //JacksonUtils配置了值为null，则不序列化
+        log.info("JSON(值为null，不序列化)：{}", JacksonUtils.JSON.writeValueAsString(result));
     }
 
     /**
