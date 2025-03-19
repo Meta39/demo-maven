@@ -2,7 +2,9 @@ package com.fu.springboot3demo;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fu.springboot3demo.entity.BSxml;
 import com.fu.springboot3demo.entity.DynamicTransformer;
+import com.fu.springboot3demo.entity.DynamicTransformerXml;
 import com.fu.springboot3demo.entity.InspectionTestRecords;
 import com.fu.springboot3demo.entity.hibernate.*;
 import com.fu.springboot3demo.mapper.InspectionTestRecordsMapper;
@@ -108,6 +110,40 @@ public class HibernateSortTests {
         log.info("对象（值为null也输出）{}", result);
         //JacksonUtils配置了值为null，则不序列化
         log.info("JSON(值为null，不序列化)：{}", JacksonUtils.JSON.writeValueAsString(result));
+    }
+
+    /**
+     * 适用于通用模板多层嵌套返回XML格式（并且数据库返回的结果是List<Map<String, Object>>类型时使用，不适用于对象）
+     * 1、支持集合内部名称
+     * 2、支持替换数据库别名为其它变量名
+     * 3、支持变量值进行格式化。如：日期格式化、枚举值转文本、金额元转分（即：金额乘100）
+     */
+    @Test
+    public void testXml() throws JsonProcessingException {
+        // 模拟数据库查询出来的数据
+        List<Map<String, Object>> records = fetchData();
+
+        //修改返回的变量名
+        Map<String, String> costItemListsParams = new HashMap<>();
+        costItemListsParams.put("DeptCode", "KSDM");//修改 DeptCode 变量名为 KSDM
+
+        // 使用构建器配置转换规则
+        List<Map<String, Object>> result = new DynamicTransformerXml
+                .Builder()
+                .addLevel("MedicalInformations", "MedicalInformation", null, "SourcePatientId", "MedicalCardType", "MedicalCardID") // 第一级
+                .addLevel("CostItemLists", "CostItemList", costItemListsParams, "VisitDateTime", "DeptCode", "DeptName", "DoctorId", "DoctorName", "TotalCost", "VisitId", "Remark") // 第二级
+                .addLevel("DetailsItemLists", "DetailsItemList", null, "CostDate", "CostItemId", "CostItemName", "CostItemCount", "FeeNo") // 第三级
+                .addLevel(null, null, null, "CostId", "CostName", "DrugSpecifications", "CostNumber", "NumberUnit", "CostPrice") // 第四级
+                .addFieldFormatter("SourcePatientId", value -> Integer.parseInt(String.valueOf(value)) + 1)//修改字段值【时间格式化、枚举转换等】。如：每个值的SourcePatientId都进行 + 1
+                .addFieldFormatter("CostDate", value -> DateTimeUtils.dateToString((Date) value, DateTimeUtils.DEFAULT_DATE_TIME_FORMAT))//日期格式化
+                .build()//结束构建链
+                .transform(records);//传入原始数据，进行数据处理
+
+        BSxml bSxml = new BSxml();
+        bSxml.setData(result);
+        log.info("对象（值为null也输出）{}", bSxml);
+        //JacksonUtils配置了值为null，则不序列化
+        log.info("XML(值为null，不序列化)：{}", JacksonUtils.XML.writeValueAsString(bSxml));
     }
 
     /**
