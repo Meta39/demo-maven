@@ -35,7 +35,7 @@ public abstract class JacksonUtils {
         try {
             return JSON.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -43,7 +43,7 @@ public abstract class JacksonUtils {
         try {
             return JSON.readValue(content, valueTypeRef);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
