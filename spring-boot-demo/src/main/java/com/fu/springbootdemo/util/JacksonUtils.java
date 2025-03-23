@@ -8,32 +8,32 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.NoArgsConstructor;
 
 /**
  * jackson 工具类
  */
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public abstract class JacksonUtils {
-    public static final JsonMapper json = new JsonMapper();
-    public static final XmlMapper xml = new XmlMapper();
+    public static final JsonMapper JSON;
+    public static final XmlMapper XML;
 
     static {
         // json 配置
-        json.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        json.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        json.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        json.registerModule(new JavaTimeModule());
+        JSON = new JsonMapper();
+        JSON.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        JSON.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        JSON.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        JSON.registerModule(new JavaTimeModule());
         // xml 配置
-        xml.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        xml.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        xml.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        xml.registerModule(new JavaTimeModule());
+        XML = new XmlMapper();
+        XML.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        XML.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        XML.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        XML.registerModule(new JavaTimeModule());
     }
 
     public static String writeValueAsStringJson(Object object) {
         try {
-            return json.writeValueAsString(object);
+            return JSON.writeValueAsString(object);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -41,7 +41,7 @@ public abstract class JacksonUtils {
 
     public static <T> T readValueJson(String content, TypeReference<T> valueTypeRef) {
         try {
-            return json.readValue(content, valueTypeRef);
+            return JSON.readValue(content, valueTypeRef);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
