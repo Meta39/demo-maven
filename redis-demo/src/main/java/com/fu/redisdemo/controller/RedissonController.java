@@ -42,17 +42,17 @@ public class RedissonController {
      */
     @PostMapping("/subProductLock")
     public void subProductLock() {
-        boolean autoLock = RedissonUtils.autoLock(redisson, "subProductLock", () -> {
+        boolean lock = RedissonUtils.lock(redisson, "subProductLock", () -> {
             RAtomicLong stocks = redisson.getAtomicLong(STOCKS);
             long cunrrent = stocks.get();//获取当前值
             if (cunrrent == 0L) {
                 log.info("卖完了~");
                 return;
             }
-            log.info("您抢到了第" + (TOTAL_STOCKS - cunrrent) + "个免单券！");
+            log.info("您抢到了第" + cunrrent + "个免单券！");
             stocks.decrementAndGet();//原子递减 1 并返回新值
         });
-        if (!autoLock) {
+        if (!lock) {
             log.info("哎呀~活动太火爆了~请稍后再试");
         }
     }
