@@ -3,30 +3,8 @@ server:
 
 spring:
   redis:
-    # 单机模式
-#    host: localhost
-#    port: 6379
-    # 过期时间
-    timeout: 15000
-#    password: 12345678
-    # cluster集群配置（首先要在linux搭建好主从复制（三主三从）、哨兵模式监听master、cluster集群）
-    cluster:
-      #重定向的最大数量，比如第一台挂了，连第二台，第二台挂了连第三台
-      max-redirects: 3
-      #redis节点：ip+port
-      nodes:
-        - 192.168.1.11:6381
-        - 192.168.1.11:6382
-        - 192.168.1.11:6383
-        - 192.168.1.11:6384
-        - 192.168.1.11:6385
-        - 192.168.1.11:6386
+    host: localhost
+    port: 6379
     lettuce:
       pool:
         enabled: true
-      cluster:
-        refresh:
-          # 防止redis重启节点更换，spring boot没有动态感知，导致抛出超时或异常。
-          adaptive: true
-          # 定时刷新时间（单位秒s）
-          period: 3000
