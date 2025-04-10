@@ -1,11 +1,13 @@
 package com.fu.basedemo;
 
 import com.fu.basedemo.designpattern.singleton.DoubleCheckedLockingParam;
+import com.fu.basedemo.reflex.DoubleCheckedLockingParamWrapper;
 import com.fu.basedemo.reflex.Reflex;
 import com.fu.basedemo.reflex.ReflexEnum;
 import org.junit.jupiter.api.Test;
 
-import java.lang.invoke.*;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -79,6 +81,18 @@ public class ReflexTests {
         //破坏了单例模式，所以输出结果是不一样的。
         System.out.println(doubleCheckedLockingParam);
         System.out.println(doubleCheckedLockingParam2);
+    }
+
+    @Test
+    void test6() {
+        //1.缓存没有实例，则进行创建
+        DoubleCheckedLockingParam doubleCheckedLockingParam1 = DoubleCheckedLockingParamWrapper.getInstance("Meta", "123456", "1.0.0");
+        //2.因为绕过私有访问，所以可以创建多实例
+        DoubleCheckedLockingParam doubleCheckedLockingParam2 = DoubleCheckedLockingParamWrapper.getInstance("Meta2", "1234567", "2.0.0");
+        //3.因为缓存了 doubleCheckedLockingParam1 所以 doubleCheckedLockingParam3 是直接从缓存取的。
+        DoubleCheckedLockingParam doubleCheckedLockingParam3 = DoubleCheckedLockingParamWrapper.getInstance("Meta", "123456", "1.0.0");
+        System.out.println(doubleCheckedLockingParam1 == doubleCheckedLockingParam2);//false。因为是2个不同的实例，不是单例
+        System.out.println(doubleCheckedLockingParam1 == doubleCheckedLockingParam3);//true。因为是从缓存获取的同一个实例
     }
 
 }
